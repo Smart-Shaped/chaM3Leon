@@ -92,13 +92,13 @@ To develop a batch application using the Batch Layer, follow these steps:
 - Override the `updateBatch` method to implement the specific logic (working on Spark Dataframe).
 - It will automatically save results on Cassandra DB.
 
-### 5. Create a Class that Extends `com.smartshaped.chameleon.common.utils.TableModel`
+### 4. Create a Class that Extends `com.smartshaped.chameleon.common.utils.TableModel`
 - Define the table fields as class attributes.
 - Specify the name of the primary key as a **string**.
 - Create a `typeMapping.yml` file to define the mapping between Java field types and CQL (Cassandra Query Language) types.
 - Declare this class in the YAML file (batch.cassandra.model.class).
 
-### 6. Create a Class Containing the `main` Method
+### 5. Create a Class Containing the `main` Method
 - Call the `start` method of `BatchLayer` inside the `main` method.
 - Specify this class in the `spark-submit` command.
 
@@ -113,20 +113,20 @@ To develop a batch application using the Speed Layer, follow these steps:
 ### 1. Create a Class that Extends `com.smartshaped.chameleon.speed.SpeedLayer`
 - Ensure that the class constructor is **public**.
 
-### 3. Create a Class that Extends `com.smartshaped.chameleon.speed.SpeedUpdater`
+### 2. Create a Class that Extends `com.smartshaped.chameleon.speed.SpeedUpdater`
 - Ensure that the class constructor is **public**.
 - This class permits you to export some partial analysis/statisctics from your streaming data arrived during a window time.
 - Declare this class in the YAML file (speed.updater.class).
 - Override the `updateSpeed` method to implement the specific logic (working on Spark Dataframe).
 - It will automatically save results on Cassandra DB.
 
-### 5. Create a Class that Extends `com.smartshaped.chameleon.common.utils.TableModel`
+### 3. Create a Class that Extends `com.smartshaped.chameleon.common.utils.TableModel`
 - Define the table fields as class attributes.
 - Specify the name of the primary key as a **string**.
 - Create a `typeMapping.yml` file to define the mapping between Java field types and CQL (Cassandra Query Language) types.
 - Declare this class in the YAML file (speed.cassandra.model.class).
 
-### 6. Create a Class Containing the `main` Method
+### 4. Create a Class Containing the `main` Method
 - Call the `start` method of `SpeedLayer` inside the `main` method.
 - Specify this class in the `spark-submit` command.
 
