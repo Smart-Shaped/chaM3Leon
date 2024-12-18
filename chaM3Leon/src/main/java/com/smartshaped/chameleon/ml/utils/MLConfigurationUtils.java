@@ -29,11 +29,10 @@ public class MLConfigurationUtils extends ConfigurationUtils {
     private static final String PATH = "path";
     private static final String ROOT = "ml";
     private static final String SEPARATOR = ".";
-    private static final String ML_BLACK_BOX_INPUT_PATHS = "ml.blackBox.inputPaths";
-    private static final String ML_BLACK_BOX_OUTPUT_PATH = "ml.blackBox.outputPath";
+    private static final String ML_BLACK_BOX_INPUTS = "ml.blackBox.inputs";
+    private static final String ML_BLACK_BOX_OUTPUT = "ml.blackBox.output";
     private static final String ML_BLACK_BOX_MODEL_PATH = "ml.blackBox.modelPath";
     private static final String ML_BLACK_BOX_PYTHON_SCRIPT_PATH = "ml.blackBox.pythonScriptPath";
-    private static final String ML_BLACK_BOX_PYSPARK_APP = "ml.blackBox.pysparkApp";
     private static final String ML_BLACK_BOX_CLASS = "ml.blackBox.class";
     private static final String ML_BLACK_BOX_PYTHON_LIBRARIES = "ml.blackBox.pythonLibraries";
 
@@ -208,66 +207,6 @@ public class MLConfigurationUtils extends ConfigurationUtils {
     }
 
     /**
-     * Returns the comma-separated list of input paths for the BlackBox.
-     * <p>
-     * The value is read from the configuration key {@link #ML_BLACK_BOX_INPUT_PATHS}.
-     * If the key is not defined, an empty string is returned.
-     *
-     * @return the comma-separated list of input paths for the BlackBox
-     */
-    public String getBlackBoxInputPaths() {
-        return config.getString(ML_BLACK_BOX_INPUT_PATHS, "");
-    }
-
-    /**
-     * Returns the output path for the BlackBox.
-     * <p>
-     * The value is read from the configuration key {@link #ML_BLACK_BOX_OUTPUT_PATH}.
-     * If the key is not defined, an empty string is returned.
-     *
-     * @return the output path for the BlackBox
-     */
-    public String getBlackBoxOutputPath() {
-        return config.getString(ML_BLACK_BOX_OUTPUT_PATH, "");
-    }
-
-    /**
-     * Returns the model path for the BlackBox.
-     * <p>
-     * The value is read from the configuration key {@link #ML_BLACK_BOX_MODEL_PATH}.
-     * If the key is not defined, an empty string is returned.
-     *
-     * @return the model path for the BlackBox
-     */
-    public String getBlackBoxModelPath() {
-        return config.getString(ML_BLACK_BOX_MODEL_PATH, "");
-    }
-
-    /**
-     * Returns the Python script path for the PythonBlackBox.
-     * <p>
-     * The value is read from the configuration key {@link #ML_BLACK_BOX_PYTHON_SCRIPT_PATH}.
-     * If the key is not defined, an empty string is returned.
-     *
-     * @return the Python script path for the BlackBox
-     */
-    public String getBlackBoxPythonScriptPath() {
-        return config.getString(ML_BLACK_BOX_PYTHON_SCRIPT_PATH, "");
-    }
-
-    /**
-     * Returns whether the script in the PythonBlackBox is a PySpark application or not.
-     * <p>
-     * The value is read from the configuration key {@link #ML_BLACK_BOX_PYSPARK_APP}.
-     * If the key is not defined, {@code false} is returned.
-     *
-     * @return whether the BlackBox is a PySpark application or not
-     */
-    public boolean isPysparkApp() {
-        return config.getBoolean(ML_BLACK_BOX_PYSPARK_APP, false);
-    }
-
-    /**
      * Returns an instance of the configured {@link BlackBox} class or null if the class name is empty.
      * <p>
      * The class name is read from the configuration key {@link #ML_BLACK_BOX_CLASS}.
@@ -292,6 +231,54 @@ public class MLConfigurationUtils extends ConfigurationUtils {
         } catch (ConfigurationException e) {
             throw new ConfigurationException("Could not instantiate " + BlackBox.class + " due to exception", e);
         }
+    }
+
+    /**
+     * Returns the comma-separated list of input paths for the BlackBox.
+     * <p>
+     * The value is read from the configuration key {@link #ML_BLACK_BOX_INPUTS}.
+     * If the key is not defined, an empty string is returned.
+     *
+     * @return the input paths for the BlackBox
+     */
+    public String getBlackBoxInputs() {
+        return config.getString(ML_BLACK_BOX_INPUTS, "");
+    }
+
+    /**
+     * Returns the output path for the BlackBox.
+     * <p>
+     * The value is read from the configuration key {@link #ML_BLACK_BOX_OUTPUT}.
+     * If the key is not defined, an empty string is returned.
+     *
+     * @return the output path for the BlackBox
+     */
+    public String getBlackBoxOutput() {
+        return config.getString(ML_BLACK_BOX_OUTPUT, "");
+    }
+
+    /**
+     * Returns the model path for the BlackBox.
+     * <p>
+     * The value is read from the configuration key {@link #ML_BLACK_BOX_MODEL_PATH}.
+     * If the key is not defined, an empty string is returned.
+     *
+     * @return the model path for the BlackBox
+     */
+    public String getBlackBoxModelPath() {
+        return config.getString(ML_BLACK_BOX_MODEL_PATH, "");
+    }
+
+    /**
+     * Returns the Python script path for the PythonBlackBox.
+     * <p>
+     * The value is read from the configuration key {@link #ML_BLACK_BOX_PYTHON_SCRIPT_PATH}.
+     * If the key is not defined, an empty string is returned.
+     *
+     * @return the Python script path for the BlackBox
+     */
+    public String getBlackBoxPythonScriptPath() {
+        return config.getString(ML_BLACK_BOX_PYTHON_SCRIPT_PATH, "");
     }
 
     /**

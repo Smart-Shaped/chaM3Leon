@@ -4,7 +4,10 @@ import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.ml.blackBox.exception.BlackBoxException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.deploy.PythonRunner;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
 import java.io.File;
@@ -22,8 +25,7 @@ public abstract class PythonBlackBox extends BlackBox {
 
     private final String pythonScriptPath;
     private final String pythonLibraries;
-    private final boolean pysparkApp;
-    private SparkConf sparkConf;
+    public static JavaSparkContext javaSparkContext;
 
     protected PythonBlackBox() throws ConfigurationException {
 
@@ -31,13 +33,16 @@ public abstract class PythonBlackBox extends BlackBox {
 
         this.pythonScriptPath = mlConfigurationUtils.getBlackBoxPythonScriptPath();
         this.pythonLibraries = mlConfigurationUtils.getBlackBoxPythonLibraries();
-        this.pysparkApp = mlConfigurationUtils.isPysparkApp();
     }
 
+
     /**
-     * Installs the Python libraries specified in the configuration file, if any.
+     * Perform any additional preparation required for Python-based black boxes.
+     * <p>
+     * This includes installing required Python libraries and making the Python
+     * script executable.
      *
-     * @throws BlackBoxException if there is an error during the libraries installation
+     * @throws BlackBoxException if any error occurs during preparation
      */
     @Override
     protected void extraPreparation() throws BlackBoxException {
@@ -48,22 +53,8 @@ public abstract class PythonBlackBox extends BlackBox {
         // copy python script to make it executable
         copyResourceToDestination(pythonScriptPath);
 
-        closeSession();
-    }
-
-    /**
-     * Closes the active Spark session and saves its configuration.
-     * <p>
-     * This method is used to close the Spark session after it has been used in the black box process.
-     * The configuration of the active session is saved in the {@link #sparkConf} field.
-     */
-    private void closeSession() {
-
-        if (SparkSession.getActiveSession().isDefined()) {
-            SparkSession session = SparkSession.getActiveSession().get();
-            this.sparkConf = session.sparkContext().conf();
-            session.stop();
-        }
+        // prepare SparkSession to be accessed by python
+        javaSparkContext = new JavaSparkContext(SparkSession.getActiveSession().get().sparkContext());
     }
 
     /**
@@ -136,29 +127,23 @@ public abstract class PythonBlackBox extends BlackBox {
     @Override
     protected void validateParams() throws BlackBoxException {
 
-        super.validateParams();
-
         if (pythonScriptPath.trim().isEmpty()) {
             throw new BlackBoxException("The python script path is empty");
         }
     }
 
     /**
-     * Cleans the black box folder by deleting the input, output, and Python script files.
+     * Cleans up the Python script used in the black box.
      * <p>
-     * This method overrides the base class implementation to include the deletion of
-     * the Python script file used in the Python-based black box. It first calls the
-     * superclass method to handle the standard input and output folder cleanup, then
-     * attempts to delete the Python script file.
-     * <p>
-     * If the Python script file cannot be deleted due to an I/O error, a
-     * {@link BlackBoxException} is thrown with the error details.
+     * This method deletes the Python script from the filesystem if it exists.
+     * It is intended to be used as part of the cleanup process for Python-based
+     * black boxes. If the deletion process encounters any issues, a
+     * {@link BlackBoxException} is thrown.
      *
-     * @throws BlackBoxException if any error occurs during the deletion process
+     * @throws BlackBoxException if an error occurs while deleting the Python script
      */
     @Override
     protected void cleanBlackBoxFolder() throws BlackBoxException {
-        super.cleanBlackBoxFolder();
 
         // delete python script
         try {
@@ -169,55 +154,72 @@ public abstract class PythonBlackBox extends BlackBox {
     }
 
     /**
-     * Executes the machine learning script for the Python-based black box.
+     * Runs the machine learning script.
      * <p>
-     * This method constructs a command to either run the script using Spark or Python,
-     * depending on whether the black box is configured as a PySpark application.
-     * The input paths, output path, and model path are passed as arguments to the script.
+     * This method overrides the base class implementation to execute the Python-based
+     * machine learning script. It uses the Apache Spark's {@link PythonRunner} to
+     * execute the script with the input paths, output path, and model path as
+     * command-line arguments.
      * <p>
-     * If the script execution fails, a {@link BlackBoxException} is thrown with the error details.
+     * If the script execution fails due to any exception, a {@link BlackBoxException}
+     * is thrown with the error details.
      *
-     * @throws BlackBoxException if an error occurs while running the machine learning script
+     * @throws BlackBoxException if an error occurs during the script execution
      */
     @Override
     protected void runML() throws BlackBoxException {
-        // command building
-        ProcessBuilder processBuilder;
-        if (pysparkApp) {
-            processBuilder = new ProcessBuilder("spark-submit", pythonScriptPath,
-                    inputPaths, outputPath, modelPath);
-        } else {
-            processBuilder = new ProcessBuilder("python3", pythonScriptPath,
-                    inputPaths, outputPath, modelPath);
-        }
 
-        // command execution
         try {
             logger.info("Running ML script...");
-            runCommand(processBuilder);
-        } catch (BlackBoxException e) {
+            PythonRunner.main(new String[]{pythonScriptPath, pythonScriptPath, inputs, output, modelPath});
+        } catch (Exception e) {
             throw new BlackBoxException("Error running ML script", e);
         }
     }
 
     /**
-     * Post-processing step to be executed after the machine learning script has completed.
+     * Reads the output of the machine learning script and returns it as a Spark
+     * Dataset<Row>.
      * <p>
-     * This implementation opens a Spark session by invoking the {@link #openSession()} method.
-     * Subclasses can override this method to perform any additional post-processing tasks.
+     * This method reads the output of the machine learning script from a temporary
+     * view and returns it as a Spark Dataset<Row>. The output view name is given
+     * as a string argument.
+     * <p>
+     * The method should return a Spark Dataset containing the output of the
+     * machine learning script. The schema of the returned Dataset should match
+     * the schema of the output Dataset as specified in the configuration.
+     * <p>
+     * The method should throw a BlackBoxException if any error occurs while
+     * reading the output.
+     *
+     * @param outputInfo the name of the output view
+     * @return the output of the machine learning script as a Spark Dataset
+     * @throws BlackBoxException if an error occurs while reading the output
      */
     @Override
-    protected void postRunning() {
-        openSession();
+    protected Dataset<Row> readOutput(String outputInfo) throws BlackBoxException {
+
+        logger.info("Reading output from view: {}", outputInfo);
+        SparkSession sparkSession = SparkSession.getActiveSession().get();
+        String query = "SELECT * FROM " + outputInfo;
+        return sparkSession.sql(query);
     }
 
     /**
-     * Opens a Spark session.
+     * Saves the given dataset as a temporary view.
      * <p>
-     * This method creates a Spark session using the configuration defined in
-     * {@link #sparkConf} and stores it in a local variable.
+     * This method makes the given dataset accessible to the machine learning
+     * script by saving it as a temporary view. The view name is given as a
+     * string argument.
+     *
+     * @param dataset   the dataset to be saved as a view
+     * @param inputInfo the name of the view
+     * @throws BlackBoxException if an error occurs during the saving process
      */
-    private void openSession() {
-        SparkSession.builder().config(sparkConf).getOrCreate();
+    @Override
+    protected void makeDatasetAccessible(Dataset<Row> dataset, String inputInfo) throws BlackBoxException {
+
+        logger.info("Saving dataset to view: {}", inputInfo);
+        dataset.createOrReplaceTempView(inputInfo);
     }
 }

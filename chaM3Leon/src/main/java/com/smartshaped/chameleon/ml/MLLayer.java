@@ -128,7 +128,7 @@ public abstract class MLLayer {
 
             logger.info("Starting {}", blackBox.getClass().getName());
 
-            blackBox.start(sedona, datasets);
+            blackBox.start(datasets);
 
             if (this.modelSaver != null && blackBox.getPredictions() != null) {
                 modelSaver.saveModel(blackBox);
