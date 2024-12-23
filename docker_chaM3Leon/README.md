@@ -1,10 +1,10 @@
 # How to Run a Spark Application on YARN and View Logs
 
-1. **Create a `/jars` Directory in `docker_sp_had`**  
-   - Create a directory named `/jars` in `docker_sp_had`.
+1. **Create a `/jars` Directory in `docker_chaM3Leon`**  
+   - Create a directory named `/jars` in `docker_chaM3Leon`.
 
 2. **Copy the Application JAR**  
-   - Place the application `.jar` file inside the `docker_sp_had/jars` directory.
+   - Place the application `.jar` file inside the `docker_chaM3Leon/jars` directory.
 
 3. **Build the Docker Environment**  
    - Run the following command:  
@@ -21,13 +21,13 @@
 5. **Insert Hadoop's XML Configurations into Spark Master**  
    - Copy Hadoop configurations from the NameNode to your local directory:  
      ```bash
-     docker cp docker_sp_had-namenode-1:/opt/hadoop/etc/hadoop/. ./hadoop
+     docker cp docker_chaM3Leon-namenode-1:/opt/hadoop/etc/hadoop/. ./hadoop
      ```
 
 6. **Copy Spark JARs into Hadoop**  
    - Transfer Spark JARs from the Spark Master to Hadoop:  
      ```bash
-     docker cp docker_sp_had-spark-master-1:/opt/bitnami/spark/jars/. ./spark_jars
+     docker cp docker_chaM3Leon-spark-master-1:/opt/bitnami/spark/jars/. ./spark_jars
      ```
 
 7. **Set Up HDFS Directories for Spark JARs and Logs**  
