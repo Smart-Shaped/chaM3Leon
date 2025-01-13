@@ -53,6 +53,3 @@ build/
 ## cassandra workbench
 .cassandraWorkbench.jsonc
 /.cassandraWorkbench
-/docker_chaM3Leon/hadoop
-/docker_chaM3Leon/spark_jars
-/docker_chaM3Leon/jars
