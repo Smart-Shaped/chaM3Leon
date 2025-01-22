@@ -125,6 +125,51 @@ ml:
     class: "com.smartshaped.chameleon.ml.PipelineExample"
   modelSaver:
     class: "com.smartshaped.chameleon.ml.ModelSaverExample"
+harvester:
+  RequestHandler: "default"
+  downloader:
+    DownloaderTwoExample:
+      params:
+        variables: "var1, var2"
+    DownloaderExample:
+      params:
+        start: "20100101"
+        end: "20100201"
+        community: "ag"
+        parameters: "par1,par2,par3"
+        header: "true"
+        time-standard: "lst"
+        site-elevation: "0"
+      url:
+        schema: "https"
+        authority: "super.auth"
+        path: "/api/some/path"
+  preprocessor:
+    TifRescalerPreprocessor:
+      params:
+        splittingFactorX: "64"
+        splittingFactorY: "64"
+        rescalingFactorX: "0.01"
+        rescalingFactorY: "0.01"
+    HarvesterExample:
+      params:
+        splittingFactorX: "64"
+        splittingFactorY: "64"
+        rescalingFactorX: "0.01"
+        rescalingFactorY: "0.01"
+  harvesters:
+    harvester1:
+      inputPath: ""
+      class: "com.smartshaped.chameleon.harvester.HarvesterExample"
+      downloader:
+          class: "com.smartshaped.chameleon.harvester.DownloaderExample"
+      transformer: "com.smartshaped.chameleon.harvester.TransformerExample"
+      preprocessor: "com.smartshaped.chameleon.harvester.PreprocessorExample"
+      saver:
+        class: "HarvesterSaver"
+        path: "/some/path"
+        checkpoint: ""
+    harvester2:
 test:
   spark:
     master: "local[*]"

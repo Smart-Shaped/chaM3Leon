@@ -207,4 +207,3 @@ ml:
     keyspace:
       name: "ml_keyspace"
       replication_factor: 1
-

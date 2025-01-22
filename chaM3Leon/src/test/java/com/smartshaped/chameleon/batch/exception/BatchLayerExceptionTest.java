@@ -47,4 +47,5 @@ class BatchLayerExceptionTest {
 			throw new BatchLayerException(new RuntimeException("Test exception"));
 		});
 	}
+
 }

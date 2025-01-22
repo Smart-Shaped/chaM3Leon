@@ -15,8 +15,33 @@ public class RequestValidator {
      */
 	public boolean isRequestValid(Request request) {
 
-        return !request.getContent().isBlank() && !request.getHarvesterIds().isBlank();
+        if (request == null) {
+            return false;
+        }
 
+        if (request.getId() == null) {
+            return false;
+        }
+
+        if (request.getState() == null || request.getState().isBlank()) {
+            return false;
+        }
+        String state = request.getState().toLowerCase();
+        if (!state.equals("completed") && !state.equals("false") && !state.equals("error")) {
+            return false;
+        }
+
+        if (request.getContent() == null || request.getContent().isBlank()) {
+            return false;
+        }
+
+        if (request.getHarvesterIds() == null || request.getHarvesterIds().isBlank()) {
+            return false;
+        }
+
+        return true;
     }
+
+
 
 }

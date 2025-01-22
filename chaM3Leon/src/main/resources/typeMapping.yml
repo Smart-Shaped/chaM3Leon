@@ -1,4 +1,5 @@
 typeMapping:
+  UUID: "uuid"
   int: "int"
   Integer: "int"
   String: "text"

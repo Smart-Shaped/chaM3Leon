@@ -61,31 +61,32 @@ class BatchUpdaterTest {
 
 	@Test
     void testStartUpdateSuccess() throws ConfigurationException, CassandraException {
-    	
+
     	when(configurationUtils.getModelClassName()).thenReturn(modelName);
     	when(configurationUtils.createTableModel(modelName)).thenReturn(tableModel);
     	doNothing().when(cassandraUtils).validateTableModel(tableModel);
     	when(dataFrame.writeStream()).thenReturn(mockDataStreamWriter);
     	when(mockDataStreamWriter.foreachBatch(any(VoidFunction2.class))).thenReturn(mockDataStreamWriter);
     	when(mockDataStreamWriter.trigger(any())).thenReturn(mockDataStreamWriter);
-    	
+
 	    try (MockedStatic<BatchConfigurationUtils> mockedStatic = mockStatic(BatchConfigurationUtils.class)) {
 	        mockedStatic.when(BatchConfigurationUtils::getBatchConf).thenReturn(configurationUtils);
 	        try (MockedStatic<CassandraUtils> mockedStaticCassandra = mockStatic(CassandraUtils.class)) {
 	        	mockedStaticCassandra.when(() -> CassandraUtils.getCassandraUtils(configurationUtils)).thenReturn(cassandraUtils);
-	        
+
 	        	when(sparkSession.streams()).thenReturn(streamingQueryManager);
-	        	
+
 	        	BatchUpdaterTestClass batchUpdater = new BatchUpdaterTestClass();
 	        	assertDoesNotThrow(() -> batchUpdater.startUpdate(dataFrame,sparkSession,30000L));
-	        
+
 	        }
 	    }
+
     }
 
 	@Test
     void testStartUpdateTimeoutFailure() throws ConfigurationException, CassandraException, StreamingQueryException {
-    	
+
     	when(configurationUtils.getModelClassName()).thenReturn(modelName);
     	when(configurationUtils.createTableModel(modelName)).thenReturn(tableModel);
     	doNothing().when(cassandraUtils).validateTableModel(tableModel);
@@ -94,22 +95,22 @@ class BatchUpdaterTest {
     	when(mockDataStreamWriter.trigger(any())).thenReturn(mockDataStreamWriter);
     	when(sparkSession.streams()).thenReturn(streamingQueryManager);
     	doThrow(StreamingQueryException.class).when(streamingQueryManager).awaitAnyTermination();
-    	
+
 	    try (MockedStatic<BatchConfigurationUtils> mockedStatic = mockStatic(BatchConfigurationUtils.class)) {
 	        mockedStatic.when(BatchConfigurationUtils::getBatchConf).thenReturn(configurationUtils);
 	        try (MockedStatic<CassandraUtils> mockedStaticCassandra = mockStatic(CassandraUtils.class)) {
 	        	mockedStaticCassandra.when(() -> CassandraUtils.getCassandraUtils(configurationUtils)).thenReturn(cassandraUtils);
-	        		
+
 	        	BatchUpdaterTestClass batchUpdater = new BatchUpdaterTestClass();
 	        	assertThrows(BatchUpdaterException.class,() -> batchUpdater.startUpdate(dataFrame,sparkSession,30000L));
-	        
+
 	        }
 	    }
     }
 
 	@Test
     void testStartUpdateStreamingFailure() throws ConfigurationException, CassandraException, TimeoutException {
-    	
+
     	when(configurationUtils.getModelClassName()).thenReturn(modelName);
     	when(configurationUtils.createTableModel(modelName)).thenReturn(tableModel);
     	doNothing().when(cassandraUtils).validateTableModel(tableModel);
@@ -117,12 +118,12 @@ class BatchUpdaterTest {
     	when(mockDataStreamWriter.foreachBatch(any(VoidFunction2.class))).thenReturn(mockDataStreamWriter);
     	when(mockDataStreamWriter.trigger(any())).thenReturn(mockDataStreamWriter);
     	when(mockDataStreamWriter.start()).thenThrow(TimeoutException.class);
-    	
+
 	    try (MockedStatic<BatchConfigurationUtils> mockedStatic = mockStatic(BatchConfigurationUtils.class)) {
 	        mockedStatic.when(BatchConfigurationUtils::getBatchConf).thenReturn(configurationUtils);
 	        try (MockedStatic<CassandraUtils> mockedStaticCassandra = mockStatic(CassandraUtils.class)) {
 	        	mockedStaticCassandra.when(() -> CassandraUtils.getCassandraUtils(configurationUtils)).thenReturn(cassandraUtils);
-	        	
+
 	        	BatchUpdaterTestClass batchUpdater = new BatchUpdaterTestClass();
 	        	assertThrows(BatchUpdaterException.class,() -> batchUpdater.startUpdate(dataFrame,sparkSession,30000L));
 	        }
@@ -131,95 +132,95 @@ class BatchUpdaterTest {
 
 	@Test
     void testSaveBatchSuccess() throws ConfigurationException, CassandraException {
-    	
+
     	when(configurationUtils.getModelClassName()).thenReturn(modelName);
     	when(configurationUtils.createTableModel(modelName)).thenReturn(tableModel);
     	doNothing().when(cassandraUtils).validateTableModel(tableModel);
-        
+
 		try (MockedStatic<BatchConfigurationUtils> mockedStatic = mockStatic(BatchConfigurationUtils.class)) {
 		    mockedStatic.when(BatchConfigurationUtils::getBatchConf).thenReturn(configurationUtils);
 		    try (MockedStatic<CassandraUtils> mockedStaticCassandra = mockStatic(CassandraUtils.class)) {
 		    	mockedStaticCassandra.when(() -> CassandraUtils.getCassandraUtils(configurationUtils)).thenReturn(cassandraUtils);
-		    	
+
 		    	BatchUpdaterTestClass batchUpdater = new BatchUpdaterTestClass();
 		    	assertDoesNotThrow(() -> batchUpdater.saveBatch(dataFrame));
-		    
+
 		    }
 		}
     }
 
 	@Test
     void testGetCassandraUtilsSuccess() throws ConfigurationException, CassandraException {
-    	
+
     	when(configurationUtils.getModelClassName()).thenReturn(modelName);
     	when(configurationUtils.createTableModel(modelName)).thenReturn(tableModel);
     	doNothing().when(cassandraUtils).validateTableModel(tableModel);
-    	
+
 	    try (MockedStatic<BatchConfigurationUtils> mockedStatic = mockStatic(BatchConfigurationUtils.class)) {
 	        mockedStatic.when(BatchConfigurationUtils::getBatchConf).thenReturn(configurationUtils);
 	        try (MockedStatic<CassandraUtils> mockedStaticCassandra = mockStatic(CassandraUtils.class)) {
 	        	mockedStaticCassandra.when(() -> CassandraUtils.getCassandraUtils(configurationUtils)).thenReturn(cassandraUtils);
-	        	
+
 	        	BatchUpdaterTestClass batchUpdater = new BatchUpdaterTestClass();
 	        	assertDoesNotThrow(() -> batchUpdater.getCassandraUtils());
-	        
+
 	        }
 	    }
     }
 
 	@Test
     void testGetConfigurationUtilsSuccess() throws ConfigurationException, CassandraException {
-    	
+
     	when(configurationUtils.getModelClassName()).thenReturn(modelName);
     	when(configurationUtils.createTableModel(modelName)).thenReturn(tableModel);
     	doNothing().when(cassandraUtils).validateTableModel(tableModel);
-    	
+
 	    try (MockedStatic<BatchConfigurationUtils> mockedStatic = mockStatic(BatchConfigurationUtils.class)) {
 	        mockedStatic.when(BatchConfigurationUtils::getBatchConf).thenReturn(configurationUtils);
 	        try (MockedStatic<CassandraUtils> mockedStaticCassandra = mockStatic(CassandraUtils.class)) {
 	        	mockedStaticCassandra.when(() -> CassandraUtils.getCassandraUtils(configurationUtils)).thenReturn(cassandraUtils);
-	        	
+
 	        	BatchUpdaterTestClass batchUpdater = new BatchUpdaterTestClass();
 	        	assertDoesNotThrow(() -> batchUpdater.getConfigurationUtils());
-	        
+
 	        }
 	    }
     }
 
 	@Test
     void testGetModelNameSuccess() throws ConfigurationException, CassandraException {
-    	
+
     	when(configurationUtils.getModelClassName()).thenReturn(modelName);
     	when(configurationUtils.createTableModel(modelName)).thenReturn(tableModel);
     	doNothing().when(cassandraUtils).validateTableModel(tableModel);
-    	
+
 	    try (MockedStatic<BatchConfigurationUtils> mockedStatic = mockStatic(BatchConfigurationUtils.class)) {
 	        mockedStatic.when(BatchConfigurationUtils::getBatchConf).thenReturn(configurationUtils);
 	        try (MockedStatic<CassandraUtils> mockedStaticCassandra = mockStatic(CassandraUtils.class)) {
 	        	mockedStaticCassandra.when(() -> CassandraUtils.getCassandraUtils(configurationUtils)).thenReturn(cassandraUtils);
-	        	
+
 	        	BatchUpdaterTestClass batchUpdater = new BatchUpdaterTestClass();
 	        	assertDoesNotThrow(() -> batchUpdater.getModelName());
-	        
+
 	        }
 	    }
     }
 
 	@Test
     void testGetTableModelSuccess() throws ConfigurationException, CassandraException {
-    	
+
     	when(configurationUtils.getModelClassName()).thenReturn(modelName);
     	when(configurationUtils.createTableModel(modelName)).thenReturn(tableModel);
     	doNothing().when(cassandraUtils).validateTableModel(tableModel);
-    	
+
 	    try (MockedStatic<BatchConfigurationUtils> mockedStatic = mockStatic(BatchConfigurationUtils.class)) {
 	        mockedStatic.when(BatchConfigurationUtils::getBatchConf).thenReturn(configurationUtils);
 	        try (MockedStatic<CassandraUtils> mockedStaticCassandra = mockStatic(CassandraUtils.class)) {
 	        	mockedStaticCassandra.when(() -> CassandraUtils.getCassandraUtils(configurationUtils)).thenReturn(cassandraUtils);
-	        	
+
 	        	BatchUpdaterTestClass batchUpdater = new BatchUpdaterTestClass();
 	        	assertDoesNotThrow(() -> batchUpdater.getTableModel());
-	        
+
 	        }
 	    }
     }

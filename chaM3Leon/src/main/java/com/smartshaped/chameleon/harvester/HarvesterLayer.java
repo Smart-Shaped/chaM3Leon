@@ -3,6 +3,7 @@ package com.smartshaped.chameleon.harvester;
 import com.smartshaped.chameleon.common.exception.CassandraException;
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.harvester.exception.HarvesterException;
+import com.smartshaped.chameleon.harvester.exception.HarvesterLayerException;
 import com.smartshaped.chameleon.harvester.request.Request;
 import com.smartshaped.chameleon.harvester.request.RequestHandler;
 import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
@@ -32,11 +33,17 @@ public class HarvesterLayer {
 
     protected HarvesterConfigurationUtils configurationUtils;
     protected SparkSession sparkSession;
+    protected RequestHandler handler;
+    protected List<Harvester> harvesters;
 
-    public HarvesterLayer() throws ConfigurationException {
+    public HarvesterLayer() throws ConfigurationException, CassandraException {
 
         configurationUtils = HarvesterConfigurationUtils.getHarvesterConf();
         logger.info("Harvester configurations correctly loaded");
+        handler = configurationUtils.getRequestHandler();
+        logger.info("Request handler correctly loaded");
+        harvesters = configurationUtils.getHarvesters();
+        logger.info("Harvesters list correctly loaded");
 
         try {
             logger.info("Loading configuration for spark session...");
@@ -64,16 +71,14 @@ public class HarvesterLayer {
      * @throws CassandraException     If there is an error when interacting with Cassandra
      * @throws HarvesterException     If there is an error during the harvesting process
      */
-    public void start() throws ConfigurationException, HdfsReaderException, CassandraException, HarvesterException {
-        RequestHandler handler = configurationUtils.getRequestHandler();
-        Request[] requests = handler.getRequest();
-        List<Harvester> harvesters = configurationUtils.getHarvesters();
+    public void start() throws ConfigurationException, HdfsReaderException, CassandraException, HarvesterLayerException {
 
+        Request[] requests = handler.getRequest();
         String state = "";
         List<Harvester> filteredHarvesters;
 
         for (Request request : requests) {
-            logger.info("Processing request: {}", request.toString());
+            logger.info("Processing request: {}", request);
             try {
                 filteredHarvesters = filterHarvesters(harvesters, request);
                 for (Harvester harvester : filteredHarvesters) {
@@ -83,7 +88,7 @@ public class HarvesterLayer {
                 state = "completed";
             } catch (HarvesterException | PreprocessorException e) {
                 state = "error";
-                throw new HarvesterException("Error during the request: " + request);
+                throw new HarvesterLayerException("Error during the request: " + request + "/n Caused by : " + e.getMessage());
             } finally {
                 handler.updateRequestState(request, state);
             }

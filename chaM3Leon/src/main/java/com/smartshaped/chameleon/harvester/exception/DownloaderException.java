@@ -3,11 +3,11 @@ package com.smartshaped.chameleon.harvester.exception;
 public class DownloaderException extends Exception {
 
     public DownloaderException(String message) {
-        super("Exception related to Downloader. Caused by: \n" + message);
+        super("Exception in the Downloader. Caused by: \n" + message);
     }
 
     public DownloaderException(Throwable err) {
-        super("Exception related to Downloader. Caused by : \n" + err.getMessage(), err);
+        super("Exception in the Downloader. Caused by : \n" + err.getMessage(), err);
     }
 
     public DownloaderException(String errMessage, Throwable err) {

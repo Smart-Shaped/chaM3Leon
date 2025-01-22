@@ -64,7 +64,6 @@ public abstract class Harvester {
      * @throws PreprocessorException If there is an error during the preprocessing step.
      */
     public void execute(Request req) throws HarvesterException, PreprocessorException {
-
         List<String> paramList = extractParams(req);
         logger.info("Extracted params: {}", paramList);
 
@@ -100,8 +99,6 @@ public abstract class Harvester {
             }
         } catch (DownloaderException | ConfigurationException e) {
             throw new HarvesterException("Error downloading or transforming data.");
-        } catch (ClassCastException e) {
-            throw new HarvesterException("Mismatch between downloader and transformer.");
         }
 
         return df;
@@ -115,7 +112,11 @@ public abstract class Harvester {
      * @throws PreprocessorException If there is an error during the preprocessing step.
      */
     public Dataset<Row> process(Dataset<Row> data) throws PreprocessorException {
-        return preprocessor.preprocess(data);
+        if (preprocessor == null) {
+            return data;
+        } else {
+            return preprocessor.preprocess(data);
+        }
     }
 
     /**

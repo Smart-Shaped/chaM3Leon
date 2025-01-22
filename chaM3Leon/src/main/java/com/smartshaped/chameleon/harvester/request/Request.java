@@ -17,6 +17,8 @@ public class Request extends TableModel{
 	String state;
 	String content;
 	String harvesterIds;
+
+
 	@Override
 	protected String choosePrimaryKey() {
 		return "id";
