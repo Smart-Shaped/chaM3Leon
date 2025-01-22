@@ -3,10 +3,10 @@ package com.smartshaped.chameleon.ml;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
+import com.smartshaped.chameleon.common.exception.CassandraException;
+import com.smartshaped.chameleon.ml.blackBox.BlackBox;
 import org.apache.spark.ml.Model;
 import org.apache.spark.ml.util.MLWritable;
 import org.apache.spark.ml.util.MLWriter;
@@ -35,6 +35,8 @@ class ModelSaverTest {
 	TableModel tableModel;
 	@Mock
 	Pipeline pipeline;
+	@Mock
+	BlackBox blackBox;
 	Model model;
 	@Mock
 	MLWriter mlWriter;
@@ -103,6 +105,32 @@ class ModelSaverTest {
 
 				assertDoesNotThrow(() -> modelSaver.saveModel(pipeline));
 			}
+		}
+	}
+
+	@Test
+	void testSaveModelBlackBoxSuccess() throws ConfigurationException {
+		when(blackBox.getPredictions()).thenReturn(predictions);
+
+		try (MockedStatic<CassandraUtils> mockedStatic = mockStatic(CassandraUtils.class)) {
+
+			mockedStatic.when(() -> CassandraUtils.getCassandraUtils(any())).thenReturn(cassandraUtils);
+			ModelSaverExample modelSaver = new ModelSaverExample();
+			assertDoesNotThrow(() -> modelSaver.saveModel(blackBox));
+		}
+	}
+
+	@Test
+	void testSaveModelBlackBoxFailure() throws ConfigurationException, CassandraException {
+		when(blackBox.getPredictions()).thenReturn(predictions);
+
+		try (MockedStatic<CassandraUtils> mockedStatic = mockStatic(CassandraUtils.class)) {
+
+			mockedStatic.when(() -> CassandraUtils.getCassandraUtils(any())).thenReturn(cassandraUtils);
+			doThrow(CassandraException.class).when(cassandraUtils).saveDF(any(), any());
+
+			ModelSaverExample modelSaver = new ModelSaverExample();
+			assertThrows(ModelSaverException.class,(() -> modelSaver.saveModel(blackBox)));
 		}
 	}
 }

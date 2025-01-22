@@ -11,6 +11,8 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.ml.blackBox.BlackBox;
 import org.apache.sedona.spark.SedonaContext;
 import org.apache.spark.SparkConf;
 import org.apache.spark.sql.Dataset;
@@ -38,6 +40,8 @@ class MLLayerTest {
 	@Mock
 	Pipeline pipeline;
 	@Mock
+	BlackBox blackBox;
+	@Mock
 	ModelSaver modelSaver;
 	@Mock
 	MLConfigurationUtils configurationUtils;
@@ -49,6 +53,8 @@ class MLLayerTest {
 	Dataset<Row> predictions;
 	@Mock
 	CassandraUtils cassandraUtils;
+	@Mock
+	SparkConf sparkConf;
 
 	@BeforeEach
 	void setUp() {
@@ -56,13 +62,18 @@ class MLLayerTest {
 	}
 
 	@Test
-	void testConstructorSuccess() {
+	void testConstructorSuccess() throws ConfigurationException {
 
-		try (MockedStatic<SedonaContext> mockedStatic = mockStatic(SedonaContext.class)) {
+		try (MockedStatic<SedonaContext> mockedStatic = mockStatic(SedonaContext.class);
+			 MockedStatic<MLConfigurationUtils> mockedMlConfig = mockStatic(MLConfigurationUtils.class);) {
 
 			mockedStatic.when(SedonaContext::builder).thenReturn(builder);
 			when(builder.config(any(SparkConf.class))).thenReturn(builder);
 			when(builder.getOrCreate()).thenReturn(sedona);
+
+			mockedMlConfig.when(MLConfigurationUtils::getMlConf).thenReturn(configurationUtils);
+			when(configurationUtils.getPipeline()).thenReturn(pipeline);
+			when(configurationUtils.getSparkConf()).thenReturn(sparkConf);
 
 			mockedStatic.when(() -> SedonaContext.create(sedona)).thenReturn(sedona);
 
@@ -71,13 +82,37 @@ class MLLayerTest {
 	}
 
 	@Test
-	void testConstructorFailure() {
+	void testConstructorFailureSparkSessionCreation() {
 
 		assertThrows(MLLayerException.class, CustomMlLayer::new);
 	}
 
 	@Test
-    void testStartSuccess() {
+	void testConstructorFailureBothMLNull() throws ConfigurationException {
+
+		try (MockedStatic<MLConfigurationUtils> mockedStatic = mockStatic(MLConfigurationUtils.class)) {
+
+			mockedStatic.when(MLConfigurationUtils::getMlConf).thenReturn(configurationUtils);
+			when(configurationUtils.getPipeline()).thenReturn(null);
+			when(configurationUtils.getBlackBox()).thenReturn(null);
+			assertThrows(MLLayerException.class, CustomMlLayer::new);
+		}
+	}
+
+	@Test
+	void testConstructorFailureBothMLNotNull() throws ConfigurationException {
+
+		try (MockedStatic<MLConfigurationUtils> mockedStatic = mockStatic(MLConfigurationUtils.class)) {
+
+			mockedStatic.when(MLConfigurationUtils::getMlConf).thenReturn(configurationUtils);
+			when(configurationUtils.getPipeline()).thenReturn(pipeline);
+			when(configurationUtils.getBlackBox()).thenReturn(blackBox);
+			assertThrows(MLLayerException.class, CustomMlLayer::new);
+		}
+	}
+
+	@Test
+    void testStartWithPipelineSuccess() {
 
         when(pipeline.getPredictions()).thenReturn(predictions);
 
@@ -96,6 +131,67 @@ class MLLayerTest {
             assertDoesNotThrow(() -> mlLayer.start());
         }
     }
+
+	@Test
+	void testStartWithPipelineMissingModelSaver() {
+
+		readerList = new ArrayList<>();
+		readerList.add(reader);
+
+		mlLayer.setReaderList(readerList);
+		mlLayer.setSedona(sedona);
+		mlLayer.setPipeline(pipeline);
+		mlLayer.setModelSaver(null);
+
+		try (MockedStatic<CassandraUtils> mockedStatic = mockStatic(CassandraUtils.class)) {
+
+			mockedStatic.when(() -> CassandraUtils.getCassandraUtils(any())).thenReturn(cassandraUtils);
+
+			assertDoesNotThrow(() -> mlLayer.start());
+		}
+	}
+
+	@Test
+	void testStartWithBlackBoxSuccess() {
+
+		when(blackBox.getPredictions()).thenReturn(predictions);
+
+		readerList = new ArrayList<>();
+		readerList.add(reader);
+
+		mlLayer.setReaderList(readerList);
+		mlLayer.setSedona(sedona);
+		mlLayer.setPipeline(null);
+		mlLayer.setBlackBox(blackBox);
+		mlLayer.setModelSaver(modelSaver);
+
+		try (MockedStatic<CassandraUtils> mockedStatic = mockStatic(CassandraUtils.class)) {
+
+			mockedStatic.when(() -> CassandraUtils.getCassandraUtils(any())).thenReturn(cassandraUtils);
+
+			assertDoesNotThrow(() -> mlLayer.start());
+		}
+	}
+
+	@Test
+	void testStartWithBlackBoxMissingModelSaver() {
+
+		readerList = new ArrayList<>();
+		readerList.add(reader);
+
+		mlLayer.setReaderList(readerList);
+		mlLayer.setSedona(sedona);
+		mlLayer.setPipeline(null);
+		mlLayer.setBlackBox(blackBox);
+		mlLayer.setModelSaver(null);
+
+		try (MockedStatic<CassandraUtils> mockedStatic = mockStatic(CassandraUtils.class)) {
+
+			mockedStatic.when(() -> CassandraUtils.getCassandraUtils(any())).thenReturn(cassandraUtils);
+
+			assertDoesNotThrow(() -> mlLayer.start());
+		}
+	}
 
 	@Test
 	void testStartSuccessNoOptionalParameters() {

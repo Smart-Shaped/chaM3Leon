@@ -121,6 +121,13 @@ ml:
     keyspace:
       name: "test"
       replication_factor: 1
+  blackBox:
+    class: "com.smartshaped.chameleon.ml.blackBox.PythonBlackBoxExample"
+    inputs: "input"
+    output: "output"
+    modelPath: "model_path"
+    pythonScriptPath: "path/script.py"
+    pythonLibraries: "library1,library2"
   pipeline:
     class: "com.smartshaped.chameleon.ml.PipelineExample"
   modelSaver:
