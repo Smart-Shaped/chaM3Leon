@@ -5,11 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -17,6 +15,7 @@ import org.apache.spark.sql.SparkSession;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -40,6 +39,18 @@ class HdfsReaderTest {
 	void testConstructor() {
 
 		assertDoesNotThrow(CustomReader::new);
+	}
+
+	@Test
+	void testConstructorFailure() {
+
+		try (MockedStatic<MLConfigurationUtils> mockedStatic = mockStatic(MLConfigurationUtils.class)) {
+			mockedStatic.when(MLConfigurationUtils::getMlConf).thenReturn(configurationUtils);
+			when(configurationUtils.getHDFSPath(anyString())).thenReturn("");
+
+			assertThrows(ConfigurationException.class, CustomReader::new);
+		}
+
 	}
 
 	@Test

@@ -1,8 +1,17 @@
 package com.smartshaped.chameleon.ml;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.smartshaped.chameleon.common.exception.CassandraException;
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.CassandraUtils;
+import com.smartshaped.chameleon.ml.blackBox.BlackBox;
+import com.smartshaped.chameleon.ml.blackBox.exception.BlackBoxException;
+import com.smartshaped.chameleon.ml.exception.HdfsReaderException;
+import com.smartshaped.chameleon.ml.exception.MLLayerException;
+import com.smartshaped.chameleon.ml.exception.ModelSaverException;
+import com.smartshaped.chameleon.ml.exception.PipelineException;
+import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.sedona.spark.SedonaContext;
@@ -11,17 +20,8 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
-import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.common.utils.CassandraUtils;
-import com.smartshaped.chameleon.ml.exception.HdfsReaderException;
-import com.smartshaped.chameleon.ml.exception.MLLayerException;
-import com.smartshaped.chameleon.ml.exception.ModelSaverException;
-import com.smartshaped.chameleon.ml.exception.PipelineException;
-import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
-
-import lombok.Getter;
-import lombok.Setter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Abstract class for the entry point of the machine learning layer;
@@ -38,7 +38,7 @@ public abstract class MLLayer {
     private ModelSaver modelSaver;
     private SparkSession sedona;
     private MLConfigurationUtils configurationUtils;
-
+    private BlackBox blackBox;
 
     protected MLLayer() throws ConfigurationException, MLLayerException {
 
@@ -46,6 +46,17 @@ public abstract class MLLayer {
         this.setReaderList(this.configurationUtils.getHdfsReaders());
         this.setPipeline(this.configurationUtils.getPipeline());
         this.setModelSaver(this.configurationUtils.getModelSaver());
+        this.setBlackBox(this.configurationUtils.getBlackBox());
+
+        logger.info(pipeline == null ? "Pipeline is null" : "Pipeline is not null");
+        logger.info(blackBox == null ? "BlackBox is null" : "BlackBox is not null");
+
+        // one between pipeline and blackbox must be not null
+        if (this.pipeline == null && this.blackBox == null) {
+            throw new MLLayerException("Pipeline and BlackBox cannot be null at the same time");
+        } else if (this.pipeline != null && this.blackBox != null) {
+            throw new MLLayerException("Pipeline and BlackBox cannot be not null at the same time");
+        }
 
         SparkConf sedonaConf = this.configurationUtils.getSparkConf();
 
@@ -63,22 +74,30 @@ public abstract class MLLayer {
         }
     }
 
-
     /**
-     * Start the MLLayer.
-     * <p>
-     * This method will start all the HDFSReaders configured in the ml configuration.
-     * After all the HDFSReaders have been started, it will start the configured Pipeline
-     * and then save the model to HDFS using the configured ModelSaver.
+     * Starts the machine learning layer process by executing the configured HDFS readers,
+     * pipelines, and black box components.
      *
-     * @throws MLLayerException       if any of the HDFSReaders fail to start
-     * @throws HdfsReaderException    if any of the HDFSReaders have an error while running
-     * @throws ModelSaverException    if the ModelSaver has an error while saving the model
-     * @throws ConfigurationException if there is an error with the configuration
-     * @throws CassandraException     if there is an error with Cassandra
-     * @throws PipelineException      if there is an error with the Pipeline
+     * <p>
+     * This method performs the following steps:
+     * <ul>
+     * <li>Executes each HDFS reader to read and process data, storing the results in datasets.</li>
+     * <li>If a pipeline is configured, sets the datasets and starts the pipeline process,
+     * saving the model and predictions if a ModelSaver is available.</li>
+     * <li>If a black box is configured, starts the black box process,
+     * saving the predictions if a ModelSaver is available.</li>
+     * <li>Closes the CassandraUtils connection and stops the Spark session.</li>
+     * </ul>
+     *
+     * @throws MLLayerException       If an error occurs in the ML layer process.
+     * @throws HdfsReaderException    If an error occurs while reading from HDFS.
+     * @throws ModelSaverException    If an error occurs while saving the model or predictions.
+     * @throws ConfigurationException If an error occurs during configuration retrieval.
+     * @throws CassandraException     If an error occurs while interacting with Cassandra.
+     * @throws PipelineException      If an error occurs during pipeline execution.
+     * @throws BlackBoxException      If an error occurs during black box execution.
      */
-    public void start() throws MLLayerException, HdfsReaderException, ModelSaverException, ConfigurationException, CassandraException, PipelineException {
+    public void start() throws MLLayerException, HdfsReaderException, ModelSaverException, ConfigurationException, CassandraException, PipelineException, BlackBoxException {
 
         List<Dataset<Row>> datasets = new ArrayList<>();
 
@@ -91,6 +110,8 @@ public abstract class MLLayer {
 
         if (this.pipeline != null) {
 
+            logger.info("Starting {}", pipeline.getClass().getName());
+
             pipeline.setDatasets(datasets);
             pipeline.start();
 
@@ -99,9 +120,21 @@ public abstract class MLLayer {
             } else {
                 logger.info("Model Saver skipped");
             }
-
         } else {
             logger.info("Pipeline skipped");
+        }
+
+        if (this.blackBox != null) {
+
+            logger.info("Starting {}", blackBox.getClass().getName());
+
+            blackBox.start(datasets);
+
+            if (this.modelSaver != null && blackBox.getPredictions() != null) {
+                modelSaver.saveModel(blackBox);
+            } else {
+                logger.info("Model Saver skipped");
+            }
         }
 
         CassandraUtils cassandraUtils = CassandraUtils.getCassandraUtils(configurationUtils);

@@ -1,17 +1,17 @@
 package com.smartshaped.chameleon.ml.utils;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.ConfigurationUtils;
 import com.smartshaped.chameleon.ml.HdfsReader;
 import com.smartshaped.chameleon.ml.ModelSaver;
 import com.smartshaped.chameleon.ml.Pipeline;
+import com.smartshaped.chameleon.ml.blackBox.BlackBox;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Utility class that extends {@link ConfigurationUtils} for reading configuration files related to ML layer.
@@ -29,6 +29,12 @@ public class MLConfigurationUtils extends ConfigurationUtils {
     private static final String PATH = "path";
     private static final String ROOT = "ml";
     private static final String SEPARATOR = ".";
+    private static final String ML_BLACK_BOX_INPUTS = "ml.blackBox.inputs";
+    private static final String ML_BLACK_BOX_OUTPUT = "ml.blackBox.output";
+    private static final String ML_BLACK_BOX_MODEL_PATH = "ml.blackBox.modelPath";
+    private static final String ML_BLACK_BOX_PYTHON_SCRIPT_PATH = "ml.blackBox.pythonScriptPath";
+    private static final String ML_BLACK_BOX_CLASS = "ml.blackBox.class";
+    private static final String ML_BLACK_BOX_PYTHON_LIBRARIES = "ml.blackBox.pythonLibraries";
 
     private static MLConfigurationUtils configuration;
 
@@ -147,11 +153,10 @@ public class MLConfigurationUtils extends ConfigurationUtils {
     }
 
     /**
-     * Returns an instance of the configured {@link Pipeline} class.
-     *
+     * Returns an instance of the configured {@link Pipeline} class or null if the class name is empty.
      * <p>
-     * The class name is read from the configuration key {@link #ML_PIPELINE_CLASS}. If
-     * the key is not defined, or if the class cannot be instantiated, a
+     * The class name is read from the configuration key {@link #ML_PIPELINE_CLASS}.
+     * If the class is defined but cannot be instantiated, a
      * {@link ConfigurationException} is thrown.
      *
      * @return an instance of the configured {@link Pipeline} class
@@ -163,7 +168,8 @@ public class MLConfigurationUtils extends ConfigurationUtils {
         String pipelineClassName = config.getString(ML_PIPELINE_CLASS, "");
 
         if (pipelineClassName.trim().isEmpty()) {
-            throw new ConfigurationException("Missing or empty configuration for key: " + ML_PIPELINE_CLASS);
+            logger.info("Missing or empty configuration for key: " + ML_PIPELINE_CLASS);
+            return null;
         }
 
         try {
@@ -198,5 +204,92 @@ public class MLConfigurationUtils extends ConfigurationUtils {
         } catch (ConfigurationException e) {
             throw new ConfigurationException("Could not instantiate " + ModelSaver.class + " due to exception", e);
         }
+    }
+
+    /**
+     * Returns an instance of the configured {@link BlackBox} class or null if the class name is empty.
+     * <p>
+     * The class name is read from the configuration key {@link #ML_BLACK_BOX_CLASS}.
+     * If the class is defined but cannot be instantiated, a
+     * {@link ConfigurationException} is thrown.
+     *
+     * @return an instance of the configured {@link BlackBox} class
+     * @throws ConfigurationException if any error occurs while loading the
+     *                                configuration, or if the class cannot be
+     *                                instantiated
+     */
+    public BlackBox getBlackBox() throws ConfigurationException {
+        String blackBoxClassName = config.getString(ML_BLACK_BOX_CLASS, "");
+
+        if (blackBoxClassName.trim().isEmpty()) {
+            logger.info("Missing or empty configuration for key: " + ML_BLACK_BOX_CLASS);
+            return null;
+        }
+
+        try {
+            return loadInstanceOf(blackBoxClassName, BlackBox.class);
+        } catch (ConfigurationException e) {
+            throw new ConfigurationException("Could not instantiate " + BlackBox.class + " due to exception", e);
+        }
+    }
+
+    /**
+     * Returns the comma-separated list of input paths for the BlackBox.
+     * <p>
+     * The value is read from the configuration key {@link #ML_BLACK_BOX_INPUTS}.
+     * If the key is not defined, an empty string is returned.
+     *
+     * @return the input paths for the BlackBox
+     */
+    public String getBlackBoxInputs() {
+        return config.getString(ML_BLACK_BOX_INPUTS, "");
+    }
+
+    /**
+     * Returns the output path for the BlackBox.
+     * <p>
+     * The value is read from the configuration key {@link #ML_BLACK_BOX_OUTPUT}.
+     * If the key is not defined, an empty string is returned.
+     *
+     * @return the output path for the BlackBox
+     */
+    public String getBlackBoxOutput() {
+        return config.getString(ML_BLACK_BOX_OUTPUT, "");
+    }
+
+    /**
+     * Returns the model path for the BlackBox.
+     * <p>
+     * The value is read from the configuration key {@link #ML_BLACK_BOX_MODEL_PATH}.
+     * If the key is not defined, an empty string is returned.
+     *
+     * @return the model path for the BlackBox
+     */
+    public String getBlackBoxModelPath() {
+        return config.getString(ML_BLACK_BOX_MODEL_PATH, "");
+    }
+
+    /**
+     * Returns the Python script path for the PythonBlackBox.
+     * <p>
+     * The value is read from the configuration key {@link #ML_BLACK_BOX_PYTHON_SCRIPT_PATH}.
+     * If the key is not defined, an empty string is returned.
+     *
+     * @return the Python script path for the BlackBox
+     */
+    public String getBlackBoxPythonScriptPath() {
+        return config.getString(ML_BLACK_BOX_PYTHON_SCRIPT_PATH, "");
+    }
+
+    /**
+     * Returns the comma-separated list of Python libraries required by the PythonBlackBox.
+     * <p>
+     * The value is read from the configuration key {@link #ML_BLACK_BOX_PYTHON_LIBRARIES}.
+     * If the key is not defined, an empty string is returned.
+     *
+     * @return the comma-separated list of Python libraries required by the BlackBox
+     */
+    public String getBlackBoxPythonLibraries() {
+        return config.getString(ML_BLACK_BOX_PYTHON_LIBRARIES, "");
     }
 }
