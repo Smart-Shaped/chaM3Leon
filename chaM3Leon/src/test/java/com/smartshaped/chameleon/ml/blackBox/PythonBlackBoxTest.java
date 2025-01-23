@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import scala.Option;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -43,14 +44,22 @@ class PythonBlackBoxTest {
         datasets.add(dataset);
     }
 
+    private void resetSingleton() throws NoSuchFieldException, IllegalAccessException {
+
+        Field instance = MLConfigurationUtils.class.getDeclaredField("configuration");
+        instance.setAccessible(true);
+        instance.set(null, null);
+    }
+
     @Test
     void testConstructor() {
         assertDoesNotThrow(PythonBlackBoxExample::new);
     }
 
     @Test
-    void testExtraPreparation() throws ConfigurationException {
+    void testExtraPreparation() throws ConfigurationException, NoSuchFieldException, IllegalAccessException {
 
+        resetSingleton();
         PythonBlackBoxExample blackBox = new PythonBlackBoxExample();
 
         try (MockedConstruction<JavaSparkContext> mockedConstruction = mockConstruction(JavaSparkContext.class);

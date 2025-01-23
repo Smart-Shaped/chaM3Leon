@@ -22,6 +22,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.smartshaped.chameleon.ml.exception.HdfsReaderException;
 import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
 
+import java.lang.reflect.Field;
+
 @ExtendWith(MockitoExtension.class)
 class HdfsReaderTest {
 
@@ -35,14 +37,25 @@ class HdfsReaderTest {
 	@Mock
 	DataFrameReader dataFrameReader;
 
+	private void resetSingleton() throws NoSuchFieldException, IllegalAccessException {
+
+		Field instance = MLConfigurationUtils.class.getDeclaredField("configuration");
+		instance.setAccessible(true);
+		instance.set(null, null);
+	}
+
 	@Test
-	void testConstructor() {
+	void testConstructor() throws NoSuchFieldException, IllegalAccessException {
+
+		resetSingleton();
 
 		assertDoesNotThrow(CustomReader::new);
 	}
 
 	@Test
-	void testConstructorFailure() {
+	void testConstructorFailure() throws NoSuchFieldException, IllegalAccessException {
+
+		resetSingleton();
 
 		try (MockedStatic<MLConfigurationUtils> mockedStatic = mockStatic(MLConfigurationUtils.class)) {
 			mockedStatic.when(MLConfigurationUtils::getMlConf).thenReturn(configurationUtils);
