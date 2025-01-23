@@ -69,7 +69,6 @@ class ModelSaverTest {
 
 	@Test
 	void testSaveModelModelSaverException() {
-
 		modelSaver = mock(ModelSaver.class, Mockito.CALLS_REAL_METHODS);
 
 		assertThrows(ModelSaverException.class, () -> modelSaver.saveModel(pipeline));

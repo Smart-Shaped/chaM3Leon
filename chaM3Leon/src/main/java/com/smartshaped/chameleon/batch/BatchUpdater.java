@@ -73,10 +73,8 @@ public abstract class BatchUpdater {
 
         try {
             df.writeStream().foreachBatch((streamingBatch, batchId) -> {
-
                         logger.info("Starting batch update...");
                         Dataset<Row> updatedDF = updateBatch(streamingBatch, sparkSession);
-
                         saveBatch(updatedDF);
                     })
                     .trigger(Trigger.ProcessingTime(intervalMs))
