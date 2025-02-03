@@ -26,9 +26,10 @@ import lombok.Setter;
 public abstract class HdfsReader {
 
 	private static final Logger logger = LogManager.getLogger(HdfsReader.class);
-	private String hdfsPath;
-	private Dataset<Row> dataframe;
-	private MLConfigurationUtils configurationUtils;
+	
+	protected String hdfsPath;
+	protected Dataset<Row> dataframe;
+	protected MLConfigurationUtils configurationUtils;
 
 	protected HdfsReader() throws ConfigurationException {
 

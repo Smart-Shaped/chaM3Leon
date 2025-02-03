@@ -25,10 +25,9 @@ public abstract class BlackBox {
     private static final Logger logger = LogManager.getLogger(BlackBox.class);
 
     protected MLConfigurationUtils mlConfigurationUtils;
-
-    protected final String inputs;
-    protected final String output;
-    protected final String modelPath;
+    protected String inputs;
+    protected String output;
+    protected String modelPath;
 
     @Getter
     private Dataset<Row> predictions;

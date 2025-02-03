@@ -23,8 +23,8 @@ public abstract class PythonBlackBox extends BlackBox {
 
     private static final Logger logger = LogManager.getLogger(PythonBlackBox.class);
 
-    private final String pythonScriptPath;
-    private final String pythonLibraries;
+    protected String pythonScriptPath;
+    protected String pythonLibraries;
     public static JavaSparkContext javaSparkContext;
 
     protected PythonBlackBox() throws ConfigurationException {
