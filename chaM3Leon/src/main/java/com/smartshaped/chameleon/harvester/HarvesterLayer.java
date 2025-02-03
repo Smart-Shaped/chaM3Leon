@@ -88,7 +88,7 @@ public class HarvesterLayer {
                 state = "completed";
             } catch (HarvesterException | PreprocessorException e) {
                 state = "error";
-                throw new HarvesterLayerException("Error during the request: " + request + "/n Caused by : " + e.getMessage());
+                throw new HarvesterLayerException("Error during the request: " + request, e);
             } finally {
                 handler.updateRequestState(request, state);
             }

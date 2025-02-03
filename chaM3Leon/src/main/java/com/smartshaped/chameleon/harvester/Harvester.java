@@ -98,7 +98,7 @@ public abstract class Harvester {
                 df = transformer.transform(downloader.download(paramList, req));
             }
         } catch (DownloaderException | ConfigurationException e) {
-            throw new HarvesterException("Error downloading or transforming data.");
+            throw new HarvesterException("Error downloading or transforming data.", e);
         }
 
         return df;
