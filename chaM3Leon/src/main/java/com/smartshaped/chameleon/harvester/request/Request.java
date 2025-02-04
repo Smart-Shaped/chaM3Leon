@@ -11,19 +11,15 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Request extends TableModel{
-	
-	UUID id;
-	String state;
-	String content;
-	String harvesterIds;
+public class Request extends TableModel {
 
+  UUID id;
+  String state;
+  String content;
+  String harvesterIds;
 
-	@Override
-	protected String choosePrimaryKey() {
-		return "id";
-	}
-
-
-
+  @Override
+  protected String choosePrimaryKey() {
+    return "id";
+  }
 }

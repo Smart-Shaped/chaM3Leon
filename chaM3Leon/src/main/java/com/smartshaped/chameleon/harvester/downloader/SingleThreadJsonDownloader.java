@@ -18,43 +18,40 @@ import java.util.List;
 
 public abstract class SingleThreadJsonDownloader extends Downloader<JsonNode> {
 
-    protected static final Logger log = LogManager.getLogger(Harvester.class);
+  protected static final Logger log = LogManager.getLogger(Harvester.class);
 
-    public SingleThreadJsonDownloader() throws ConfigurationException {
-        super();
+  public SingleThreadJsonDownloader() throws ConfigurationException {
+    super();
+  }
+
+  @Override
+  public JsonNode download(List<String> reqParams, Request req) throws DownloaderException {
+    List<String> uriList = createUriList(reqParams);
+    List<HttpResponse<String>> responses = new LinkedList<>();
+    HttpResponse<String> response = null;
+    HttpClient client = HttpClient.newHttpClient();
+    HttpRequest request;
+    for (String uri : uriList) {
+      URI newUri = URI.create(uri);
+      request = HttpRequest.newBuilder().uri(newUri).build();
+      log.info("Request uri:{}", request.uri());
+      try {
+        response = client.send(request, HttpResponse.BodyHandlers.ofString());
+      } catch (IOException | InterruptedException e) {
+        Thread.currentThread().interrupt();
+        throw new DownloaderException(e.getMessage());
+      }
+      if (response.statusCode() != 200) {
+        log.info("Error returned, code:{}", response.statusCode());
+        throw new DownloaderException("Status code returned:" + response.statusCode());
+      }
+      log.info("Response:{}", response.body());
+
+      responses.add(response);
     }
 
-    @Override
-    public JsonNode download(List<String> reqParams, Request req) throws DownloaderException {
-        List<String> uriList = createUriList(reqParams);
-        List<HttpResponse<String>> responses = new LinkedList<>();
-        HttpResponse<String> response = null;
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request;
-        for (String uri : uriList) {
-            URI newUri = URI.create(uri);
-            request = HttpRequest.newBuilder().uri(newUri).build();
-            log.info("Request uri:{}", request.uri());
-            try {
-                response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            } catch (IOException | InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DownloaderException(e.getMessage());
-            }
-            if (response.statusCode() != 200) {
-                log.info("Error returned, code:{}", response.statusCode());
-                throw new DownloaderException("Status code returned:" + response.statusCode());
-            }
-            log.info("Response:{}", response.body());
+    return joinResponses(responses);
+  }
 
-            responses.add(response);
-
-        }
-
-        return joinResponses(responses);
-
-    }
-
-    protected abstract JsonNode joinResponses(List<HttpResponse<String>> responses);
-
+  protected abstract JsonNode joinResponses(List<HttpResponse<String>> responses);
 }

@@ -17,109 +17,109 @@ import org.apache.spark.sql.Row;
 
 /**
  * Abstract class representing a saver for ml results.
- * <p>
- * This class provides a standard interface for saving models and predictions.
- * All model savers must extend this class and implement the methods.
- * <p>
- * This class is thread safe.
+ *
+ * <p>This class provides a standard interface for saving models and predictions. All model savers
+ * must extend this class and implement the methods.
+ *
+ * <p>This class is thread safe.
  */
 public abstract class ModelSaver {
 
-    private static final Logger logger = LogManager.getLogger(ModelSaver.class);
+  private static final Logger logger = LogManager.getLogger(ModelSaver.class);
 
-    private final String hdfsPath;
-    private final TableModel tableModel;
-    private final MLConfigurationUtils mlConfigurationUtils;
+  private final String hdfsPath;
+  private final TableModel tableModel;
+  private final MLConfigurationUtils mlConfigurationUtils;
 
-    protected ModelSaver() throws ConfigurationException {
+  protected ModelSaver() throws ConfigurationException {
 
-        this.mlConfigurationUtils = MLConfigurationUtils.getMlConf();
-        this.hdfsPath = mlConfigurationUtils.getModelDir();
+    this.mlConfigurationUtils = MLConfigurationUtils.getMlConf();
+    this.hdfsPath = mlConfigurationUtils.getModelDir();
 
-        String modelName = mlConfigurationUtils.getModelClassName();
-        this.tableModel = mlConfigurationUtils.createTableModel(modelName);
+    String modelName = mlConfigurationUtils.getModelClassName();
+    this.tableModel = mlConfigurationUtils.createTableModel(modelName);
+  }
+
+  /**
+   * Saves the model and predictions to HDFS and Cassandra respectively.
+   *
+   * <p>This method saves the model to HDFS using the configured ModelSaver and saves the
+   * predictions to Cassandra using the configured TableModel.
+   *
+   * @param pipeline the pipeline containing the model and predictions
+   * @throws ModelSaverException if any error occurs while saving the model
+   * @throws ConfigurationException if any error occurs while retrieving the configuration
+   * @throws CassandraException if any error occurs while saving the predictions to Cassandra
+   */
+  public void saveModel(Pipeline pipeline)
+      throws ModelSaverException, ConfigurationException, CassandraException {
+
+    Model<?> model = pipeline.getModel();
+    Dataset<Row> predictions = pipeline.getPredictions();
+
+    saveModelToHDFS(model);
+
+    savePredictionsToCassandra(predictions);
+  }
+
+  /**
+   * Saves the predictions from the given BlackBox to Cassandra.
+   *
+   * <p>This method retrieves the predictions from the provided BlackBox instance and saves them to
+   * Cassandra.
+   *
+   * @param blackBox the BlackBox containing the predictions to be saved
+   * @throws ConfigurationException if there is an error in the configuration
+   * @throws CassandraException if an error occurs while saving the predictions to Cassandra
+   * @throws ModelSaverException if any other error occurs during the saving process
+   */
+  public void saveModel(BlackBox blackBox)
+      throws ConfigurationException, CassandraException, ModelSaverException {
+
+    Dataset<Row> predictions = blackBox.getPredictions();
+
+    savePredictionsToCassandra(predictions);
+  }
+
+  /**
+   * This method takes an ML model and saves it to HDFS.
+   *
+   * @param model the model to be saved
+   * @throws ModelSaverException if any error occurs while saving the model
+   */
+  private void saveModelToHDFS(Model<?> model) throws ModelSaverException {
+    try {
+      MLWritable writableModel = (MLWritable) model;
+
+      MLWriter mlwriter = writableModel.write();
+      mlwriter.overwrite().save(hdfsPath);
+
+      logger.info("Model has been saved to HDFS");
+    } catch (Exception e) {
+      throw new ModelSaverException("Error while saving model to HDFS: " + hdfsPath, e);
     }
+  }
 
-    /**
-     * Saves the model and predictions to HDFS and Cassandra respectively.
-     * <p>
-     * This method saves the model to HDFS using the configured ModelSaver and
-     * saves the predictions to Cassandra using the configured TableModel.
-     *
-     * @param pipeline the pipeline containing the model and predictions
-     * @throws ModelSaverException    if any error occurs while saving the model
-     * @throws ConfigurationException if any error occurs while retrieving the configuration
-     * @throws CassandraException     if any error occurs while saving the predictions to Cassandra
-     */
-    public void saveModel(Pipeline pipeline) throws ModelSaverException, ConfigurationException, CassandraException {
+  /**
+   * Save the predictions to Cassandra.
+   *
+   * <p>This method validates the TableModel then it saves the predictions to Cassandra.
+   *
+   * @param predictions the predictions to be saved
+   * @throws ModelSaverException if any error occurs during the saving of the predictions
+   * @throws ConfigurationException if any error occurs during the configuration
+   * @throws CassandraException if any error occurs while saving the predictions to Cassandra
+   */
+  private void savePredictionsToCassandra(Dataset<Row> predictions)
+      throws ModelSaverException, ConfigurationException, CassandraException {
 
-        Model<?> model = pipeline.getModel();
-        Dataset<Row> predictions = pipeline.getPredictions();
+    CassandraUtils cassandraUtils = CassandraUtils.getCassandraUtils(mlConfigurationUtils);
 
-        saveModelToHDFS(model);
-
-        savePredictionsToCassandra(predictions);
+    try {
+      cassandraUtils.validateTableModel(tableModel);
+      cassandraUtils.saveDF(predictions, tableModel);
+    } catch (CassandraException e) {
+      throw new ModelSaverException("Error while saving predictions to Cassandra", e);
     }
-
-    /**
-     * Saves the predictions from the given BlackBox to Cassandra.
-     * <p>
-     * This method retrieves the predictions from the provided BlackBox instance
-     * and saves them to Cassandra.
-     *
-     * @param blackBox the BlackBox containing the predictions to be saved
-     * @throws ConfigurationException if there is an error in the configuration
-     * @throws CassandraException     if an error occurs while saving the predictions to Cassandra
-     * @throws ModelSaverException    if any other error occurs during the saving process
-     */
-    public void saveModel(BlackBox blackBox) throws ConfigurationException, CassandraException, ModelSaverException {
-
-        Dataset<Row> predictions = blackBox.getPredictions();
-
-        savePredictionsToCassandra(predictions);
-    }
-
-    /**
-     * This method takes an ML model and saves it to HDFS.
-     *
-     * @param model the model to be saved
-     * @throws ModelSaverException if any error occurs while saving the model
-     */
-    private void saveModelToHDFS(Model<?> model) throws ModelSaverException {
-        try {
-            MLWritable writableModel = (MLWritable) model;
-
-            MLWriter mlwriter = writableModel.write();
-            mlwriter.overwrite().save(hdfsPath);
-
-            logger.info("Model has been saved to HDFS");
-        } catch (Exception e) {
-            throw new ModelSaverException("Error while saving model to HDFS: " + hdfsPath, e);
-        }
-    }
-
-    /**
-     * Save the predictions to Cassandra.
-     * <p>
-     * This method validates the TableModel then it saves the
-     * predictions to Cassandra.
-     *
-     * @param predictions the predictions to be saved
-     * @throws ModelSaverException    if any error occurs during the saving of the
-     *                                predictions
-     * @throws ConfigurationException if any error occurs during the configuration
-     * @throws CassandraException     if any error occurs while saving the
-     *                                predictions to Cassandra
-     */
-    private void savePredictionsToCassandra(Dataset<Row> predictions) throws ModelSaverException, ConfigurationException, CassandraException {
-
-        CassandraUtils cassandraUtils = CassandraUtils.getCassandraUtils(mlConfigurationUtils);
-
-        try {
-            cassandraUtils.validateTableModel(tableModel);
-            cassandraUtils.saveDF(predictions, tableModel);
-        } catch (CassandraException e) {
-            throw new ModelSaverException("Error while saving predictions to Cassandra", e);
-        }
-    }
+  }
 }
