@@ -10,50 +10,58 @@ import org.junit.jupiter.api.Test;
 
 class MLLayerExceptionTest {
 
-	@Test
-	void testMLLayerExceptionThrown() {
-		assertThrows(MLLayerException.class, () -> {
-			throw new MLLayerException("Test exception");
-		});
-	}
+  @Test
+  void testMLLayerExceptionThrown() {
+    assertThrows(
+        MLLayerException.class,
+        () -> {
+          throw new MLLayerException("Test exception");
+        });
+  }
 
-	@Test
-	void testConstructorWithMessage() {
-		String errorMessage = "Exception in the ML Layer";
-		MLLayerException exception = new MLLayerException(errorMessage);
+  @Test
+  void testConstructorWithMessage() {
+    String errorMessage = "Exception in the ML Layer";
+    MLLayerException exception = new MLLayerException(errorMessage);
 
-		String expectedMessage = "Exception in the ML Layer. Caused by: \n" + errorMessage;
-		assertEquals(expectedMessage, exception.getMessage());
-	}
+    String expectedMessage = "Exception in the ML Layer. Caused by: \n" + errorMessage;
+    assertEquals(expectedMessage, exception.getMessage());
+  }
 
-	@Test
-	void testExceptionThrownWithCause() {
-		Throwable cause = new IllegalArgumentException("Original cause");
-		MLLayerException exception = assertThrows(MLLayerException.class, () -> {
-			throw new MLLayerException("Test exception", cause);
-		});
-		assertEquals(cause, exception.getCause());
-	}
+  @Test
+  void testExceptionThrownWithCause() {
+    Throwable cause = new IllegalArgumentException("Original cause");
+    MLLayerException exception =
+        assertThrows(
+            MLLayerException.class,
+            () -> {
+              throw new MLLayerException("Test exception", cause);
+            });
+    assertEquals(cause, exception.getCause());
+  }
 
-	@Test
-	void testMLLayerExceptionWithThrowable() {
-		Throwable cause = new RuntimeException("Runtime error");
-		MLLayerException exception = new MLLayerException(cause);
+  @Test
+  void testMLLayerExceptionWithThrowable() {
+    Throwable cause = new RuntimeException("Runtime error");
+    MLLayerException exception = new MLLayerException(cause);
 
-		assertAll(() -> assertNotNull(exception),
-				() -> assertTrue(exception.getMessage().contains("Exception in the ML Layer")),
-				() -> assertTrue(exception.getMessage().contains("Runtime error")),
-				() -> assertEquals(cause, exception.getCause()));
-	}
+    assertAll(
+        () -> assertNotNull(exception),
+        () -> assertTrue(exception.getMessage().contains("Exception in the ML Layer")),
+        () -> assertTrue(exception.getMessage().contains("Runtime error")),
+        () -> assertEquals(cause, exception.getCause()));
+  }
 
-	@Test
-	void testMLLayerExceptionWithMessageAndThrowable() {
-		String errorMessage = "Error when reading from hdfs";
-		Throwable cause = new IllegalArgumentException("Invalid argument");
-		MLLayerException exception = new MLLayerException(errorMessage, cause);
+  @Test
+  void testMLLayerExceptionWithMessageAndThrowable() {
+    String errorMessage = "Error when reading from hdfs";
+    Throwable cause = new IllegalArgumentException("Invalid argument");
+    MLLayerException exception = new MLLayerException(errorMessage, cause);
 
-		assertAll(() -> assertNotNull(exception), () -> assertTrue(exception.getMessage().contains(errorMessage)),
-				() -> assertTrue(exception.getMessage().contains("Invalid argument")),
-				() -> assertEquals(cause, exception.getCause()));
-	}
+    assertAll(
+        () -> assertNotNull(exception),
+        () -> assertTrue(exception.getMessage().contains(errorMessage)),
+        () -> assertTrue(exception.getMessage().contains("Invalid argument")),
+        () -> assertEquals(cause, exception.getCause()));
+  }
 }

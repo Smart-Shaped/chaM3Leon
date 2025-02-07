@@ -4,7 +4,7 @@ import com.smartshaped.chameleon.common.exception.CassandraException;
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.CassandraUtils;
 import com.smartshaped.chameleon.common.utils.TableModel;
-import com.smartshaped.chameleon.ml.blackBox.BlackBox;
+import com.smartshaped.chameleon.ml.blackbox.BlackBox;
 import com.smartshaped.chameleon.ml.exception.ModelSaverException;
 import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
 import org.apache.logging.log4j.LogManager;
@@ -27,9 +27,9 @@ public abstract class ModelSaver {
 
   private static final Logger logger = LogManager.getLogger(ModelSaver.class);
 
-  private final String hdfsPath;
-  private final TableModel tableModel;
-  private final MLConfigurationUtils mlConfigurationUtils;
+  protected String hdfsPath;
+  protected TableModel tableModel;
+  protected MLConfigurationUtils mlConfigurationUtils;
 
   protected ModelSaver() throws ConfigurationException {
 
@@ -38,6 +38,8 @@ public abstract class ModelSaver {
 
     String modelName = mlConfigurationUtils.getModelClassName();
     this.tableModel = mlConfigurationUtils.createTableModel(modelName);
+
+    logger.debug("ModelSaver initialized");
   }
 
   /**
@@ -60,6 +62,8 @@ public abstract class ModelSaver {
     saveModelToHDFS(model);
 
     savePredictionsToCassandra(predictions);
+
+    logger.info("ModelSaver process for Pipeline completed");
   }
 
   /**
@@ -79,6 +83,8 @@ public abstract class ModelSaver {
     Dataset<Row> predictions = blackBox.getPredictions();
 
     savePredictionsToCassandra(predictions);
+
+    logger.info("ModelSaver process for BlackBox completed");
   }
 
   /**
@@ -87,17 +93,17 @@ public abstract class ModelSaver {
    * @param model the model to be saved
    * @throws ModelSaverException if any error occurs while saving the model
    */
-  private void saveModelToHDFS(Model<?> model) throws ModelSaverException {
+  protected void saveModelToHDFS(Model<?> model) throws ModelSaverException {
     try {
       MLWritable writableModel = (MLWritable) model;
 
       MLWriter mlwriter = writableModel.write();
       mlwriter.overwrite().save(hdfsPath);
-
-      logger.info("Model has been saved to HDFS");
     } catch (Exception e) {
       throw new ModelSaverException("Error while saving model to HDFS: " + hdfsPath, e);
     }
+
+    logger.info("Model has been saved to HDFS");
   }
 
   /**
@@ -110,7 +116,7 @@ public abstract class ModelSaver {
    * @throws ConfigurationException if any error occurs during the configuration
    * @throws CassandraException if any error occurs while saving the predictions to Cassandra
    */
-  private void savePredictionsToCassandra(Dataset<Row> predictions)
+  protected void savePredictionsToCassandra(Dataset<Row> predictions)
       throws ModelSaverException, ConfigurationException, CassandraException {
 
     CassandraUtils cassandraUtils = CassandraUtils.getCassandraUtils(mlConfigurationUtils);
@@ -121,5 +127,7 @@ public abstract class ModelSaver {
     } catch (CassandraException e) {
       throw new ModelSaverException("Error while saving predictions to Cassandra", e);
     }
+
+    logger.info("Predictions have been saved to Cassandra");
   }
 }

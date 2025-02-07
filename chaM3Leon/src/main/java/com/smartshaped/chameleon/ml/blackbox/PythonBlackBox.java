@@ -1,7 +1,7 @@
-package com.smartshaped.chameleon.ml.blackBox;
+package com.smartshaped.chameleon.ml.blackbox;
 
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.ml.blackBox.exception.BlackBoxException;
+import com.smartshaped.chameleon.ml.blackbox.exception.BlackBoxException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -31,6 +31,8 @@ public abstract class PythonBlackBox extends BlackBox {
 
     this.pythonScriptPath = mlConfigurationUtils.getBlackBoxPythonScriptPath();
     this.pythonLibraries = mlConfigurationUtils.getBlackBoxPythonLibraries();
+
+    logger.debug("PythonBlackBox initialized");
   }
 
   /**
@@ -51,6 +53,8 @@ public abstract class PythonBlackBox extends BlackBox {
 
     // prepare SparkSession to be accessed by python
     javaSparkContext = new JavaSparkContext(SparkSession.getActiveSession().get().sparkContext());
+
+    logger.info("PythonBlackBox extra preparation completed");
   }
 
   /**
@@ -72,6 +76,9 @@ public abstract class PythonBlackBox extends BlackBox {
         ProcessBuilder processBuilder = new ProcessBuilder("pip3", "install", library);
         runCommand(processBuilder);
       }
+      logger.info("Python libraries installed successfully");
+    } else {
+      logger.warn("No Python libraries specified in the configuration");
     }
   }
 
@@ -101,12 +108,15 @@ public abstract class PythonBlackBox extends BlackBox {
       }
       File destination = new File(destinationPath).getParentFile();
       if (!destination.exists()) {
+        logger.warn("Destination folder does not exist: {}", destinationPath);
         boolean created = destination.mkdirs();
         if (created) {
-          logger.info("Destination folder created: {}", destinationPath);
+          logger.debug("Destination folder created: {}", destinationPath);
         }
       }
       Files.copy(is, new File(destinationPath).toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+      logger.info("Resource copied successfully");
     } catch (IOException e) {
       throw new BlackBoxException("Error copying resource", e);
     }
@@ -126,6 +136,8 @@ public abstract class PythonBlackBox extends BlackBox {
     if (pythonScriptPath.trim().isEmpty()) {
       throw new BlackBoxException("The python script path is empty");
     }
+
+    logger.debug("PythonBlackBox validation completed");
   }
 
   /**
@@ -146,6 +158,8 @@ public abstract class PythonBlackBox extends BlackBox {
     } catch (IOException e) {
       throw new BlackBoxException("Error deleting python script", e);
     }
+
+    logger.info("PythonBlackBox cleanup completed");
   }
 
   /**
@@ -170,6 +184,8 @@ public abstract class PythonBlackBox extends BlackBox {
     } catch (Exception e) {
       throw new BlackBoxException("Error running ML script", e);
     }
+
+    logger.info("ML script completed successfully");
   }
 
   /**
@@ -191,7 +207,7 @@ public abstract class PythonBlackBox extends BlackBox {
   @Override
   protected Dataset<Row> readOutput(String outputInfo) throws BlackBoxException {
 
-    logger.info("Reading output from view: {}", outputInfo);
+    logger.debug("Reading output from view: {}", outputInfo);
     SparkSession sparkSession = SparkSession.getActiveSession().get();
     String query = "SELECT * FROM " + outputInfo;
     return sparkSession.sql(query);
@@ -211,7 +227,7 @@ public abstract class PythonBlackBox extends BlackBox {
   protected void makeDatasetAccessible(Dataset<Row> dataset, String inputInfo)
       throws BlackBoxException {
 
-    logger.info("Saving dataset to view: {}", inputInfo);
+    logger.debug("Saving dataset to view: {}", inputInfo);
     dataset.createOrReplaceTempView(inputInfo);
   }
 }

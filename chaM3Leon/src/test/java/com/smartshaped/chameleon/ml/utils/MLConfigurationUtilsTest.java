@@ -1,85 +1,103 @@
 package com.smartshaped.chameleon.ml.utils;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import org.apache.commons.configuration2.YAMLConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import java.util.Iterator;
 
 @ExtendWith(MockitoExtension.class)
 class MLConfigurationUtilsTest {
 
-	@Mock
-	YAMLConfiguration ymlConfig;
-	MLConfigurationUtils mlConfigurationUtils;
+  MLConfigurationUtils mlConfigurationUtils;
 
-	@BeforeEach
-	void setUp() throws ConfigurationException {
-		mlConfigurationUtils = MLConfigurationUtils.getMlConf();
-	}
+  @Mock YAMLConfiguration configuration;
+  @Mock Iterator<String> iterator;
+  @InjectMocks MLConfigurationUtils mlConfigurationUtilsMock;
 
-	@Test
-	void testGetHDFSPathSuccess() {
-		assertDoesNotThrow(() -> mlConfigurationUtils.getHDFSPath("com.smartshaped.fesr.framework.ml.CustomReader"));
-	}
+  @BeforeEach
+  void setUp() throws ConfigurationException {
+    mlConfigurationUtils = MLConfigurationUtils.getMlConf();
+  }
 
-	@Test
-	void testGetHDFSPathDefaultValue() {
-		assertDoesNotThrow(() -> mlConfigurationUtils.getHDFSPath("test"));
-	}
+  @Test
+  void testGetHDFSPathSuccess() {
+    assertDoesNotThrow(
+        () -> mlConfigurationUtils.getHDFSPath("com.smartshaped.fesr.framework.ml.CustomReader"));
+  }
 
-	@Test
-	void testGetHDFSReaders() {
-		assertDoesNotThrow(() -> mlConfigurationUtils.getHdfsReaders());
-	}
+  @Test
+  void testGetHDFSPathDefaultValue() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getHDFSPath("test"));
+  }
 
-	@Test
-	void testGetModelDir() {
-		assertDoesNotThrow(() -> mlConfigurationUtils.getModelDir());
-	}
+  @Test
+  void testGetHDFSReadersSuccess() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getHdfsReaders());
+  }
 
-	@Test
-	void testGetModelSaver() {
-		assertDoesNotThrow(() -> mlConfigurationUtils.getModelSaver());
-	}
+  @Test
+  void testGetHDFSReadersFailure() {
 
-	@Test
-	void testGetPipeline() {
-		assertDoesNotThrow(() -> mlConfigurationUtils.getPipeline());
-	}
+    when(iterator.hasNext()).thenReturn(true);
+    when(iterator.next()).thenReturn(".class");
+    when(configuration.getKeys("ml.hdfs.readers")).thenReturn(iterator);
+    when(configuration.getString(".class")).thenReturn("test");
 
-	@Test
-	void testGetBlackBox() {
-		assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBox());
-	}
+    assertThrows(ConfigurationException.class, () -> mlConfigurationUtilsMock.getHdfsReaders());
+  }
 
-	@Test
-	void testGetBlackBoxInputs() {
-		assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxInputs());
-	}
+  @Test
+  void testGetModelDir() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getModelDir());
+  }
 
-	@Test
-	void testGetBlackBoxOutput() {
-		assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxOutput());
-	}
+  @Test
+  void testGetModelSaver() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getModelSaver());
+  }
 
-	@Test
-	void testGetBlackBoxModelPath() {
-		assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxModelPath());
-	}
+  @Test
+  void testGetPipeline() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getPipeline());
+  }
 
-	@Test
-	void testGetBlackBoxPythonScriptPath() {
-		assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxPythonScriptPath());
-	}
+  @Test
+  void testGetBlackBox() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBox());
+  }
 
-	@Test
-	void testGetBlackBoxPythonLibraries() {
-		assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxPythonLibraries());
-	}
+  @Test
+  void testGetBlackBoxInputs() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxInputs());
+  }
+
+  @Test
+  void testGetBlackBoxOutput() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxOutput());
+  }
+
+  @Test
+  void testGetBlackBoxModelPath() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxModelPath());
+  }
+
+  @Test
+  void testGetBlackBoxPythonScriptPath() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxPythonScriptPath());
+  }
+
+  @Test
+  void testGetBlackBoxPythonLibraries() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxPythonLibraries());
+  }
 }

@@ -1,7 +1,7 @@
-package com.smartshaped.chameleon.ml.blackBox;
+package com.smartshaped.chameleon.ml.blackbox;
 
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.ml.blackBox.exception.BlackBoxException;
+import com.smartshaped.chameleon.ml.blackbox.exception.BlackBoxException;
 import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
 import lombok.Getter;
 import org.apache.hadoop.conf.Configuration;
@@ -36,6 +36,8 @@ public abstract class BlackBox {
     this.inputs = mlConfigurationUtils.getBlackBoxInputs();
     this.output = mlConfigurationUtils.getBlackBoxOutput();
     this.modelPath = mlConfigurationUtils.getBlackBoxModelPath();
+
+    logger.debug("BlackBox initialized");
   }
 
   public void start(List<Dataset<Row>> datasets) throws BlackBoxException {
@@ -50,6 +52,8 @@ public abstract class BlackBox {
     this.predictions = readOutput(output);
 
     cleanBlackBoxFolder();
+
+    logger.info("BlackBox process completed successfully");
   }
 
   /**
@@ -78,10 +82,10 @@ public abstract class BlackBox {
         if (deleted) {
           logger.info("Folder deleted successfully: {}", folderPath);
         } else {
-          logger.info("Failed to delete folder: {}", folderPath);
+          logger.warn("Failed to delete folder: {}", folderPath);
         }
       } else {
-        logger.info("Folder does not exist: {}", folderPath);
+        logger.warn("Folder does not exist: {}", folderPath);
       }
 
       fileSystem.close();
@@ -108,7 +112,7 @@ public abstract class BlackBox {
       BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
       String line;
       while ((line = reader.readLine()) != null) {
-        logger.info(line);
+        logger.debug(line);
       }
 
       int exitCode = process.waitFor();

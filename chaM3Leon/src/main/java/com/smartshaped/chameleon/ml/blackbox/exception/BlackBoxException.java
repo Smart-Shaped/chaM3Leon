@@ -1,4 +1,4 @@
-package com.smartshaped.chameleon.ml.blackBox.exception;
+package com.smartshaped.chameleon.ml.blackbox.exception;
 
 /** Java class to manage exceptions inside BlackBox class and those that extends it. */
 public class BlackBoxException extends Exception {

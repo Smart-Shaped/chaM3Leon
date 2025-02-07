@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.ml.blackBox.BlackBox;
+import com.smartshaped.chameleon.ml.blackbox.BlackBox;
 import org.apache.spark.ml.Model;
 import org.apache.spark.ml.util.MLWritable;
 import org.apache.spark.ml.util.MLWriter;
@@ -29,108 +29,103 @@ import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
 @ExtendWith(MockitoExtension.class)
 class ModelSaverTest {
 
-	@Mock
-	MLConfigurationUtils mlConfigurationUtils;
-	@Mock
-	TableModel tableModel;
-	@Mock
-	Pipeline pipeline;
-	@Mock
-	BlackBox blackBox;
-	Model model;
-	@Mock
-	MLWriter mlWriter;
-	@Mock
-	Dataset<Row> predictions;
-	@Mock
-	CassandraUtils cassandraUtils;
-	ModelSaver modelSaver;
-	String modelDir;
-	String modelName;
+  @Mock MLConfigurationUtils mlConfigurationUtils;
+  @Mock TableModel tableModel;
+  @Mock Pipeline pipeline;
+  @Mock BlackBox blackBox;
+  Model model;
+  @Mock MLWriter mlWriter;
+  @Mock Dataset<Row> predictions;
+  @Mock CassandraUtils cassandraUtils;
+  ModelSaver modelSaver;
+  String modelDir;
+  String modelName;
 
-	@BeforeEach
-	void setUp() {
-		modelDir = "ModelSaverExample";
-		modelName = "ModelSaverExample";
-	}
+  @BeforeEach
+  void setUp() {
+    modelDir = "ModelSaverExample";
+    modelName = "ModelSaverExample";
+  }
 
-	@Test
-	void testConstructor() throws ConfigurationException {
+  @Test
+  void testConstructor() throws ConfigurationException {
 
-		try (MockedStatic<MLConfigurationUtils> mockedStatic = mockStatic(MLConfigurationUtils.class)) {
+    try (MockedStatic<MLConfigurationUtils> mockedStatic = mockStatic(MLConfigurationUtils.class)) {
 
-			mockedStatic.when(MLConfigurationUtils::getMlConf).thenReturn(mlConfigurationUtils);
+      mockedStatic.when(MLConfigurationUtils::getMlConf).thenReturn(mlConfigurationUtils);
 
-			when(mlConfigurationUtils.getModelDir()).thenReturn(modelDir);
-			when(mlConfigurationUtils.getModelClassName()).thenReturn(modelName);
-			when(mlConfigurationUtils.createTableModel(modelName)).thenReturn(tableModel);
+      when(mlConfigurationUtils.getModelDir()).thenReturn(modelDir);
+      when(mlConfigurationUtils.getModelClassName()).thenReturn(modelName);
+      when(mlConfigurationUtils.createTableModel(modelName)).thenReturn(tableModel);
 
-			assertDoesNotThrow(ModelSaverExample::new);
-		}
-	}
+      assertDoesNotThrow(ModelSaverExample::new);
+    }
+  }
 
-	@Test
-	void testSaveModelModelSaverException() {
-		modelSaver = mock(ModelSaver.class, Mockito.CALLS_REAL_METHODS);
+  @Test
+  void testSaveModelModelSaverException() {
+    modelSaver = mock(ModelSaver.class, Mockito.CALLS_REAL_METHODS);
 
-		assertThrows(ModelSaverException.class, () -> modelSaver.saveModel(pipeline));
-	}
+    assertThrows(ModelSaverException.class, () -> modelSaver.saveModel(pipeline));
+  }
 
-	@Test
-	void testSaveModelSuccess() throws Exception {
+  @Test
+  void testSaveModelSuccess() throws Exception {
 
-		model = mock(Model.class, Mockito.withSettings().extraInterfaces(MLWritable.class));
+    model = mock(Model.class, Mockito.withSettings().extraInterfaces(MLWritable.class));
 
-		try (MockedStatic<MLConfigurationUtils> mockedStatic = mockStatic(MLConfigurationUtils.class)) {
+    try (MockedStatic<MLConfigurationUtils> mockedStatic = mockStatic(MLConfigurationUtils.class)) {
 
-			mockedStatic.when(MLConfigurationUtils::getMlConf).thenReturn(mlConfigurationUtils);
+      mockedStatic.when(MLConfigurationUtils::getMlConf).thenReturn(mlConfigurationUtils);
 
-			when(mlConfigurationUtils.getModelDir()).thenReturn(modelDir);
-			when(mlConfigurationUtils.getModelClassName()).thenReturn(modelName);
-			when(mlConfigurationUtils.createTableModel(modelName)).thenReturn(tableModel);
+      when(mlConfigurationUtils.getModelDir()).thenReturn(modelDir);
+      when(mlConfigurationUtils.getModelClassName()).thenReturn(modelName);
+      when(mlConfigurationUtils.createTableModel(modelName)).thenReturn(tableModel);
 
-			when(pipeline.getModel()).thenReturn(model);
-			when(pipeline.getPredictions()).thenReturn(predictions);
+      when(pipeline.getModel()).thenReturn(model);
+      when(pipeline.getPredictions()).thenReturn(predictions);
 
-			MLWritable mlWritable = (MLWritable) model;
+      MLWritable mlWritable = (MLWritable) model;
 
-			when(mlWritable.write()).thenReturn(mlWriter);
-			when(mlWriter.overwrite()).thenReturn(mlWriter);
+      when(mlWritable.write()).thenReturn(mlWriter);
+      when(mlWriter.overwrite()).thenReturn(mlWriter);
 
-			try (MockedStatic<CassandraUtils> mockedStaticModel = mockStatic(CassandraUtils.class)) {
+      try (MockedStatic<CassandraUtils> mockedStaticModel = mockStatic(CassandraUtils.class)) {
 
-				mockedStaticModel.when(() -> CassandraUtils.getCassandraUtils(any())).thenReturn(cassandraUtils);
+        mockedStaticModel
+            .when(() -> CassandraUtils.getCassandraUtils(any()))
+            .thenReturn(cassandraUtils);
 
-				ModelSaver modelSaver = new ModelSaverExample();
+        ModelSaver modelSaver = new ModelSaverExample();
 
-				assertDoesNotThrow(() -> modelSaver.saveModel(pipeline));
-			}
-		}
-	}
+        assertDoesNotThrow(() -> modelSaver.saveModel(pipeline));
+      }
+    }
+  }
 
-	@Test
-	void testSaveModelBlackBoxSuccess() throws ConfigurationException {
-		when(blackBox.getPredictions()).thenReturn(predictions);
+  @Test
+  void testSaveModelBlackBoxSuccess() throws ConfigurationException {
+    when(blackBox.getPredictions()).thenReturn(predictions);
 
-		try (MockedStatic<CassandraUtils> mockedStatic = mockStatic(CassandraUtils.class)) {
+    try (MockedStatic<CassandraUtils> mockedStatic = mockStatic(CassandraUtils.class)) {
 
-			mockedStatic.when(() -> CassandraUtils.getCassandraUtils(any())).thenReturn(cassandraUtils);
-			ModelSaverExample modelSaver = new ModelSaverExample();
-			assertDoesNotThrow(() -> modelSaver.saveModel(blackBox));
-		}
-	}
+      mockedStatic.when(() -> CassandraUtils.getCassandraUtils(any())).thenReturn(cassandraUtils);
+      ModelSaverExample modelSaver = new ModelSaverExample();
+      assertDoesNotThrow(() -> modelSaver.saveModel(blackBox));
+    }
+  }
 
-	@Test
-	void testSaveModelBlackBoxFailure() throws ConfigurationException, CassandraException {
-		when(blackBox.getPredictions()).thenReturn(predictions);
+  @Test
+  void testSaveModelBlackBoxFailure() throws ConfigurationException, CassandraException {
+    when(blackBox.getPredictions()).thenReturn(predictions);
 
-		try (MockedStatic<CassandraUtils> mockedStatic = mockStatic(CassandraUtils.class)) {
+    try (MockedStatic<CassandraUtils> mockedStatic = mockStatic(CassandraUtils.class)) {
 
-			mockedStatic.when(() -> CassandraUtils.getCassandraUtils(any())).thenReturn(cassandraUtils);
-			doThrow(CassandraException.class).when(cassandraUtils).saveDF(any(), any());
+      mockedStatic.when(() -> CassandraUtils.getCassandraUtils(any())).thenReturn(cassandraUtils);
+      doThrow(CassandraException.class).when(cassandraUtils).saveDF(any(), any());
 
-			ModelSaverExample modelSaver = new ModelSaverExample();
-			assertThrows(ModelSaverException.class,(() -> modelSaver.saveModel(blackBox)));
-		}
-	}
+      ModelSaverExample modelSaver = new ModelSaverExample();
+      assertThrows(ModelSaverException.class, (() -> modelSaver.saveModel(blackBox)));
+    }
+  }
 }

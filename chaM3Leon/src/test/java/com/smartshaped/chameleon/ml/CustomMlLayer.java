@@ -5,8 +5,7 @@ import com.smartshaped.chameleon.ml.exception.MLLayerException;
 
 public class CustomMlLayer extends MLLayer {
 
-	public CustomMlLayer() throws ConfigurationException, MLLayerException {
-		super();
-	}
-
+  public CustomMlLayer() throws ConfigurationException, MLLayerException {
+    super();
+  }
 }

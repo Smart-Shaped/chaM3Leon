@@ -1,17 +1,15 @@
 package com.smartshaped.chameleon.ml;
 
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.ml.exception.HdfsReaderException;
+import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.ml.exception.HdfsReaderException;
-import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
-
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Abstract class representing a HDFS reader.
@@ -40,58 +38,64 @@ public abstract class HdfsReader {
     if (hdfsPath.trim().isEmpty()) {
       throw new ConfigurationException("Missing HDFS path");
     }
+
+    logger.debug("HdfsReader initialized");
   }
 
   /**
    * Method to read raw data from HDFS and store it in a DataFrame
    *
-   * @param sedona Spark session
    * @throws HdfsReaderException if any error occurs while reading from HDFS
    */
-  public void readRawData(SparkSession sedona) throws HdfsReaderException {
+  protected void readRawData() throws HdfsReaderException {
+
+    logger.info("Reading data from HDFS...");
+
+    SparkSession sparkSession = SparkSession.getActiveSession().get();
     String filePath = this.hdfsPath;
 
     Dataset<Row> rawDF;
 
     try {
-      rawDF = sedona.read().parquet(filePath);
-      logger.info("Files in {} were read succesfully", filePath);
+      rawDF = sparkSession.read().parquet(filePath);
+      logger.debug("Files in {} were read successfully", filePath);
     } catch (Exception e) {
       throw new HdfsReaderException("Error while reading from HDFS", e);
     }
 
     this.dataframe = rawDF;
+
+    logger.info("Data read from HDFS");
   }
 
   /**
    * This method starts the HDFSReader, reading the data from HDFS and processing it.
    *
-   * @param sedona Spark session
    * @throws HdfsReaderException if any error occurs while reading or processing the data
    */
-  public void start(SparkSession sedona) throws HdfsReaderException {
+  public void start() throws HdfsReaderException {
 
     try {
-      this.readRawData(sedona);
+      this.readRawData();
     } catch (HdfsReaderException e) {
       throw new HdfsReaderException(e);
     }
 
     try {
-      dataframe = this.processRawData(sedona);
+      dataframe = this.processRawData();
     } catch (HdfsReaderException e) {
       throw new HdfsReaderException("Error processing Data", e);
     }
+
+    logger.info("HdfsReader process completed");
   }
 
   /**
-   * Method to process data and make them suitable for machine learning.
+   * This method must be implemented by all the HDFSReaders. It processes the raw data
+   * read from HDFS and returns a new DataFrame.
    *
-   * @param sedona Spark session.
-   * @return Processed DataFrame.
-   * @throws HdfsReaderException if any error occurs during data processing.
+   * @return a DataFrame containing the processed data
+   * @throws HdfsReaderException if any error occurs while processing the data
    */
-  public Dataset<Row> processRawData(SparkSession sedona) throws HdfsReaderException {
-    return this.dataframe;
-  }
+  protected abstract Dataset<Row> processRawData() throws HdfsReaderException;
 }

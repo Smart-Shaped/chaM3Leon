@@ -27,98 +27,106 @@ import java.lang.reflect.Field;
 @ExtendWith(MockitoExtension.class)
 class HdfsReaderTest {
 
-	HdfsReader hdfsReader;
-	@Mock
-	MLConfigurationUtils configurationUtils;
-	@Mock
-	SparkSession sedona;
-	@Mock
-	Dataset<Row> dataFrame;
-	@Mock
-	DataFrameReader dataFrameReader;
+  HdfsReader hdfsReader;
+  @Mock MLConfigurationUtils configurationUtils;
+  @Mock SparkSession sedona;
+  @Mock Dataset<Row> dataFrame;
+  @Mock DataFrameReader dataFrameReader;
+  @Mock scala.Option<SparkSession> option;
 
-	private void resetSingleton() throws NoSuchFieldException, IllegalAccessException {
+  private void resetSingleton() throws NoSuchFieldException, IllegalAccessException {
 
-		Field instance = MLConfigurationUtils.class.getDeclaredField("configuration");
-		instance.setAccessible(true);
-		instance.set(null, null);
-	}
+    Field instance = MLConfigurationUtils.class.getDeclaredField("configuration");
+    instance.setAccessible(true);
+    instance.set(null, null);
+  }
 
-	@Test
-	void testConstructor() throws NoSuchFieldException, IllegalAccessException {
+  @Test
+  void testConstructor() throws NoSuchFieldException, IllegalAccessException {
 
-		resetSingleton();
+    resetSingleton();
 
-		assertDoesNotThrow(CustomReader::new);
-	}
+    assertDoesNotThrow(CustomReader::new);
+  }
 
-	@Test
-	void testConstructorFailure() throws NoSuchFieldException, IllegalAccessException {
+  @Test
+  void testConstructorFailure() throws NoSuchFieldException, IllegalAccessException {
 
-		resetSingleton();
+    resetSingleton();
 
-		try (MockedStatic<MLConfigurationUtils> mockedStatic = mockStatic(MLConfigurationUtils.class)) {
-			mockedStatic.when(MLConfigurationUtils::getMlConf).thenReturn(configurationUtils);
-			when(configurationUtils.getHDFSPath(anyString())).thenReturn("");
+    try (MockedStatic<MLConfigurationUtils> mockedStatic = mockStatic(MLConfigurationUtils.class)) {
+      mockedStatic.when(MLConfigurationUtils::getMlConf).thenReturn(configurationUtils);
+      when(configurationUtils.getHDFSPath(anyString())).thenReturn("");
 
-			assertThrows(ConfigurationException.class, CustomReader::new);
-		}
-
-	}
-
-	@Test
-    void testStartSuccess() throws HdfsReaderException {
-
-        when(sedona.read()).thenReturn(dataFrameReader);
-        when(sedona.read().parquet(anyString())).thenReturn(dataFrame);
-
-        hdfsReader = mock(HdfsReader.class, Mockito.CALLS_REAL_METHODS);
-        hdfsReader.setHdfsPath(anyString());
-
-        hdfsReader.start(sedona);
-
-        assertNotNull(hdfsReader);
+      assertThrows(ConfigurationException.class, CustomReader::new);
     }
+  }
 
-	@Test
-    void testStartFailureRead() {
+  @Test
+  void testStartSuccess() throws HdfsReaderException {
 
-        when(sedona.read()).thenReturn(dataFrameReader);
-        doThrow(RuntimeException.class).when(dataFrameReader).parquet(anyString());
+    try (MockedStatic<SparkSession> mockedStatic = mockStatic(SparkSession.class)) {
+      mockedStatic.when(SparkSession::getActiveSession).thenReturn(option);
 
-        hdfsReader = mock(HdfsReader.class, Mockito.CALLS_REAL_METHODS);
+      when(option.get()).thenReturn(sedona);
 
-        assertThrows(HdfsReaderException.class, () -> {
-            hdfsReader.start(sedona);
+      when(sedona.read()).thenReturn(dataFrameReader);
+      when(sedona.read().parquet(anyString())).thenReturn(dataFrame);
+
+      hdfsReader = mock(HdfsReader.class, Mockito.CALLS_REAL_METHODS);
+      hdfsReader.setHdfsPath(anyString());
+
+      hdfsReader.start();
+
+      assertNotNull(hdfsReader);
+    }
+  }
+
+  @Test
+  void testStartFailureRead() {
+
+    try (MockedStatic<SparkSession> mockedStatic = mockStatic(SparkSession.class)) {
+      mockedStatic.when(SparkSession::getActiveSession).thenReturn(option);
+
+      when(option.get()).thenReturn(sedona);
+
+      when(sedona.read()).thenReturn(dataFrameReader);
+      doThrow(RuntimeException.class).when(dataFrameReader).parquet(anyString());
+
+      hdfsReader = mock(HdfsReader.class, Mockito.CALLS_REAL_METHODS);
+
+      assertThrows(HdfsReaderException.class, () -> hdfsReader.start());
+    }
+  }
+
+  @Test
+  void testStartFailureProcess() throws HdfsReaderException {
+
+    hdfsReader = Mockito.mock(HdfsReader.class, Mockito.CALLS_REAL_METHODS);
+
+    doNothing().when(hdfsReader).readRawData();
+    doThrow(HdfsReaderException.class).when(hdfsReader).processRawData();
+
+    assertThrows(
+        HdfsReaderException.class,
+        () -> {
+          hdfsReader.start();
         });
-    }
+  }
 
-	@Test
-	void testStartFailureProcess() throws HdfsReaderException {
+  @Test
+  void testGettersAndSetters() {
 
-		hdfsReader = Mockito.mock(HdfsReader.class, Mockito.CALLS_REAL_METHODS);
+    hdfsReader = mock(HdfsReader.class, Mockito.CALLS_REAL_METHODS);
 
-		doNothing().when(hdfsReader).readRawData(sedona);
-		doThrow(HdfsReaderException.class).when(hdfsReader).processRawData(sedona);
+    String hdfsPath = "test";
 
-		assertThrows(HdfsReaderException.class, () -> {
-			hdfsReader.start(sedona);
-		});
-	}
+    hdfsReader.setConfigurationUtils(configurationUtils);
+    hdfsReader.setDataframe(dataFrame);
+    hdfsReader.setHdfsPath(hdfsPath);
 
-	@Test
-	void testGettersAndSetters() {
-
-		hdfsReader = mock(HdfsReader.class, Mockito.CALLS_REAL_METHODS);
-
-		String hdfsPath = "test";
-
-		hdfsReader.setConfigurationUtils(configurationUtils);
-		hdfsReader.setDataframe(dataFrame);
-		hdfsReader.setHdfsPath(hdfsPath);
-
-		assertEquals(configurationUtils, hdfsReader.getConfigurationUtils());
-		assertEquals(dataFrame, hdfsReader.getDataframe());
-		assertEquals(hdfsPath, hdfsReader.getHdfsPath());
-	}
+    assertEquals(configurationUtils, hdfsReader.getConfigurationUtils());
+    assertEquals(dataFrame, hdfsReader.getDataframe());
+    assertEquals(hdfsPath, hdfsReader.getHdfsPath());
+  }
 }
