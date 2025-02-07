@@ -32,6 +32,8 @@ public class SpeedConfigurationUtils extends ConfigurationUtils {
   private SpeedConfigurationUtils() throws ConfigurationException {
     super();
     this.setConfRoot(ROOT.concat(SEPARATOR));
+
+    logger.debug("SpeedConfigurationUtils created");
   }
 
   /**
@@ -48,7 +50,7 @@ public class SpeedConfigurationUtils extends ConfigurationUtils {
   public static SpeedConfigurationUtils getSpeedConf() throws ConfigurationException {
     logger.info("Loading speed configuration");
     if (configuration == null) {
-      logger.info("No previous speed configuration found, loading new configurations.");
+      logger.warn("No previous speed configuration found, loading new configurations.");
 
       configuration = new SpeedConfigurationUtils();
     }
@@ -82,7 +84,7 @@ public class SpeedConfigurationUtils extends ConfigurationUtils {
 
     if (!Objects.isNull(kafkaServer)) {
       kafkaConfig.put("servers", kafkaServer);
-      logger.info("Kafka server: {}", kafkaServer);
+      logger.debug("Kafka server: {}", kafkaServer);
     } else {
       throw new ConfigurationException(
           "Missing server definition in " + SPEED_KAFKA_SERVER + " configuration key");
@@ -90,7 +92,10 @@ public class SpeedConfigurationUtils extends ConfigurationUtils {
 
     String intervalMs = config.getString(SPEED_KAFKA_INTERVAL);
 
+    logger.debug("Kafka interval: {}", intervalMs);
+
     if (!Objects.isNull(intervalMs)) {
+      logger.debug("Kafka interval: {}", intervalMs);
       kafkaConfig.put("intervalMs", intervalMs);
     } else {
       throw new ConfigurationException(
@@ -122,11 +127,11 @@ public class SpeedConfigurationUtils extends ConfigurationUtils {
           topicValue.concat(SEPARATOR).concat(CHECKPOINT),
           config.getString(key.concat(SEPARATOR).concat(CHECKPOINT)));
       stringBuilder.append(topicValue).append(",");
-      logger.info("Added Kafka topic: {}", topicValue);
+      logger.debug("Added Kafka topic: {}", topicValue);
     }
 
     stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-    logger.info("Kafka topics: {}", stringBuilder);
+    logger.debug("Kafka topics: {}", stringBuilder);
     kafkaConfig.put("topics", stringBuilder.toString());
     logger.info("Kafka configuration retrieved successfully");
     return kafkaConfig;
@@ -144,7 +149,7 @@ public class SpeedConfigurationUtils extends ConfigurationUtils {
    *     loading the class.
    */
   public SpeedUpdater getSpeedUpdater() throws ConfigurationException {
-    logger.info("Loading SpeedUpdater class.");
+    logger.info("Loading SpeedUpdater class");
     String speedClassName = config.getString(SPEED_UPDATER_CLASS);
 
     if (speedClassName == null || speedClassName.trim().isEmpty()) {

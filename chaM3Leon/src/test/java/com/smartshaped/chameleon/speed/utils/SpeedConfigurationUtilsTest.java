@@ -19,52 +19,58 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class SpeedConfigurationUtilsTest {
 
-    YAMLConfiguration ymlConfig;
+  YAMLConfiguration ymlConfig;
 
-    @Mock
-    private ConfigurationInterpolator interpolator;
+  @Mock private ConfigurationInterpolator interpolator;
 
-    @BeforeEach
-    public void resetSingleton()
-            throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        Field instance = SpeedConfigurationUtils.class.getDeclaredField("configuration");
-        instance.setAccessible(true);
-        instance.set(null, null);
+  @BeforeEach
+  public void resetSingleton()
+      throws SecurityException,
+          NoSuchFieldException,
+          IllegalArgumentException,
+          IllegalAccessException {
+    Field instance = SpeedConfigurationUtils.class.getDeclaredField("configuration");
+    instance.setAccessible(true);
+    instance.set(null, null);
+  }
+
+  @Test
+  void getKafkaConfigTestFailureServer() throws ConfigurationException {
+    try (MockedConstruction<YAMLConfiguration> mockedConstruction =
+        mockConstruction(
+            YAMLConfiguration.class,
+            (mock, context) -> {
+              when(mock.getInterpolator()).thenReturn(interpolator);
+            })) {
+      SpeedConfigurationUtils speedConfUt = SpeedConfigurationUtils.getSpeedConf();
+      assertThrows(ConfigurationException.class, speedConfUt::getKafkaConfig);
     }
+  }
 
-    @Test
-    void getKafkaConfigTestFailureServer() throws ConfigurationException {
-        try (MockedConstruction<YAMLConfiguration> mockedConstruction = mockConstruction(YAMLConfiguration.class,
-                (mock, context) -> {
-                    when(mock.getInterpolator()).thenReturn(interpolator);
-                })) {
-            SpeedConfigurationUtils speedConfUt = SpeedConfigurationUtils.getSpeedConf();
-            assertThrows(ConfigurationException.class, speedConfUt::getKafkaConfig);
-        }
-
+  @Test
+  void getKafkaConfigTestFailureInterval() throws ConfigurationException {
+    try (MockedConstruction<YAMLConfiguration> mockedConstruction =
+        mockConstruction(
+            YAMLConfiguration.class,
+            (mock, context) -> {
+              when(mock.getInterpolator()).thenReturn(interpolator);
+              when(mock.getString("speed.kafka.server")).thenReturn("localhost:9092");
+            })) {
+      SpeedConfigurationUtils speedConfUt = SpeedConfigurationUtils.getSpeedConf();
+      assertThrows(ConfigurationException.class, speedConfUt::getKafkaConfig);
     }
+  }
 
-    @Test
-    void getKafkaConfigTestFailureInterval() throws ConfigurationException {
-        try (MockedConstruction<YAMLConfiguration> mockedConstruction = mockConstruction(YAMLConfiguration.class,
-                (mock, context) -> {
-                    when(mock.getInterpolator()).thenReturn(interpolator);
-                    when(mock.getString("speed.kafka.server")).thenReturn("localhost:9092");
-                })) {
-            SpeedConfigurationUtils speedConfUt = SpeedConfigurationUtils.getSpeedConf();
-            assertThrows(ConfigurationException.class, speedConfUt::getKafkaConfig);
-        }
+  @Test
+  void speedUpdaterTestFailureClassName() throws ConfigurationException {
+    try (MockedConstruction<YAMLConfiguration> mockedConstruction =
+        mockConstruction(
+            YAMLConfiguration.class,
+            (mock, context) -> {
+              when(mock.getInterpolator()).thenReturn(interpolator);
+            })) {
+      SpeedConfigurationUtils speedConfUt = SpeedConfigurationUtils.getSpeedConf();
+      assertThrows(ConfigurationException.class, speedConfUt::getSpeedUpdater);
     }
-
-    @Test
-    void speedUpdaterTestFailureClassName() throws ConfigurationException {
-        try (MockedConstruction<YAMLConfiguration> mockedConstruction = mockConstruction(YAMLConfiguration.class,
-                (mock, context) -> {
-                    when(mock.getInterpolator()).thenReturn(interpolator);
-                })) {
-            SpeedConfigurationUtils speedConfUt = SpeedConfigurationUtils.getSpeedConf();
-            assertThrows(ConfigurationException.class, speedConfUt::getSpeedUpdater);
-        }
-    }
-
+  }
 }

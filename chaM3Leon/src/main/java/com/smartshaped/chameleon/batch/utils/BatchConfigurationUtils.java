@@ -194,7 +194,6 @@ public class BatchConfigurationUtils extends ConfigurationUtils {
   public BatchUpdater getBatchUpdater() throws ConfigurationException {
     logger.info("Loading BatchUpdater class");
     String batchClassName = config.getString(BATCH_UPDATER_CLASS);
-    logger.debug("{}", batchClassName);
 
     if (batchClassName == null || batchClassName.trim().isEmpty()) {
       logger.warn("No BatchUpdater class configured");

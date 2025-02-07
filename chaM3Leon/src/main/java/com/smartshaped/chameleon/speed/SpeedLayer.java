@@ -85,15 +85,15 @@ public abstract class SpeedLayer {
 
     logger.info("Starting SpeedLayer...");
 
-    Dataset<Row> df = KafkaConsumer.kafkaRead(kafkaConfig, sparkSession);
+    Dataset<Row> df = KafkaConsumer.kafkaRead(kafkaConfig);
 
     speedUpdater.startUpdate(df, Long.parseLong(kafkaConfig.get("intervalMs")));
-    logger.info("SpeedUpdater completed.");
+    logger.info("SpeedUpdater completed");
 
     try {
       sparkSession.streams().awaitAnyTermination();
     } catch (StreamingQueryException e) {
-      throw new SpeedLayerException("Error awayting all Spark Streaming queries termination", e);
+      throw new SpeedLayerException("Error awaiting all Spark Streaming queries termination", e);
     }
 
     sparkSession.stop();

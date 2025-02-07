@@ -5,7 +5,7 @@ import com.smartshaped.chameleon.speed.exception.SpeedLayerException;
 
 public class SpeedLayerTestClass extends SpeedLayer {
 
-	protected SpeedLayerTestClass() throws ConfigurationException, SpeedLayerException {
-		super();
-	}
+  protected SpeedLayerTestClass() throws ConfigurationException, SpeedLayerException {
+    super();
+  }
 }
