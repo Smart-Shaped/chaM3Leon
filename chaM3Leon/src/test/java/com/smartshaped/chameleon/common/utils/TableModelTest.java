@@ -10,50 +10,50 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TableModelTest {
 
-	TableModel tableModel;
+  TableModel tableModel;
 
-	@Test
-	void testNoPK() throws CassandraException, ConfigurationException {
+  @Test
+  void testNoPK() throws CassandraException, ConfigurationException {
 
-		tableModel = new TableModelExample();
-		tableModel.validateModel();
-		tableModel.isGenerateUuid();
+    tableModel = new TableModelExample();
+    tableModel.validateModel();
+    tableModel.isGenerateUuid();
 
-		assertDoesNotThrow(() -> tableModel.getCreationQuery());
-	}
+    assertDoesNotThrow(() -> tableModel.getCreationQuery());
+  }
 
-	@Test
-	void testSinglePK() throws CassandraException, ConfigurationException {
+  @Test
+  void testSinglePK() throws CassandraException, ConfigurationException {
 
-		tableModel = new TableModelExample1();
-		tableModel.validateModel();
+    tableModel = new TableModelExample1();
+    tableModel.validateModel();
 
-		assertDoesNotThrow(() -> tableModel.getCreationQuery());
-	}
+    assertDoesNotThrow(() -> tableModel.getCreationQuery());
+  }
 
-	@Test
-	void testMultiplePK() throws CassandraException, ConfigurationException {
+  @Test
+  void testMultiplePK() throws CassandraException, ConfigurationException {
 
-		tableModel = new TableModelExample2();
-		tableModel.validateModel();
+    tableModel = new TableModelExample2();
+    tableModel.validateModel();
 
-		assertDoesNotThrow(() -> tableModel.getCreationQuery());
-	}
+    assertDoesNotThrow(() -> tableModel.getCreationQuery());
+  }
 
-	@Test
-	void testWrongPK() {
+  @Test
+  void testWrongPK() {
 
-		tableModel = new TableModelExample3();
+    tableModel = new TableModelExample3();
 
-		assertThrows(CassandraException.class, () -> tableModel.validateModel());
-	}
+    assertThrows(CassandraException.class, () -> tableModel.validateModel());
+  }
 
-	@Test
-	void testUnmappedType() throws ConfigurationException, CassandraException {
+  @Test
+  void testUnmappedType() throws ConfigurationException, CassandraException {
 
-		tableModel = new TableModelExample4();
-		tableModel.validateModel();
+    tableModel = new TableModelExample4();
+    tableModel.validateModel();
 
-		assertThrows(ConfigurationException.class, () -> tableModel.getCreationQuery());
-	}
+    assertThrows(ConfigurationException.class, () -> tableModel.getCreationQuery());
+  }
 }

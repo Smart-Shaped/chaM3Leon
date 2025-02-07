@@ -44,6 +44,9 @@ public abstract class ConfigurationUtils {
    * @throws ConfigurationException if a configuration file is not found or is invalid
    */
   protected ConfigurationUtils() throws ConfigurationException {
+
+    logger.info("Loading configuration file");
+
     String mainConfigFile = "framework-config.yml";
     YAMLConfiguration ymlConfig = new YAMLConfiguration();
     FileHandler fileHandler = new FileHandler(ymlConfig);
@@ -56,7 +59,7 @@ public abstract class ConfigurationUtils {
       processIncludes(ymlConfig);
       this.config = ymlConfig;
       String env = this.config.getString("env");
-      logger.info("Configuration loaded successfully for environment: {}", env);
+      logger.debug("Configuration loaded successfully for environment: {}", env);
     } catch (org.apache.commons.configuration2.ex.ConfigurationException e) {
       throw new ConfigurationException("Unable to load configuration file", e);
     }
@@ -99,7 +102,7 @@ public abstract class ConfigurationUtils {
     SparkConf sparkConf = new SparkConf();
     Iterator<String> keys = config.getKeys(confRoot + "spark");
 
-    logger.info("Reading configurations that starts with \"{}spark\"", confRoot);
+    logger.debug("Reading configurations that starts with \"{}spark\"", confRoot);
 
     int prefixLength = confRoot.length();
     String fullKey;
@@ -114,7 +117,7 @@ public abstract class ConfigurationUtils {
 
       if (value != null && !value.trim().isEmpty()) {
 
-        logger.info("Setting Spark configuration: {} = {}", sparkKey, value);
+        logger.debug("Setting Spark configuration: {} = {}", sparkKey, value);
         sparkConf.set(sparkKey, value);
       } else {
         logger.warn("Skipping empty configuration for key: {}", fullKey);
@@ -131,10 +134,10 @@ public abstract class ConfigurationUtils {
    * @param className the name of the class to load
    * @param type the type that the loaded class must be an instance of
    * @return an instance of the loaded class
-   * @throws Exception if the class cannot be loaded or instantiated
+   * @throws ConfigurationException if the class cannot be loaded or instantiated
    */
   protected <T> T loadInstanceOf(String className, Class<T> type) throws ConfigurationException {
-    logger.info("Loading instance of class: {} for type: {}", className, type.getSimpleName());
+    logger.debug("Loading instance of class: {} for type: {}", className, type.getSimpleName());
     Class<?> instance = null;
     try {
       instance = Class.forName(className);
@@ -255,12 +258,16 @@ public abstract class ConfigurationUtils {
           "Missing or empty configuration for key: " + confRoot + CASSANDRA_MODEL_CLASS);
     }
 
+    logger.debug("TableModel class: {}", className);
+
     try {
       tableModel = loadInstanceOf(className, TableModel.class);
     } catch (ConfigurationException e) {
       throw new ConfigurationException(
           "Could not instantiate " + TableModel.class + " due to exception", e);
     }
+
+    logger.info("TableModel instantiated successfully");
 
     return tableModel;
   }

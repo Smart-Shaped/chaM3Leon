@@ -144,7 +144,7 @@ public class MLConfigurationUtils extends ConfigurationUtils {
 
         try {
           readerList.add(loadInstanceOf(readerClassName, HdfsReader.class));
-        } catch (Exception e) {
+        } catch (ConfigurationException e) {
           throw new ConfigurationException(
               "Could not instantiate " + HdfsReader.class + " due to exception", e);
         }

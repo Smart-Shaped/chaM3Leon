@@ -65,10 +65,14 @@ public class CassandraUtils {
       throw new ConfigurationException("Keyspace not setted");
     }
 
+    logger.debug("Keyspace: {}", keyspace);
+
     if (!keyspaceExists(keyspace)) {
-      logger.info("Keyspace {} does not exist", keyspace);
+      logger.warn("Keyspace {} does not exist", keyspace);
 
       int replicationFactor = configurationUtils.getCassandraReplicationFactor();
+
+      logger.debug("Replication factor: {}", replicationFactor);
 
       try {
         createKeyspace(replicationFactor);
@@ -130,6 +134,8 @@ public class CassandraUtils {
       cassandraUtils = new CassandraUtils(configurationUtils);
     }
 
+    logger.warn("CassandraUtils instance already created");
+
     return cassandraUtils;
   }
 
@@ -163,9 +169,13 @@ public class CassandraUtils {
       throw new ConfigurationException("Missing or empty Cassandra node configuration");
     }
 
+    logger.debug("Node: {}", node);
+
     if (dataCenter == null || dataCenter.trim().isEmpty()) {
       throw new ConfigurationException("Missing or empty Cassandra data center configuration");
     }
+
+    logger.debug("Data center: {}", dataCenter);
 
     try {
       CqlSessionBuilder builder =
@@ -174,7 +184,7 @@ public class CassandraUtils {
               .withLocalDatacenter(dataCenter);
 
       CqlSession buildSession = builder.build();
-      logger.info(
+      logger.debug(
           "Cassandra session created successfully. Connected to node: {}, port: {}, data center: {}",
           node,
           port,
@@ -226,6 +236,9 @@ public class CassandraUtils {
    */
   public ResultSet executeSelect(String tableName, Optional<String> whereClause)
       throws CassandraException {
+
+    logger.debug("Executing SELECT query on table {}", tableName);
+
     StringBuilder queryBuilder =
         new StringBuilder("SELECT * FROM ").append(keyspace).append(".").append(tableName);
 
@@ -256,6 +269,9 @@ public class CassandraUtils {
    */
   public ResultSet executeInsert(String tableName, Map<String, Object> columnValueMap)
       throws CassandraException {
+
+    logger.debug("Executing INSERT query on table {}", tableName);
+
     StringBuilder columns = new StringBuilder();
     StringBuilder valuesPlaceholders = new StringBuilder();
 
@@ -300,6 +316,9 @@ public class CassandraUtils {
   public ResultSet executeUpdate(
       String tableName, Map<String, Object> values, Optional<String> whereClause)
       throws CassandraException {
+
+    logger.debug("Executing UPDATE query on table {}", tableName);
+
     StringBuilder queryBuilder =
         new StringBuilder("UPDATE ").append(keyspace).append(".").append(tableName).append(" SET ");
     List<Object> params = new ArrayList<>();
@@ -335,7 +354,7 @@ public class CassandraUtils {
     }
 
     if (!tableExists(tableModel.getTableName())) {
-      logger.info("Table {} does not exist in keyspace {}", tableModel.getTableName(), keyspace);
+      logger.warn("Table {} does not exist in keyspace {}", tableModel.getTableName(), keyspace);
 
       createTable(tableModel);
     }
@@ -356,6 +375,7 @@ public class CassandraUtils {
   private void createTable(TableModel tableModel) throws CassandraException {
 
     try {
+      logger.debug("Creating table {}", tableModel.getTableName());
       String query = tableModel.getCreationQuery().replace("KEYSPACE", keyspace);
       executeQuery(query);
       logger.info("Table {} created successfully", tableModel.getTableName());
@@ -400,6 +420,7 @@ public class CassandraUtils {
     boolean generateUuid = tableModel.isGenerateUuid();
 
     if (generateUuid) {
+      logger.debug("Adding UUID field as primary key");
       df = df.withColumn("id", functions.expr("uuid()"));
     }
 
@@ -409,6 +430,7 @@ public class CassandraUtils {
           .options(Map.of("keyspace", keyspace, "table", table))
           .mode(SaveMode.Append)
           .save();
+      logger.info("DataFrame saved to Cassandra table {} successfully", table);
     } catch (Exception e) {
       throw new CassandraException("Failed to save DataFrame to Cassandra", e);
     }
@@ -439,6 +461,7 @@ public class CassandraUtils {
     String checkpoint = configurationUtils.getCassandraCheckpoint();
 
     if (generateUuid) {
+      logger.debug("Adding UUID field as primary key");
       df = df.withColumn("id", functions.expr("uuid()"));
     }
 
@@ -452,6 +475,7 @@ public class CassandraUtils {
           .outputMode(OutputMode.Append())
           .trigger(Trigger.ProcessingTime(intervalMs))
           .start();
+      logger.info("DataFrame saved to Cassandra table {} in streaming mode successfully", table);
     } catch (Exception e) {
       throw new CassandraException("Failed to save DataFrame to Cassandra", e);
     }
