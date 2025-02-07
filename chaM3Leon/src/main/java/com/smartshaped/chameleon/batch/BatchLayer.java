@@ -88,7 +88,7 @@ public abstract class BatchLayer {
           BatchLayerException {
     logger.info("Starting BatchLayer...");
 
-    Dataset<Row> df = KafkaConsumer.kafkaRead(kafkaConfig, sparkSession);
+    Dataset<Row> df = KafkaConsumer.kafkaRead(kafkaConfig);
 
     logger.info("Starting preprocessing and save to HDFS...");
     preprocessAndSave(df);
@@ -96,7 +96,7 @@ public abstract class BatchLayer {
     if (Objects.isNull(batchUpdater)) {
       logger.info("No batchUpdater found in configuration,skipping it...");
     } else {
-      batchUpdater.startUpdate(df, sparkSession, Long.parseLong(kafkaConfig.get("intervalMs")));
+      batchUpdater.startUpdate(df, Long.parseLong(kafkaConfig.get("intervalMs")));
       logger.info("BatchUpdater completed.");
     }
 

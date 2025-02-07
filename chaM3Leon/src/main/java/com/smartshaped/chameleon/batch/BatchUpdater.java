@@ -56,24 +56,24 @@ public abstract class BatchUpdater {
   /**
    * Starts the batch update process.
    *
-   * <p>This method takes a streaming Dataset<Row>, a SparkSession, and an interval in milliseconds
-   * as arguments. It writes the streaming Dataset to a Cassandra table at the specified interval.
-   * The updateBatch method is called with each new batch of data.
+   * <p>This method takes a streaming Dataset<Row> and an interval in milliseconds as arguments. It
+   * writes the streaming Dataset to a Cassandra table at the specified interval. The updateBatch
+   * method is called with each new batch of data.
    *
    * @param df the streaming Dataset<Row>
-   * @param sparkSession the SparkSession
    * @param intervalMs the interval in milliseconds
    * @throws BatchUpdaterException if an error occurs while executing the update
    */
-  public void startUpdate(Dataset<Row> df, SparkSession sparkSession, Long intervalMs)
-      throws BatchUpdaterException {
+  public void startUpdate(Dataset<Row> df, Long intervalMs) throws BatchUpdaterException {
+
+    SparkSession sparkSession = SparkSession.getActiveSession().get();
 
     try {
       df.writeStream()
           .foreachBatch(
               (streamingBatch, batchId) -> {
                 logger.info("Starting batch update...");
-                Dataset<Row> updatedDF = updateBatch(streamingBatch, sparkSession);
+                Dataset<Row> updatedDF = updateBatch(streamingBatch);
                 saveBatch(updatedDF);
               })
           .trigger(Trigger.ProcessingTime(intervalMs))
@@ -94,17 +94,15 @@ public abstract class BatchUpdater {
   /**
    * Updates a batch of data in Cassandra.
    *
-   * <p>This method takes a Dataset<Row> and a SparkSession as arguments. It should execute any
-   * necessary computations on the Dataset and then return the updated Dataset. The updated Dataset
-   * is then saved to Cassandra by the BatchUpdater.
+   * <p>This method takes a Dataset<Row> as arguments. It should execute any necessary computations
+   * on the Dataset and then return the updated Dataset. The updated Dataset is then saved to
+   * Cassandra by the BatchUpdater.
    *
    * @param df the Dataset<Row> to update
-   * @param sparkSession the SparkSession
    * @return the updated Dataset
    * @throws BatchUpdaterException if an error occurs while executing the update
    */
-  public abstract Dataset<Row> updateBatch(Dataset<Row> df, SparkSession sparkSession)
-      throws BatchUpdaterException;
+  public abstract Dataset<Row> updateBatch(Dataset<Row> df) throws BatchUpdaterException;
 
   /**
    * Saves a batch of data to Cassandra.

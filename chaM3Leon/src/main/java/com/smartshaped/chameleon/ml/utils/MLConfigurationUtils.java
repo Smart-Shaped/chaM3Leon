@@ -58,10 +58,8 @@ public class MLConfigurationUtils extends ConfigurationUtils {
    */
   public static MLConfigurationUtils getMlConf() throws ConfigurationException {
     if (configuration == null) {
+      logger.warn("No previous ml configuration found, loading new configurations.");
       configuration = new MLConfigurationUtils();
-      logger.debug("MLConfigurationUtils instance created");
-    } else {
-      logger.debug("MLConfigurationUtils instance already created");
     }
 
     return configuration;

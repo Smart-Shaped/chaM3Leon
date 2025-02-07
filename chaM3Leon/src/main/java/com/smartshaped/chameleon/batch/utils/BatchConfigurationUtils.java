@@ -34,6 +34,8 @@ public class BatchConfigurationUtils extends ConfigurationUtils {
   private BatchConfigurationUtils() throws ConfigurationException {
     super();
     this.setConfRoot(ROOT.concat(SEPARATOR));
+
+    logger.debug("BatchConfigurationUtils created");
   }
 
   /**
@@ -49,8 +51,7 @@ public class BatchConfigurationUtils extends ConfigurationUtils {
   public static BatchConfigurationUtils getBatchConf() throws ConfigurationException {
     logger.info("Loading batch configuration");
     if (configuration == null) {
-      logger.info("No previous batch configuration found, loading new configurations.");
-
+      logger.warn("No previous batch configuration found, loading new configurations.");
       configuration = new BatchConfigurationUtils();
     }
 
@@ -86,6 +87,9 @@ public class BatchConfigurationUtils extends ConfigurationUtils {
       topicName = config.getString(key.concat(SEPARATOR).concat(NAME));
 
       preprocessorClassName = config.getString(key.concat(SEPARATOR).concat(CLASS));
+
+      logger.debug("Topic name: {}", topicName);
+      logger.debug("Preprocessor class name: {}", preprocessorClassName);
 
       try {
         preprocessorMap.put(topicName, loadInstanceOf(preprocessorClassName, Preprocessor.class));
@@ -124,7 +128,7 @@ public class BatchConfigurationUtils extends ConfigurationUtils {
 
     if (!Objects.isNull(kafkaServer)) {
       kafkaConfig.put("servers", kafkaServer);
-      logger.info("Kafka server: {}", kafkaServer);
+      logger.debug("Kafka server: {}", kafkaServer);
     } else {
       throw new ConfigurationException(
           "Missing server definition in " + BATCH_KAFKA_SERVER + " configuration key");
@@ -133,6 +137,7 @@ public class BatchConfigurationUtils extends ConfigurationUtils {
     String intervalMs = config.getString(BATCH_KAFKA_INTERVAL);
 
     if (!Objects.isNull(intervalMs)) {
+      logger.debug("Kafka interval: {}", intervalMs);
       kafkaConfig.put("intervalMs", intervalMs);
     } else {
       throw new ConfigurationException(
@@ -168,7 +173,7 @@ public class BatchConfigurationUtils extends ConfigurationUtils {
     }
 
     stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-    logger.info("Kafka topics: {}", stringBuilder);
+    logger.debug("Kafka topics: {}", stringBuilder);
     kafkaConfig.put("topics", stringBuilder.toString());
     logger.info("Kafka configuration retrieved successfully");
     return kafkaConfig;
@@ -187,9 +192,9 @@ public class BatchConfigurationUtils extends ConfigurationUtils {
    *     class can not be instantiated.
    */
   public BatchUpdater getBatchUpdater() throws ConfigurationException {
-    logger.info("Loading BatchUpdater class.");
+    logger.info("Loading BatchUpdater class");
     String batchClassName = config.getString(BATCH_UPDATER_CLASS);
-    logger.info("{}", batchClassName);
+    logger.debug("{}", batchClassName);
 
     if (batchClassName == null || batchClassName.trim().isEmpty()) {
       logger.warn("No BatchUpdater class configured");

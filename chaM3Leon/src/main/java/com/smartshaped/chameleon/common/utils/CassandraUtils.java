@@ -134,8 +134,6 @@ public class CassandraUtils {
       cassandraUtils = new CassandraUtils(configurationUtils);
     }
 
-    logger.warn("CassandraUtils instance already created");
-
     return cassandraUtils;
   }
 
