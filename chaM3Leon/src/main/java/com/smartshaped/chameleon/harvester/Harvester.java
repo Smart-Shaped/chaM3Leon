@@ -10,14 +10,13 @@ import com.smartshaped.chameleon.harvester.transformer.DatasetTransformer;
 import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
 import com.smartshaped.chameleon.preprocessing.Preprocessor;
 import com.smartshaped.chameleon.preprocessing.exception.PreprocessorException;
+import java.util.List;
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-
-import java.util.List;
 
 /**
  * The Harvester class is responsible for downloading and transforming data, and then saving it to a

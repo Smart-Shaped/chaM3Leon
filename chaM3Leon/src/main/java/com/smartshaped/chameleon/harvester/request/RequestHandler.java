@@ -7,10 +7,9 @@ import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.CassandraUtils;
 import com.smartshaped.chameleon.common.utils.TableModel;
 import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
+import java.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.*;
 
 /** Class for handling requests: retrieving, updating and validating them. */
 public class RequestHandler {
@@ -44,12 +43,12 @@ public class RequestHandler {
       ResultSet resultSet = cassandraUtils.executeSelect("request", Optional.of("state = 'false'"));
 
       List<Row> rows = resultSet.all();
-      logger.info("Number of rows retrieved: {}", rows.size());
+      logger.debug("Number of rows retrieved: {}", rows.size());
 
       List<Request> requests = new ArrayList<>();
 
       for (Row row : rows) {
-        logger.info("Populating request");
+        logger.debug("Populating request");
         Request request = new Request();
 
         request.setId(row.getUuid("id"));
@@ -57,12 +56,12 @@ public class RequestHandler {
         request.setHarvesterIds(row.getString("harvesterids"));
         request.setState(row.getString("state"));
 
-        logger.info("Request populated: {}", request);
+        logger.debug("Request populated: {}", request);
 
         RequestValidator validator = new RequestValidator();
 
         if (!validator.isRequestValid(request)) {
-          logger.info("Invalid request: {}", request);
+          logger.warn("Invalid request: {}", request);
           continue;
         }
         requests.add(request);
@@ -70,7 +69,7 @@ public class RequestHandler {
       return requests.toArray(new Request[0]);
 
     } catch (Exception e) {
-      logger.info("Error retrieving requests with false state", e);
+      logger.warn("Error retrieving requests with false state", e);
       return new Request[0];
     }
   }

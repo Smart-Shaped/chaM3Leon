@@ -4,11 +4,10 @@ import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.harvester.exception.DownloaderException;
 import com.smartshaped.chameleon.harvester.request.Request;
 import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /** An abstract class representing a downloader that downloads data from a source. */
 public abstract class Downloader<T> {
@@ -29,11 +28,11 @@ public abstract class Downloader<T> {
     }
 
     className = this.getClass().getSimpleName();
-    logger.info("Class name set to: " + className);
+    logger.debug("Class name set to: " + className);
 
     try {
       queryParams = configurationUtils.getQueryParam(className);
-      logger.info("Query parameters retrieved: " + queryParams);
+      logger.debug("Query parameters retrieved: " + queryParams);
     } catch (ConfigurationException e) {
       throw new ConfigurationException(
           "Failed to retrieve query parameters for class: " + className, e);
@@ -41,7 +40,7 @@ public abstract class Downloader<T> {
 
     try {
       urlParams = configurationUtils.getUrlParams(className);
-      logger.info("URL parameters retrieved: " + urlParams);
+      logger.debug("URL parameters retrieved: " + urlParams);
     } catch (ConfigurationException e) {
       throw new ConfigurationException(
           "Failed to retrieve URL parameters for class: " + className, e);

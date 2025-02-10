@@ -1,9 +1,7 @@
 package com.smartshaped.chameleon.harvester.request;
 
-import java.util.UUID;
-
 import com.smartshaped.chameleon.common.utils.TableModel;
-
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

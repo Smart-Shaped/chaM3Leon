@@ -10,14 +10,13 @@ import com.smartshaped.chameleon.harvester.transformer.DatasetTransformer;
 import com.smartshaped.chameleon.ml.HdfsReader;
 import com.smartshaped.chameleon.preprocessing.EmptyPreprocessor;
 import com.smartshaped.chameleon.preprocessing.Preprocessor;
+import java.util.*;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
-
-import java.util.*;
 
 /**
  * Utility class that extends {@link ConfigurationUtils} for reading configuration files related to
@@ -62,10 +61,10 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
   public static HarvesterConfigurationUtils getHarvesterConf() throws ConfigurationException {
     logger.info("Loading harvester configuration");
     if (configuration == null) {
-      logger.info("No previous harvester configuration found, loading new configurations.");
+      logger.warn("No previous harvester configuration found, loading new configurations");
       configuration = new HarvesterConfigurationUtils();
-      logger.info("Configuration retrieved successfully.");
     }
+    logger.info("Configuration retrieved successfully");
     return configuration;
   }
 
@@ -82,7 +81,7 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
    * @throws ConfigurationException if no harvester ID is found for the given class name
    */
   public String getHarvesterId(String className) throws ConfigurationException {
-    logger.info("Retrieving harvester ID for class: {}", className);
+    logger.debug("Retrieving harvester ID for class: {}", className);
     List<HierarchicalConfiguration<ImmutableNode>> harvesterList =
         config.childConfigurationsAt(HARVESTERS);
     for (HierarchicalConfiguration<ImmutableNode> harvesterNode : harvesterList) {
@@ -152,7 +151,7 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
    */
   public RequestHandler getRequestHandler() throws ConfigurationException, CassandraException {
     String handlerName = config.getString(ROOT.concat(SEPARATOR) + "RequestHandler");
-    logger.info("Loading RequestHandler: {}", handlerName);
+    logger.debug("Loading RequestHandler: {}", handlerName);
 
     if (handlerName == null) {
       throw new ConfigurationException(
@@ -183,20 +182,20 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
    * @throws RuntimeException if there is an error retrieving any parameter value.
    */
   public Map<String, String> getPreprocessorParams(String className) throws ConfigurationException {
-    logger.info("Starting to retrieve preprocessor parameters for class: " + className);
+    logger.debug("Starting to retrieve preprocessor parameters for class: " + className);
 
     Map<String, String> params = new HashMap<>();
     String basePath = confRoot + PREPROCESSOR + SEPARATOR + className + SEPARATOR + PARAMS;
-    logger.info("Base path for preprocessor keys: " + basePath);
+    logger.debug("Base path for preprocessor keys: " + basePath);
 
     Iterator<String> iterator = config.getKeys(basePath);
     if (!iterator.hasNext()) {
-      logger.info("No keys found under base path: " + basePath);
+      logger.warn("No keys found under base path: " + basePath);
     }
 
     while (iterator.hasNext()) {
       String key = iterator.next();
-      logger.info("Processing key: " + key);
+      logger.debug("Processing key: " + key);
 
       try {
         String originalKey = key;
@@ -205,18 +204,20 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
           key = key.substring(lastDotIndex + 1);
         }
         String value = config.getString(originalKey);
-        logger.info("Retrieved value for key '" + originalKey + "': " + value);
+        logger.debug("Retrieved value for key '" + originalKey + "': " + value);
         params.put(key, value);
       } catch (Exception e) {
         throw new ConfigurationException("Failed to retrieve value for key: " + key, e);
       }
     }
 
-    logger.info(
+    logger.debug(
         "Finished retrieving preprocesssor parameters for class: "
             + className
             + ". Total parameters: "
             + params.size());
+
+    logger.info("Finished retrieving preprocessor parameters");
     return params;
   }
 
@@ -237,7 +238,7 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
     String preprocessorName = config.getString(harvesterId + SEPARATOR.concat(PREPROCESSOR), "");
 
     if (preprocessorName.trim().isEmpty()) {
-      logger.info("No preprocessor specified in the configurations, using empty one...");
+      logger.warn("No preprocessor specified in the configurations, using empty one...");
       return new EmptyPreprocessor();
     }
 
@@ -263,10 +264,10 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
    * @throws ConfigurationException if there is an error retrieving any parameter value.
    */
   public Map<String, String> getUrlParams(String className) throws ConfigurationException {
-    logger.info("Starting to retrieve url parameters for class: " + className);
+    logger.debug("Starting to retrieve url parameters for class: " + className);
 
     String basePath = confRoot + DOWNLOADER + SEPARATOR + className + SEPARATOR + URL;
-    logger.info("Base path for configuration keys: " + basePath);
+    logger.debug("Base path for configuration keys: " + basePath);
 
     return getParams(basePath);
   }
@@ -285,9 +286,9 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
    * @throws ConfigurationException if there is an error retrieving any parameter value.
    */
   public Map<String, String> getQueryParam(String className) throws ConfigurationException {
-    logger.info("Starting to retrieve query parameters for class: " + className);
+    logger.debug("Starting to retrieve query parameters for class: " + className);
     String basePath = confRoot + DOWNLOADER + SEPARATOR + className + SEPARATOR + PARAMS;
-    logger.info("Base path for configuration keys: " + basePath);
+    logger.debug("Base path for configuration keys: " + basePath);
 
     return getParams(basePath);
   }
@@ -310,12 +311,12 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
 
     Iterator<String> iterator = config.getKeys(basePath);
     if (!iterator.hasNext()) {
-      logger.info("No keys found under base path: " + basePath);
+      logger.warn("No keys found under base path: " + basePath);
     }
 
     while (iterator.hasNext()) {
       String key = iterator.next();
-      logger.info("Processing key: " + key);
+      logger.debug("Processing key: " + key);
       try {
         String originalKey = key;
         int lastDotIndex = key.lastIndexOf(".");
@@ -323,14 +324,16 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
           key = key.substring(lastDotIndex + 1);
         }
         String value = config.getString(originalKey);
-        logger.info("Retrieved value for key '" + originalKey + "': " + value);
+        logger.debug("Retrieved value for key '" + originalKey + "': " + value);
         params.put(key, value);
       } catch (Exception e) {
         throw new ConfigurationException("Failed to retrieve value for key: " + key, e);
       }
     }
 
-    logger.info("Finished retrieving parameters, total parameters: " + params.size());
+    logger.info("Finished retrieving parameters");
+    logger.debug("Total parameters: " + params.size());
+
     return params;
   }
 
@@ -381,7 +384,8 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
    *     is an error during instantiation.
    */
   public Downloader getDownloader(String harvesterId) throws ConfigurationException {
-    logger.info("Attempting to retrieve downloader name for harvester ID: {}", harvesterId);
+    logger.info("Attempting to retrieve downloader name ");
+    logger.debug("Harvester ID: {}", harvesterId);
     String downloaderName =
         config.getString(
             harvesterId + SEPARATOR.concat(DOWNLOADER.concat(SEPARATOR.concat(CLASS))));
@@ -391,7 +395,7 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
     }
 
     try {
-      logger.info("Loading instance of downloader: {}", downloaderName);
+      logger.debug("Loading instance of downloader: {}", downloaderName);
       return loadInstanceOf(downloaderName, Downloader.class);
     } catch (ConfigurationException e) {
       throw new ConfigurationException(
@@ -428,7 +432,7 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
    */
   public String getInputPath(String harvesterId) {
     String path = harvesterId + SEPARATOR + "inputPath";
-    logger.info("Input path: {}", path);
+    logger.debug("Input path: {}", path);
     return config.getString(path, "");
   }
 }
