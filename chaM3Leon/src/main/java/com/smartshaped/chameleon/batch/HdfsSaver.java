@@ -1,12 +1,13 @@
 package com.smartshaped.chameleon.batch;
 
-import com.smartshaped.chameleon.batch.exception.HdfsSaverException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.streaming.OutputMode;
 import org.apache.spark.sql.streaming.Trigger;
+
+import com.smartshaped.chameleon.batch.exception.HdfsSaverException;
 
 public class HdfsSaver {
 
@@ -40,7 +41,7 @@ public class HdfsSaver {
       Dataset<Row> ds, String parquetPath, String checkpointLocation, Long intervalMs)
       throws HdfsSaverException {
 
-    logger.info("Initiating writeStream operation");
+    logger.info("Starting writeStream operation...");
 
     try {
       ds.writeStream()
@@ -54,6 +55,6 @@ public class HdfsSaver {
       throw new HdfsSaverException(e);
     }
 
-    logger.info("WriteStream operation started successfully");
+    logger.debug("WriteStream operation started successfully");
   }
 }

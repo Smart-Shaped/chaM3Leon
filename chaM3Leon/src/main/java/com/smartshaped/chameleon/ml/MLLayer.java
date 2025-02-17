@@ -1,5 +1,16 @@
 package com.smartshaped.chameleon.ml;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.sedona.spark.SedonaContext;
+import org.apache.spark.SparkConf;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
+
 import com.smartshaped.chameleon.common.exception.CassandraException;
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.CassandraUtils;
@@ -10,18 +21,9 @@ import com.smartshaped.chameleon.ml.exception.MLLayerException;
 import com.smartshaped.chameleon.ml.exception.ModelSaverException;
 import com.smartshaped.chameleon.ml.exception.PipelineException;
 import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
+
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.sedona.spark.SedonaContext;
-import org.apache.spark.SparkConf;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Abstract class for the entry point of the machine learning layer; all ml related components will
@@ -38,18 +40,28 @@ public abstract class MLLayer {
   private ModelSaver modelSaver;
   private SparkSession sparkSession;
   private MLConfigurationUtils configurationUtils;
+  private CassandraUtils cassandraUtils;
   private BlackBox blackBox;
 
-  protected MLLayer() throws ConfigurationException, MLLayerException {
+  protected MLLayer() throws ConfigurationException, MLLayerException, CassandraException {
 
     this.setConfigurationUtils(MLConfigurationUtils.getMlConf());
+    logger.info("ML configurations loaded correctly");
+    this.cassandraUtils = CassandraUtils.getCassandraUtils(configurationUtils);
+    logger.info("Cassandra utils loaded correctly");
     this.setReaderList(this.configurationUtils.getHdfsReaders());
+    logger.info("HdfsReaders list loaded correctly");
     this.setPipeline(this.configurationUtils.getPipeline());
+    logger.info("Pipeline loaded correctly");
     this.setModelSaver(this.configurationUtils.getModelSaver());
+    logger.info("Model saver loaded correctly");
     this.setBlackBox(this.configurationUtils.getBlackBox());
+    logger.info("BlackBox loaded correctly");
 
-    logger.debug(pipeline == null ? "Pipeline is null" : "Pipeline is not null");
-    logger.debug(blackBox == null ? "BlackBox is null" : "BlackBox is not null");
+    String pipelineLog = (pipeline == null ? "Pipeline is null" : "Pipeline is not null");
+    logger.debug(pipelineLog);
+    String blackBoxLog = (blackBox == null ? "BlackBox is null" : "BlackBox is not null");
+    logger.debug(blackBoxLog);
 
     // one between pipeline and blackbox must be not null
     if (this.pipeline == null && this.blackBox == null) {
@@ -147,8 +159,7 @@ public abstract class MLLayer {
       logger.warn("BlackBox skipped");
     }
 
-    CassandraUtils cassandraUtils = CassandraUtils.getCassandraUtils(configurationUtils);
-    cassandraUtils.close();
+    this.cassandraUtils.close();
     sparkSession.stop();
   }
 }

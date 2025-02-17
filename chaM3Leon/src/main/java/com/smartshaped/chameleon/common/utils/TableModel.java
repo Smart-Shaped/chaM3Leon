@@ -1,15 +1,16 @@
 package com.smartshaped.chameleon.common.utils;
 
-import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.configuration2.YAMLConfiguration;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import com.smartshaped.chameleon.common.exception.CassandraException;
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
 
 /** This class is the base class for all classes that needs to interact with Cassandra database. */
 public abstract class TableModel {
@@ -72,7 +73,7 @@ public abstract class TableModel {
 
     checkPrimaryKey(fields);
 
-    logger.debug("TableModel Initialized");
+    logger.debug("TableModel initialized");
   }
 
   /**
@@ -88,7 +89,7 @@ public abstract class TableModel {
    */
   public String getCreationQuery() throws ConfigurationException {
 
-    logger.info("Generating query to create table {}...", tableName);
+    logger.debug("Generating query to create table {}...", tableName);
     String fieldsSchema = getSchema();
 
     return "CREATE TABLE IF NOT EXISTS KEYSPACE." + tableName + " (" + fieldsSchema + ");";
@@ -105,7 +106,7 @@ public abstract class TableModel {
    */
   private void checkPrimaryKey(Field[] fields) throws CassandraException {
 
-    logger.info("Checking primary key...");
+    logger.debug("Checking primary key...");
 
     primaryKey = choosePrimaryKey();
 
@@ -122,7 +123,7 @@ public abstract class TableModel {
 
       checkValidPrimaryKey(fields, primaryKeys);
     }
-    logger.info("Primary key checked");
+    logger.debug("Primary key checked");
   }
 
   /**
@@ -142,7 +143,7 @@ public abstract class TableModel {
       logger.debug("Checking primary key {}...", x);
       checkValidPrimaryKey(fields, x);
     }
-    logger.info("All primary keys are valid");
+    logger.debug("All primary keys are valid");
   }
 
   /**
@@ -217,7 +218,7 @@ public abstract class TableModel {
       fieldsSchema.append(", PRIMARY KEY (").append(primaryKey).append(")");
     }
 
-    logger.info("Generated schema: {}", fieldsSchema);
+    logger.debug("Generated schema: {}", fieldsSchema);
     return fieldsSchema.toString();
   }
 

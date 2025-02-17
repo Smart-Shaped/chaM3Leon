@@ -1,15 +1,17 @@
 package com.smartshaped.chameleon.ml;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.ml.exception.HdfsReaderException;
-import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.ml.exception.HdfsReaderException;
+import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Abstract class representing a HDFS reader.
@@ -32,6 +34,7 @@ public abstract class HdfsReader {
   protected HdfsReader() throws ConfigurationException {
 
     this.configurationUtils = MLConfigurationUtils.getMlConf();
+    logger.info("ML configurations loaded correctly");
     String className = this.getClass().getName();
     this.hdfsPath = configurationUtils.getHDFSPath(className);
 
@@ -39,7 +42,7 @@ public abstract class HdfsReader {
       throw new ConfigurationException("Missing HDFS path");
     }
 
-    logger.debug("HdfsReader initialized");
+    logger.info("HdfsReader initialized");
   }
 
   /**
@@ -91,8 +94,8 @@ public abstract class HdfsReader {
   }
 
   /**
-   * This method must be implemented by all the HDFSReaders. It processes the raw data
-   * read from HDFS and returns a new DataFrame.
+   * This method must be implemented by all the HDFSReaders. It processes the raw data read from
+   * HDFS and returns a new DataFrame.
    *
    * @return a DataFrame containing the processed data
    * @throws HdfsReaderException if any error occurs while processing the data

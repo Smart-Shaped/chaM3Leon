@@ -1,5 +1,15 @@
 package com.smartshaped.chameleon.harvester.request;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.smartshaped.chameleon.common.exception.CassandraException;
@@ -7,9 +17,6 @@ import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.CassandraUtils;
 import com.smartshaped.chameleon.common.utils.TableModel;
 import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
-import java.util.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /** Class for handling requests: retrieving, updating and validating them. */
 public class RequestHandler {
@@ -22,9 +29,13 @@ public class RequestHandler {
 
   public RequestHandler() throws ConfigurationException, CassandraException {
     configurationUtils = HarvesterConfigurationUtils.getHarvesterConf();
+    logger.info("Harvester configurations loaded correctly");
     cassandraUtils = CassandraUtils.getCassandraUtils(configurationUtils);
+    logger.info("Cassandra utils loaded correctly");
     requestModel = configurationUtils.createTableModel(Request.class.getName());
+    logger.info("Table from model created correctly");
     cassandraUtils.validateTableModel(requestModel);
+    logger.info("Table model validated correctly");
   }
 
   /**
@@ -39,6 +50,8 @@ public class RequestHandler {
    * @return an array of valid requests
    */
   public Request[] getRequest() {
+    logger.info("Retrieving requests not already processed");
+
     try {
       ResultSet resultSet = cassandraUtils.executeSelect("request", Optional.of("state = 'false'"));
 
@@ -101,6 +114,7 @@ public class RequestHandler {
    * idempotent, so it is safe to call it multiple times.
    */
   public void closeConnection() {
+    logger.debug("Closing Cassandra connection");
     cassandraUtils.close();
   }
 }

@@ -1,12 +1,5 @@
 package com.smartshaped.chameleon.ml;
 
-import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.common.utils.CassandraUtils;
-import com.smartshaped.chameleon.common.utils.TableModel;
-import com.smartshaped.chameleon.ml.blackbox.BlackBox;
-import com.smartshaped.chameleon.ml.exception.ModelSaverException;
-import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.ml.Model;
@@ -14,6 +7,14 @@ import org.apache.spark.ml.util.MLWritable;
 import org.apache.spark.ml.util.MLWriter;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+
+import com.smartshaped.chameleon.common.exception.CassandraException;
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.CassandraUtils;
+import com.smartshaped.chameleon.common.utils.TableModel;
+import com.smartshaped.chameleon.ml.blackbox.BlackBox;
+import com.smartshaped.chameleon.ml.exception.ModelSaverException;
+import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
 
 /**
  * Abstract class representing a saver for ml results.
@@ -30,16 +31,22 @@ public abstract class ModelSaver {
   protected String hdfsPath;
   protected TableModel tableModel;
   protected MLConfigurationUtils mlConfigurationUtils;
+  protected CassandraUtils cassandraUtils;
 
-  protected ModelSaver() throws ConfigurationException {
+  protected ModelSaver() throws ConfigurationException, CassandraException {
 
     this.mlConfigurationUtils = MLConfigurationUtils.getMlConf();
+    logger.info("ML configurations loaded correctly");
+    this.cassandraUtils = CassandraUtils.getCassandraUtils(mlConfigurationUtils);
+    logger.info("Cassandra utils loaded correctly");
     this.hdfsPath = mlConfigurationUtils.getModelDir();
+    logger.debug("Model directory set to: {}", hdfsPath);
 
     String modelName = mlConfigurationUtils.getModelClassName();
     this.tableModel = mlConfigurationUtils.createTableModel(modelName);
+    logger.info("Table from model created correctly");
 
-    logger.debug("ModelSaver initialized");
+    logger.info("ModelSaver initialized");
   }
 
   /**
@@ -57,7 +64,9 @@ public abstract class ModelSaver {
       throws ModelSaverException, ConfigurationException, CassandraException {
 
     Model<?> model = pipeline.getModel();
+    logger.debug("Model retrieved");
     Dataset<Row> predictions = pipeline.getPredictions();
+    logger.debug("Predictions retrieved");
 
     saveModelToHDFS(model);
 
@@ -119,11 +128,9 @@ public abstract class ModelSaver {
   protected void savePredictionsToCassandra(Dataset<Row> predictions)
       throws ModelSaverException, ConfigurationException, CassandraException {
 
-    CassandraUtils cassandraUtils = CassandraUtils.getCassandraUtils(mlConfigurationUtils);
-
     try {
-      cassandraUtils.validateTableModel(tableModel);
-      cassandraUtils.saveDF(predictions, tableModel);
+      this.cassandraUtils.validateTableModel(tableModel);
+      this.cassandraUtils.saveDF(predictions, tableModel);
     } catch (CassandraException e) {
       throw new ModelSaverException("Error while saving predictions to Cassandra", e);
     }

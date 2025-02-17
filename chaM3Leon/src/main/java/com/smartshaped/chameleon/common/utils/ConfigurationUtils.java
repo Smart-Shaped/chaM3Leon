@@ -1,6 +1,10 @@
 package com.smartshaped.chameleon.common.utils;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Iterator;
+import java.util.Objects;
+
 import org.apache.commons.configuration2.YAMLConfiguration;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.io.FileHandler;
@@ -8,10 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.SparkConf;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
-import java.util.Objects;
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
 
 /** Utility class for reading configuration files. */
 public abstract class ConfigurationUtils {
@@ -98,7 +99,7 @@ public abstract class ConfigurationUtils {
    * @return A SparkConf object with the configuration settings
    */
   public SparkConf getSparkConf() {
-    logger.info("Loading Spark configuration");
+    logger.debug("Loading Spark configuration");
     SparkConf sparkConf = new SparkConf();
     Iterator<String> keys = config.getKeys(confRoot + "spark");
 
@@ -124,7 +125,7 @@ public abstract class ConfigurationUtils {
       }
     }
 
-    logger.info("Spark configuration retrieved successfully");
+    logger.debug("Spark configuration retrieved successfully");
     return sparkConf;
   }
 
@@ -267,7 +268,7 @@ public abstract class ConfigurationUtils {
           "Could not instantiate " + TableModel.class + " due to exception", e);
     }
 
-    logger.info("TableModel instantiated successfully");
+    logger.debug("TableModel instantiated successfully");
 
     return tableModel;
   }

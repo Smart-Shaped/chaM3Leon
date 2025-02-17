@@ -1,5 +1,17 @@
 package com.smartshaped.chameleon.harvester;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.sedona.spark.SedonaContext;
+import org.apache.spark.SparkConf;
+import org.apache.spark.sql.SparkSession;
+
 import com.smartshaped.chameleon.common.exception.CassandraException;
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.harvester.exception.HarvesterException;
@@ -9,16 +21,6 @@ import com.smartshaped.chameleon.harvester.request.RequestHandler;
 import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
 import com.smartshaped.chameleon.ml.exception.HdfsReaderException;
 import com.smartshaped.chameleon.preprocessing.exception.PreprocessorException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.sedona.spark.SedonaContext;
-import org.apache.spark.SparkConf;
-import org.apache.spark.sql.SparkSession;
 
 /**
  * The HarvesterLayer class is responsible for starting the harvesting process. It reads all the
@@ -37,18 +39,18 @@ public class HarvesterLayer {
   public HarvesterLayer() throws ConfigurationException, CassandraException {
 
     configurationUtils = HarvesterConfigurationUtils.getHarvesterConf();
-    logger.info("Harvester configurations correctly loaded");
+    logger.info("Harvester configurations loaded correctly");
     handler = configurationUtils.getRequestHandler();
-    logger.info("Request handler correctly loaded");
+    logger.info("Request handler loaded correctly");
     harvesters = configurationUtils.getHarvesters();
-    logger.info("Harvesters list correctly loaded");
+    logger.info("Harvesters list loaded correctly");
 
     try {
       logger.info("Loading configuration for spark session...");
       SparkConf sparkConf = configurationUtils.getSparkConf();
       SparkSession config = SedonaContext.builder().config(sparkConf).getOrCreate();
       sparkSession = SedonaContext.create(config);
-      logger.info("Loaded configuration successfully for spark session");
+      logger.info("Spark session successfully created");
     } catch (Exception e) {
       throw new ConfigurationException("Error getting or creating Sedona SparkSession", e);
     }
@@ -72,6 +74,9 @@ public class HarvesterLayer {
           HdfsReaderException,
           CassandraException,
           HarvesterLayerException {
+
+    logger.info("Starting harvesting process");
+
     Request[] requests = handler.getRequest();
     String state = "";
     List<Harvester> filteredHarvesters;
@@ -112,7 +117,7 @@ public class HarvesterLayer {
 
     logger.debug("Number of harvesters: {}", harvesters.size());
     for (Harvester harvester : harvesters) {
-      logger.info("Harvester: {}", harvester);
+      logger.debug("Harvester: {}", harvester);
     }
 
     List<Harvester> harvesterList = new ArrayList<>();
@@ -129,7 +134,7 @@ public class HarvesterLayer {
       }
     }
 
-    logger.info("Number of filtered harvesters: {}", harvesterList.size());
+    logger.debug("Number of filtered harvesters: {}", harvesterList.size());
 
     return harvesterList;
   }

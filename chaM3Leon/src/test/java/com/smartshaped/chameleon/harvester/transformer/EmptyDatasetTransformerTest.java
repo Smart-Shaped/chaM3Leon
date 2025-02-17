@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class EmptyDatasetTransformerTest {
+class EmptyDatasetTransformerTest {
 
   @Mock private Dataset<Row> dataset;
 

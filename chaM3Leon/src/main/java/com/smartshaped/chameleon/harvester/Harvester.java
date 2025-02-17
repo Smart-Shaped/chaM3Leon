@@ -1,5 +1,13 @@
 package com.smartshaped.chameleon.harvester;
 
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
+
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.harvester.downloader.Downloader;
 import com.smartshaped.chameleon.harvester.exception.DownloaderException;
@@ -10,13 +18,8 @@ import com.smartshaped.chameleon.harvester.transformer.DatasetTransformer;
 import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
 import com.smartshaped.chameleon.preprocessing.Preprocessor;
 import com.smartshaped.chameleon.preprocessing.exception.PreprocessorException;
-import java.util.List;
+
 import lombok.Getter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;
 
 /**
  * The Harvester class is responsible for downloading and transforming data, and then saving it to a
@@ -36,12 +39,19 @@ public abstract class Harvester {
 
   protected Harvester() throws ConfigurationException {
     configurationUtils = HarvesterConfigurationUtils.getHarvesterConf();
+    logger.info("Harvester configurations loaded correctly");
     String className = this.getClass().getName();
     harvesterId = configurationUtils.getHarvesterId(className);
+    logger.debug("harvesterId \"{}\" loaded correctly", harvesterId);
     outputPath = configurationUtils.getOutputPath(harvesterId);
+    logger.debug("outputPath \\\"{}\\\" loaded correctly", outputPath);
     inputPath = configurationUtils.getInputPath(harvesterId);
+    logger.debug("inputPath \\\"{}\\\" loaded correctly", inputPath);
+    logger.info("Loading preprocessor...");
     preprocessor = configurationUtils.getPreprocessor(harvesterId);
+    logger.info("Loading transformer...");
     transformer = configurationUtils.getTransformer(harvesterId);
+    logger.info("Loading downloaader...");
     downloader = configurationUtils.getDownloader(harvesterId);
   }
 
@@ -63,7 +73,7 @@ public abstract class Harvester {
    */
   public void execute(Request req) throws HarvesterException, PreprocessorException {
     List<String> paramList = extractParams(req);
-    logger.info("Extracted params: {}", paramList);
+    logger.debug("Extracted params: {}", paramList);
 
     logger.info("Downloading and transforming data...");
     Dataset<Row> data = downloadAndTransform(paramList, req);
@@ -71,7 +81,7 @@ public abstract class Harvester {
 
     logger.info("Starting preprocessing...");
     Dataset<Row> df = process(data);
-    logger.info("Preprocessed data completed");
+    logger.info("Data preprocessing completed");
 
     HarvesterSaver.save(df, outputPath);
     logger.info("Saved data to: {}", outputPath);
@@ -92,6 +102,7 @@ public abstract class Harvester {
 
     try {
       if (transformer == null) {
+        logger.warn("Transformer not defined for Harvester {}", harvesterId);
         df = (Dataset<Row>) downloader.download(paramList, req);
       } else {
         df = transformer.transform(downloader.download(paramList, req));
@@ -112,18 +123,10 @@ public abstract class Harvester {
    */
   public Dataset<Row> process(Dataset<Row> data) throws PreprocessorException {
     if (preprocessor == null) {
+      logger.warn("Preprocessor not defined for Harvester {}", harvesterId);
       return data;
     } else {
       return preprocessor.preprocess(data);
     }
-  }
-
-  /**
-   * Returns the name of this harvester.
-   *
-   * @return The name of this harvester.
-   */
-  public String getName() {
-    return this.getClass().getName();
   }
 }

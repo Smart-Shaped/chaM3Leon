@@ -1,17 +1,18 @@
 package com.smartshaped.chameleon.ml.utils;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.ConfigurationUtils;
 import com.smartshaped.chameleon.ml.HdfsReader;
 import com.smartshaped.chameleon.ml.ModelSaver;
 import com.smartshaped.chameleon.ml.Pipeline;
 import com.smartshaped.chameleon.ml.blackbox.BlackBox;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Utility class that extends {@link ConfigurationUtils} for reading configuration files related to
@@ -177,7 +178,7 @@ public class MLConfigurationUtils extends ConfigurationUtils {
     String pipelineClassName = config.getString(ML_PIPELINE_CLASS, "");
 
     if (pipelineClassName.trim().isEmpty()) {
-      logger.warn("Missing or empty configuration for key: " + ML_PIPELINE_CLASS);
+      logger.warn("Missing or empty configuration for key: {}", ML_PIPELINE_CLASS);
       return null;
     }
 

@@ -4,16 +4,17 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mockStatic;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.common.utils.CassandraUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.CassandraUtils;
+
 @ExtendWith(MockitoExtension.class)
-public class HarvesterConfigurationUtilsTest {
+class HarvesterConfigurationUtilsTest {
 
   @Mock private HarvesterConfigurationUtils configurationUtils;
   @Mock private CassandraUtils cassandraUtils;

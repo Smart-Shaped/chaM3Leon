@@ -1,13 +1,11 @@
 package com.smartshaped.chameleon.common.utils;
 
-import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.core.CqlSessionBuilder;
-import com.datastax.oss.driver.api.core.cql.BoundStatement;
-import com.datastax.oss.driver.api.core.cql.PreparedStatement;
-import com.datastax.oss.driver.api.core.cql.ResultSet;
-import com.datastax.oss.driver.api.core.cql.SimpleStatement;
-import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.sql.Dataset;
@@ -17,11 +15,14 @@ import org.apache.spark.sql.functions;
 import org.apache.spark.sql.streaming.OutputMode;
 import org.apache.spark.sql.streaming.Trigger;
 
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.CqlSessionBuilder;
+import com.datastax.oss.driver.api.core.cql.BoundStatement;
+import com.datastax.oss.driver.api.core.cql.PreparedStatement;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
+import com.datastax.oss.driver.api.core.cql.SimpleStatement;
+import com.smartshaped.chameleon.common.exception.CassandraException;
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
 
 /**
  * Utility class to interact with Cassandra database and execute queries.
@@ -76,7 +77,7 @@ public class CassandraUtils {
 
       try {
         createKeyspace(replicationFactor);
-        logger.info("Keyspace {} created", keyspace);
+        logger.debug("Keyspace {} created", keyspace);
       } catch (Exception e) {
         throw new CassandraException("Error while creating the keyspace", e);
       }
@@ -91,6 +92,7 @@ public class CassandraUtils {
    * @throws CassandraException if any error occurs during the execution
    */
   private boolean keyspaceExists(String keyspace) throws CassandraException {
+    logger.debug("Checking if keyspace {} exists", keyspace);
     String query = "SELECT keyspace_name FROM system_schema.keyspaces WHERE keyspace_name = ?";
     ResultSet resultSet = executeQuery(query, keyspace);
     com.datastax.oss.driver.api.core.cql.Row row = resultSet.one();
@@ -105,7 +107,8 @@ public class CassandraUtils {
    * @throws CassandraException if any error occurs during the execution
    */
   private void createKeyspace(int replicationFactor) throws CassandraException {
-
+    logger.debug(
+        "Creating keyspace {} with a replication factor of {}", keyspace, replicationFactor);
     String query =
         "CREATE KEYSPACE IF NOT EXISTS "
             + keyspace
@@ -129,7 +132,7 @@ public class CassandraUtils {
   public static CassandraUtils getCassandraUtils(ConfigurationUtils configurationUtils)
       throws ConfigurationException, CassandraException {
     if (cassandraUtils == null) {
-      logger.info("Creating CassandraUtils instance");
+      logger.debug("Creating CassandraUtils instance");
 
       cassandraUtils = new CassandraUtils(configurationUtils);
     }
@@ -345,6 +348,8 @@ public class CassandraUtils {
    */
   public void validateTableModel(TableModel tableModel) throws CassandraException {
 
+    logger.debug("Validating table model...");
+
     try {
       tableModel.validateModel();
     } catch (ConfigurationException e) {
@@ -390,6 +395,7 @@ public class CassandraUtils {
    * @throws CassandraException if any error occurs during the execution
    */
   private boolean tableExists(String table) throws CassandraException {
+    logger.debug("Checking if table {} exists", table);
     String query =
         "SELECT table_name FROM system_schema.tables WHERE keyspace_name = ? AND table_name = ?";
     ResultSet resultSet = executeQuery(query, keyspace, table);

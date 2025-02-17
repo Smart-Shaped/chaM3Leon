@@ -1,17 +1,18 @@
 package com.smartshaped.chameleon.speed.utils;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.common.utils.ConfigurationUtils;
-import com.smartshaped.chameleon.speed.SpeedUpdater;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.ConfigurationUtils;
+import com.smartshaped.chameleon.speed.SpeedUpdater;
 
 public class SpeedConfigurationUtils extends ConfigurationUtils {
 
@@ -48,9 +49,9 @@ public class SpeedConfigurationUtils extends ConfigurationUtils {
    * @throws ConfigurationException if any error occurs while loading the configuration.
    */
   public static SpeedConfigurationUtils getSpeedConf() throws ConfigurationException {
-    logger.info("Loading speed configuration");
+    logger.debug("Loading speed configuration");
     if (configuration == null) {
-      logger.warn("No previous speed configuration found, loading new configurations.");
+      logger.debug("No previous speed configuration found, loading new configurations.");
 
       configuration = new SpeedConfigurationUtils();
     }
@@ -77,7 +78,7 @@ public class SpeedConfigurationUtils extends ConfigurationUtils {
    *     required key is not defined.
    */
   public Map<String, String> getKafkaConfig() throws ConfigurationException {
-    logger.info("Loading Kafka configuration");
+    logger.debug("Loading Kafka configuration");
     Map<String, String> kafkaConfig = new HashMap<>();
 
     String kafkaServer = config.getString(SPEED_KAFKA_SERVER);
@@ -133,7 +134,7 @@ public class SpeedConfigurationUtils extends ConfigurationUtils {
     stringBuilder.deleteCharAt(stringBuilder.length() - 1);
     logger.debug("Kafka topics: {}", stringBuilder);
     kafkaConfig.put("topics", stringBuilder.toString());
-    logger.info("Kafka configuration retrieved successfully");
+    logger.debug("Kafka configuration retrieved successfully");
     return kafkaConfig;
   }
 
@@ -149,7 +150,7 @@ public class SpeedConfigurationUtils extends ConfigurationUtils {
    *     loading the class.
    */
   public SpeedUpdater getSpeedUpdater() throws ConfigurationException {
-    logger.info("Loading SpeedUpdater class");
+    logger.debug("Loading SpeedUpdater class");
     String speedClassName = config.getString(SPEED_UPDATER_CLASS);
 
     if (speedClassName == null || speedClassName.trim().isEmpty()) {
@@ -158,7 +159,7 @@ public class SpeedConfigurationUtils extends ConfigurationUtils {
 
     try {
       SpeedUpdater updater = loadInstanceOf(speedClassName, SpeedUpdater.class);
-      logger.info("SpeedUpdater instantiated successfully: {}", speedClassName);
+      logger.debug("SpeedUpdater instantiated successfully: {}", speedClassName);
       return updater;
     } catch (ConfigurationException e) {
       throw new ConfigurationException(

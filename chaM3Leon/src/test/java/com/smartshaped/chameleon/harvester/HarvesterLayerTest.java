@@ -5,14 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.common.utils.CassandraUtils;
-import com.smartshaped.chameleon.harvester.request.Request;
-import com.smartshaped.chameleon.harvester.request.RequestHandler;
-import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.sedona.spark.SedonaContext;
 import org.apache.spark.SparkConf;
 import org.apache.spark.sql.SparkSession;
@@ -23,8 +18,15 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.smartshaped.chameleon.common.exception.CassandraException;
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.CassandraUtils;
+import com.smartshaped.chameleon.harvester.request.Request;
+import com.smartshaped.chameleon.harvester.request.RequestHandler;
+import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
+
 @ExtendWith(MockitoExtension.class)
-public class HarvesterLayerTest {
+class HarvesterLayerTest {
 
   @Mock private HarvesterConfigurationUtils configurationUtils;
   @Mock private RequestHandler requestHandler;
