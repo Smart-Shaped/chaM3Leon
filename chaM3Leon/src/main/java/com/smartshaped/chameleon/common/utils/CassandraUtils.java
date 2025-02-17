@@ -1,13 +1,11 @@
 package com.smartshaped.chameleon.common.utils;
 
-import com.datastax.oss.driver.api.core.CqlSession;
-import com.datastax.oss.driver.api.core.CqlSessionBuilder;
-import com.datastax.oss.driver.api.core.cql.BoundStatement;
-import com.datastax.oss.driver.api.core.cql.PreparedStatement;
-import com.datastax.oss.driver.api.core.cql.ResultSet;
-import com.datastax.oss.driver.api.core.cql.SimpleStatement;
-import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.sql.Dataset;
@@ -17,11 +15,14 @@ import org.apache.spark.sql.functions;
 import org.apache.spark.sql.streaming.OutputMode;
 import org.apache.spark.sql.streaming.Trigger;
 
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.CqlSessionBuilder;
+import com.datastax.oss.driver.api.core.cql.BoundStatement;
+import com.datastax.oss.driver.api.core.cql.PreparedStatement;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
+import com.datastax.oss.driver.api.core.cql.SimpleStatement;
+import com.smartshaped.chameleon.common.exception.CassandraException;
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
 
 /**
  * Utility class to interact with Cassandra database and execute queries.
@@ -65,14 +66,18 @@ public class CassandraUtils {
       throw new ConfigurationException("Keyspace not setted");
     }
 
+    logger.debug("Keyspace: {}", keyspace);
+
     if (!keyspaceExists(keyspace)) {
-      logger.info("Keyspace {} does not exist", keyspace);
+      logger.warn("Keyspace {} does not exist", keyspace);
 
       int replicationFactor = configurationUtils.getCassandraReplicationFactor();
 
+      logger.debug("Replication factor: {}", replicationFactor);
+
       try {
         createKeyspace(replicationFactor);
-        logger.info("Keyspace {} created", keyspace);
+        logger.debug("Keyspace {} created", keyspace);
       } catch (Exception e) {
         throw new CassandraException("Error while creating the keyspace", e);
       }
@@ -87,6 +92,7 @@ public class CassandraUtils {
    * @throws CassandraException if any error occurs during the execution
    */
   private boolean keyspaceExists(String keyspace) throws CassandraException {
+    logger.debug("Checking if keyspace {} exists", keyspace);
     String query = "SELECT keyspace_name FROM system_schema.keyspaces WHERE keyspace_name = ?";
     ResultSet resultSet = executeQuery(query, keyspace);
     com.datastax.oss.driver.api.core.cql.Row row = resultSet.one();
@@ -101,7 +107,8 @@ public class CassandraUtils {
    * @throws CassandraException if any error occurs during the execution
    */
   private void createKeyspace(int replicationFactor) throws CassandraException {
-
+    logger.debug(
+        "Creating keyspace {} with a replication factor of {}", keyspace, replicationFactor);
     String query =
         "CREATE KEYSPACE IF NOT EXISTS "
             + keyspace
@@ -125,7 +132,7 @@ public class CassandraUtils {
   public static CassandraUtils getCassandraUtils(ConfigurationUtils configurationUtils)
       throws ConfigurationException, CassandraException {
     if (cassandraUtils == null) {
-      logger.info("Creating CassandraUtils instance");
+      logger.debug("Creating CassandraUtils instance");
 
       cassandraUtils = new CassandraUtils(configurationUtils);
     }
@@ -163,9 +170,13 @@ public class CassandraUtils {
       throw new ConfigurationException("Missing or empty Cassandra node configuration");
     }
 
+    logger.debug("Node: {}", node);
+
     if (dataCenter == null || dataCenter.trim().isEmpty()) {
       throw new ConfigurationException("Missing or empty Cassandra data center configuration");
     }
+
+    logger.debug("Data center: {}", dataCenter);
 
     try {
       CqlSessionBuilder builder =
@@ -174,7 +185,7 @@ public class CassandraUtils {
               .withLocalDatacenter(dataCenter);
 
       CqlSession buildSession = builder.build();
-      logger.info(
+      logger.debug(
           "Cassandra session created successfully. Connected to node: {}, port: {}, data center: {}",
           node,
           port,
@@ -226,6 +237,9 @@ public class CassandraUtils {
    */
   public ResultSet executeSelect(String tableName, Optional<String> whereClause)
       throws CassandraException {
+
+    logger.debug("Executing SELECT query on table {}", tableName);
+
     StringBuilder queryBuilder =
         new StringBuilder("SELECT * FROM ").append(keyspace).append(".").append(tableName);
 
@@ -256,6 +270,9 @@ public class CassandraUtils {
    */
   public ResultSet executeInsert(String tableName, Map<String, Object> columnValueMap)
       throws CassandraException {
+
+    logger.debug("Executing INSERT query on table {}", tableName);
+
     StringBuilder columns = new StringBuilder();
     StringBuilder valuesPlaceholders = new StringBuilder();
 
@@ -300,6 +317,9 @@ public class CassandraUtils {
   public ResultSet executeUpdate(
       String tableName, Map<String, Object> values, Optional<String> whereClause)
       throws CassandraException {
+
+    logger.debug("Executing UPDATE query on table {}", tableName);
+
     StringBuilder queryBuilder =
         new StringBuilder("UPDATE ").append(keyspace).append(".").append(tableName).append(" SET ");
     List<Object> params = new ArrayList<>();
@@ -328,6 +348,8 @@ public class CassandraUtils {
    */
   public void validateTableModel(TableModel tableModel) throws CassandraException {
 
+    logger.debug("Validating table model...");
+
     try {
       tableModel.validateModel();
     } catch (ConfigurationException e) {
@@ -335,7 +357,7 @@ public class CassandraUtils {
     }
 
     if (!tableExists(tableModel.getTableName())) {
-      logger.info("Table {} does not exist in keyspace {}", tableModel.getTableName(), keyspace);
+      logger.warn("Table {} does not exist in keyspace {}", tableModel.getTableName(), keyspace);
 
       createTable(tableModel);
     }
@@ -356,6 +378,7 @@ public class CassandraUtils {
   private void createTable(TableModel tableModel) throws CassandraException {
 
     try {
+      logger.debug("Creating table {}", tableModel.getTableName());
       String query = tableModel.getCreationQuery().replace("KEYSPACE", keyspace);
       executeQuery(query);
       logger.info("Table {} created successfully", tableModel.getTableName());
@@ -372,6 +395,7 @@ public class CassandraUtils {
    * @throws CassandraException if any error occurs during the execution
    */
   private boolean tableExists(String table) throws CassandraException {
+    logger.debug("Checking if table {} exists", table);
     String query =
         "SELECT table_name FROM system_schema.tables WHERE keyspace_name = ? AND table_name = ?";
     ResultSet resultSet = executeQuery(query, keyspace, table);
@@ -400,6 +424,7 @@ public class CassandraUtils {
     boolean generateUuid = tableModel.isGenerateUuid();
 
     if (generateUuid) {
+      logger.debug("Adding UUID field as primary key");
       df = df.withColumn("id", functions.expr("uuid()"));
     }
 
@@ -409,6 +434,7 @@ public class CassandraUtils {
           .options(Map.of("keyspace", keyspace, "table", table))
           .mode(SaveMode.Append)
           .save();
+      logger.info("DataFrame saved to Cassandra table {} successfully", table);
     } catch (Exception e) {
       throw new CassandraException("Failed to save DataFrame to Cassandra", e);
     }
@@ -439,6 +465,7 @@ public class CassandraUtils {
     String checkpoint = configurationUtils.getCassandraCheckpoint();
 
     if (generateUuid) {
+      logger.debug("Adding UUID field as primary key");
       df = df.withColumn("id", functions.expr("uuid()"));
     }
 
@@ -452,6 +479,7 @@ public class CassandraUtils {
           .outputMode(OutputMode.Append())
           .trigger(Trigger.ProcessingTime(intervalMs))
           .start();
+      logger.info("DataFrame saved to Cassandra table {} in streaming mode successfully", table);
     } catch (Exception e) {
       throw new CassandraException("Failed to save DataFrame to Cassandra", e);
     }

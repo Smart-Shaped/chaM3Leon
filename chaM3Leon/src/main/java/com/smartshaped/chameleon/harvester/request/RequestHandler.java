@@ -1,5 +1,15 @@
 package com.smartshaped.chameleon.harvester.request;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.smartshaped.chameleon.common.exception.CassandraException;
@@ -7,10 +17,6 @@ import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.CassandraUtils;
 import com.smartshaped.chameleon.common.utils.TableModel;
 import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.*;
 
 /** Class for handling requests: retrieving, updating and validating them. */
 public class RequestHandler {
@@ -23,9 +29,13 @@ public class RequestHandler {
 
   public RequestHandler() throws ConfigurationException, CassandraException {
     configurationUtils = HarvesterConfigurationUtils.getHarvesterConf();
+    logger.info("Harvester configurations loaded correctly");
     cassandraUtils = CassandraUtils.getCassandraUtils(configurationUtils);
+    logger.info("Cassandra utils loaded correctly");
     requestModel = configurationUtils.createTableModel(Request.class.getName());
+    logger.info("Table from model created correctly");
     cassandraUtils.validateTableModel(requestModel);
+    logger.info("Table model validated correctly");
   }
 
   /**
@@ -40,16 +50,18 @@ public class RequestHandler {
    * @return an array of valid requests
    */
   public Request[] getRequest() {
+    logger.info("Retrieving requests not already processed");
+
     try {
       ResultSet resultSet = cassandraUtils.executeSelect("request", Optional.of("state = 'false'"));
 
       List<Row> rows = resultSet.all();
-      logger.info("Number of rows retrieved: {}", rows.size());
+      logger.debug("Number of rows retrieved: {}", rows.size());
 
       List<Request> requests = new ArrayList<>();
 
       for (Row row : rows) {
-        logger.info("Populating request");
+        logger.debug("Populating request");
         Request request = new Request();
 
         request.setId(row.getUuid("id"));
@@ -57,12 +69,12 @@ public class RequestHandler {
         request.setHarvesterIds(row.getString("harvesterids"));
         request.setState(row.getString("state"));
 
-        logger.info("Request populated: {}", request);
+        logger.debug("Request populated: {}", request);
 
         RequestValidator validator = new RequestValidator();
 
         if (!validator.isRequestValid(request)) {
-          logger.info("Invalid request: {}", request);
+          logger.warn("Invalid request: {}", request);
           continue;
         }
         requests.add(request);
@@ -70,7 +82,7 @@ public class RequestHandler {
       return requests.toArray(new Request[0]);
 
     } catch (Exception e) {
-      logger.info("Error retrieving requests with false state", e);
+      logger.warn("Error retrieving requests with false state", e);
       return new Request[0];
     }
   }
@@ -102,6 +114,7 @@ public class RequestHandler {
    * idempotent, so it is safe to call it multiple times.
    */
   public void closeConnection() {
+    logger.debug("Closing Cassandra connection");
     cassandraUtils.close();
   }
 }

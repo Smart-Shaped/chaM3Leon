@@ -1,17 +1,18 @@
 package com.smartshaped.chameleon.ml.utils;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.ConfigurationUtils;
 import com.smartshaped.chameleon.ml.HdfsReader;
 import com.smartshaped.chameleon.ml.ModelSaver;
 import com.smartshaped.chameleon.ml.Pipeline;
-import com.smartshaped.chameleon.ml.blackBox.BlackBox;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import com.smartshaped.chameleon.ml.blackbox.BlackBox;
 
 /**
  * Utility class that extends {@link ConfigurationUtils} for reading configuration files related to
@@ -42,6 +43,8 @@ public class MLConfigurationUtils extends ConfigurationUtils {
   private MLConfigurationUtils() throws ConfigurationException {
     super();
     this.setConfRoot(ROOT.concat(SEPARATOR));
+
+    logger.debug("MLConfigurationUtils created");
   }
 
   /**
@@ -56,6 +59,7 @@ public class MLConfigurationUtils extends ConfigurationUtils {
    */
   public static MLConfigurationUtils getMlConf() throws ConfigurationException {
     if (configuration == null) {
+      logger.warn("No previous ml configuration found, loading new configurations.");
       configuration = new MLConfigurationUtils();
     }
 
@@ -69,13 +73,13 @@ public class MLConfigurationUtils extends ConfigurationUtils {
    * @return String representing HDFS path.
    */
   public String getHDFSPath(String className) {
-    logger.info("Getting HDFS path for class: {}", className);
+    logger.debug("Getting HDFS path for class: {}", className);
     String defaultValue = config.getString(ML_HDFS_READERS_DEFAULT, "");
-    logger.info("Default HDFS path: {}", defaultValue);
+    logger.debug("Default HDFS path: {}", defaultValue);
 
     Iterator<String> keys = config.getKeys(ML_HDFS_READERS);
 
-    logger.info("Reading configurations that starts with \"{}\"", ML_HDFS_READERS);
+    logger.debug("Reading configurations that starts with \"{}\"", ML_HDFS_READERS);
 
     int suffixLength = 6;
     String fullKey;
@@ -92,14 +96,15 @@ public class MLConfigurationUtils extends ConfigurationUtils {
 
         if (className.equals(classConfigValue)) {
           pathKey = readerPrefix.concat(SEPARATOR.concat(PATH));
-          logger.info("Reader class {} found in configurations", className);
+          logger.debug("Reader class {} found in configurations", className);
+          logger.info("HDFS path successfully retrieved");
           return config.getString(pathKey, defaultValue);
         }
       }
     }
 
-    logger.info("Reader class {} not found in configuration file", className);
-    logger.info(
+    logger.warn("Reader class {} not found in configuration file", className);
+    logger.debug(
         "No specific HDFS path found for class {}, returning default: {}", className, defaultValue);
     return defaultValue;
   }
@@ -117,7 +122,7 @@ public class MLConfigurationUtils extends ConfigurationUtils {
 
     Iterator<String> keys = config.getKeys(ML_HDFS_READERS);
 
-    logger.info("Reading configurations that starts with \"{}\"", ML_HDFS_READERS);
+    logger.debug("Reading configurations that starts with \"{}\"", ML_HDFS_READERS);
 
     List<HdfsReader> readerList = new ArrayList<>();
     String fullKey;
@@ -134,9 +139,11 @@ public class MLConfigurationUtils extends ConfigurationUtils {
               "At least a reader must be defined in ml.hdfs.readers config");
         }
 
+        logger.debug("Reader class {} found in configurations", readerClassName);
+
         try {
           readerList.add(loadInstanceOf(readerClassName, HdfsReader.class));
-        } catch (Exception e) {
+        } catch (ConfigurationException e) {
           throw new ConfigurationException(
               "Could not instantiate " + HdfsReader.class + " due to exception", e);
         }
@@ -171,9 +178,11 @@ public class MLConfigurationUtils extends ConfigurationUtils {
     String pipelineClassName = config.getString(ML_PIPELINE_CLASS, "");
 
     if (pipelineClassName.trim().isEmpty()) {
-      logger.info("Missing or empty configuration for key: " + ML_PIPELINE_CLASS);
+      logger.warn("Missing or empty configuration for key: {}", ML_PIPELINE_CLASS);
       return null;
     }
+
+    logger.debug("Pipeline class: {}", pipelineClassName);
 
     try {
       return loadInstanceOf(pipelineClassName, Pipeline.class);
@@ -202,6 +211,8 @@ public class MLConfigurationUtils extends ConfigurationUtils {
           "Missing or empty configuration for key: " + ML_MODEL_SAVER_CLASS);
     }
 
+    logger.debug("Model saver class: {}", modelSaverClassName);
+
     try {
       return loadInstanceOf(modelSaverClassName, ModelSaver.class);
     } catch (ConfigurationException e) {
@@ -225,9 +236,11 @@ public class MLConfigurationUtils extends ConfigurationUtils {
     String blackBoxClassName = config.getString(ML_BLACK_BOX_CLASS, "");
 
     if (blackBoxClassName.trim().isEmpty()) {
-      logger.info("Missing or empty configuration for key: " + ML_BLACK_BOX_CLASS);
+      logger.debug("Missing or empty configuration for key: " + ML_BLACK_BOX_CLASS);
       return null;
     }
+
+    logger.debug("BlackBox class: {}", blackBoxClassName);
 
     try {
       return loadInstanceOf(blackBoxClassName, BlackBox.class);

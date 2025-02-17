@@ -28,13 +28,13 @@ public class KafkaConsumer {
    * Read from Kafka in streaming mode, subscribing to different topics loaded from kafkaConfig.
    *
    * @param kafkaConfig Mappa con le configurazioni di Kafka.
-   * @param sparkSession Sessione Spark.
    * @return Dataset<Row> Dataset letto da Kafka.
    * @throws KafkaConsumerException Se avviene un errore durante la lettura.
    */
-  public static Dataset<Row> kafkaRead(Map<String, String> kafkaConfig, SparkSession sparkSession)
+  public static Dataset<Row> kafkaRead(Map<String, String> kafkaConfig)
       throws KafkaConsumerException {
 
+    SparkSession sparkSession = SparkSession.getActiveSession().get();
     String topics = kafkaConfig.get("topics");
     Dataset<Row> df;
 
@@ -50,7 +50,7 @@ public class KafkaConsumer {
               .option("startingOffsets", "latest")
               .load();
 
-      logger.info("Dataset subscribed to Kafka on topics: {}", topics);
+      logger.debug("Dataset subscribed to Kafka on topics: {}", topics);
 
     } catch (Exception e) {
       throw new KafkaConsumerException(

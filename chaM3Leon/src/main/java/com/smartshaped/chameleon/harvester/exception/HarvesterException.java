@@ -2,6 +2,8 @@ package com.smartshaped.chameleon.harvester.exception;
 
 public class HarvesterException extends Exception {
 
+  private static final long serialVersionUID = 1L;
+
   public HarvesterException(String message) {
     super("Exception in the Harvester. Caused by: \n" + message);
   }

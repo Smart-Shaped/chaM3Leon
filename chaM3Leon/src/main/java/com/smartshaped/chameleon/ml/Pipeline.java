@@ -30,9 +30,9 @@ public abstract class Pipeline {
 
   private static final Logger logger = LogManager.getLogger(Pipeline.class);
 
-  private List<Dataset<Row>> datasets;
-  private Model<?> model;
-  private Dataset<Row> predictions;
+  protected List<Dataset<Row>> datasets;
+  protected Model<?> model;
+  protected Dataset<Row> predictions;
 
   public abstract void start() throws PipelineException;
 
@@ -50,6 +50,8 @@ public abstract class Pipeline {
    * @throws PipelineException if any error occurs while checking the path.
    */
   public boolean hdfsPathAlreadyExist(String hdfsPath) throws PipelineException {
+
+    logger.debug("Checking HDFS path: {}", hdfsPath);
 
     Configuration configuration = new Configuration();
     Path path = new Path(hdfsPath);

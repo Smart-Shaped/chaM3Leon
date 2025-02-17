@@ -1,12 +1,7 @@
 package com.smartshaped.chameleon.speed;
 
-import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.common.exception.KafkaConsumerException;
-import com.smartshaped.chameleon.common.utils.KafkaConsumer;
-import com.smartshaped.chameleon.speed.exception.SpeedLayerException;
-import com.smartshaped.chameleon.speed.exception.SpeedUpdaterException;
-import com.smartshaped.chameleon.speed.utils.SpeedConfigurationUtils;
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.SparkConf;
@@ -15,7 +10,13 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.streaming.StreamingQueryException;
 
-import java.util.Map;
+import com.smartshaped.chameleon.common.exception.CassandraException;
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.exception.KafkaConsumerException;
+import com.smartshaped.chameleon.common.utils.KafkaConsumer;
+import com.smartshaped.chameleon.speed.exception.SpeedLayerException;
+import com.smartshaped.chameleon.speed.exception.SpeedUpdaterException;
+import com.smartshaped.chameleon.speed.utils.SpeedConfigurationUtils;
 
 public abstract class SpeedLayer {
 
@@ -46,7 +47,7 @@ public abstract class SpeedLayer {
     logger.info("Spark configurations loaded correctly");
 
     try {
-      logger.info("Instantiating Spark Session");
+      logger.info("Instantiating Spark Session...");
       sparkSession = SparkSession.builder().config(sparkConf).getOrCreate();
       logger.info("Spark Session created");
     } catch (Exception e) {
@@ -85,15 +86,15 @@ public abstract class SpeedLayer {
 
     logger.info("Starting SpeedLayer...");
 
-    Dataset<Row> df = KafkaConsumer.kafkaRead(kafkaConfig, sparkSession);
+    Dataset<Row> df = KafkaConsumer.kafkaRead(kafkaConfig);
 
     speedUpdater.startUpdate(df, Long.parseLong(kafkaConfig.get("intervalMs")));
-    logger.info("SpeedUpdater completed.");
+    logger.info("SpeedUpdater completed");
 
     try {
       sparkSession.streams().awaitAnyTermination();
     } catch (StreamingQueryException e) {
-      throw new SpeedLayerException("Error awayting all Spark Streaming queries termination", e);
+      throw new SpeedLayerException("Error awaiting all Spark Streaming queries termination", e);
     }
 
     sparkSession.stop();

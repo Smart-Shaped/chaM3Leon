@@ -1,15 +1,16 @@
 package com.smartshaped.chameleon.common.utils;
 
-import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.configuration2.YAMLConfiguration;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import com.smartshaped.chameleon.common.exception.CassandraException;
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
 
 /** This class is the base class for all classes that needs to interact with Cassandra database. */
 public abstract class TableModel {
@@ -71,6 +72,8 @@ public abstract class TableModel {
     Field[] fields = this.getClass().getDeclaredFields();
 
     checkPrimaryKey(fields);
+
+    logger.debug("TableModel initialized");
   }
 
   /**
@@ -86,6 +89,7 @@ public abstract class TableModel {
    */
   public String getCreationQuery() throws ConfigurationException {
 
+    logger.debug("Generating query to create table {}...", tableName);
     String fieldsSchema = getSchema();
 
     return "CREATE TABLE IF NOT EXISTS KEYSPACE." + tableName + " (" + fieldsSchema + ");";
@@ -102,21 +106,24 @@ public abstract class TableModel {
    */
   private void checkPrimaryKey(Field[] fields) throws CassandraException {
 
+    logger.debug("Checking primary key...");
+
     primaryKey = choosePrimaryKey();
 
     if (primaryKey.trim().isEmpty()) {
-
+      logger.warn("Primary key is empty, a UUID will be generated as the primary key");
       generateUuid = true;
     } else {
       String[] primaryKeys = primaryKey.replaceAll("\\s", "").split(",");
 
       if (primaryKeys.length > 1) {
-
+        logger.debug("Multiple primary keys found");
         multipleKeys = true;
       }
 
       checkValidPrimaryKey(fields, primaryKeys);
     }
+    logger.debug("Primary key checked");
   }
 
   /**
@@ -133,8 +140,10 @@ public abstract class TableModel {
       throws CassandraException {
 
     for (String x : primaryKeys) {
+      logger.debug("Checking primary key {}...", x);
       checkValidPrimaryKey(fields, x);
     }
+    logger.debug("All primary keys are valid");
   }
 
   /**
@@ -154,9 +163,9 @@ public abstract class TableModel {
       fieldsList.add(field.getName());
     }
     if (!fieldsList.contains(x)) {
-
       throw new CassandraException("Primary key " + x + " not found");
     }
+    logger.debug("Primary key {} is valid", x);
   }
 
   /**
@@ -181,6 +190,7 @@ public abstract class TableModel {
     String fieldType = "";
 
     if (generateUuid) {
+      logger.debug("Adding UUID as primary key");
       fieldsSchema.append("id uuid PRIMARY KEY, ");
     }
 
@@ -204,9 +214,11 @@ public abstract class TableModel {
     }
 
     if (multipleKeys) {
+      logger.debug("Adding compound primary key");
       fieldsSchema.append(", PRIMARY KEY (").append(primaryKey).append(")");
     }
 
+    logger.debug("Generated schema: {}", fieldsSchema);
     return fieldsSchema.toString();
   }
 
@@ -225,11 +237,14 @@ public abstract class TableModel {
    */
   private String convertFieldType(String javaType) throws ConfigurationException {
 
+    logger.debug("Converting Java type {} to Cassandra type...", javaType);
     String cqlType = config.getString(MAPPING_PREFIX + javaType, "");
 
     if (cqlType.trim().isEmpty()) {
       throw new ConfigurationException("Missing mapping for " + javaType);
     }
+
+    logger.debug("Converted Java type {} to Cassandra type: {}", javaType, cqlType);
 
     return cqlType;
   }

@@ -10,82 +10,78 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ConfigurationUtilsTest {
 
-	private ConfigurationUtilsExample configurationUtils;
+  private ConfigurationUtilsExample configurationUtils;
 
-	@BeforeEach
-	void setUp() throws ConfigurationException {
-		configurationUtils = new ConfigurationUtilsExample();
-	}
+  @BeforeEach
+  void setUp() throws ConfigurationException {
+    configurationUtils = new ConfigurationUtilsExample();
+  }
 
-	@Test
-	void testConstructorSuccess() {
-		assertDoesNotThrow(ConfigurationUtilsExample::new);
-	}
+  @Test
+  void testConstructorSuccess() {
+    assertDoesNotThrow(ConfigurationUtilsExample::new);
+  }
 
-	@Test
-	void testGetSparkConf() {
+  @Test
+  void testGetSparkConf() {
+    assertDoesNotThrow(() -> configurationUtils.getSparkConf());
+  }
 
-		assertDoesNotThrow(() -> configurationUtils.getSparkConf());
-	}
+  @Test
+  void testGetCassandraKeyspaceName() {
+    assertDoesNotThrow(() -> configurationUtils.getCassandraKeySpaceName());
+  }
 
-	@Test
-	void testGetCassandraKeyspaceName() {
-		assertDoesNotThrow(() -> configurationUtils.getCassandraKeySpaceName());
-	}
+  @Test
+  void testGetCassandraReplicationFactor() {
+    assertDoesNotThrow(() -> configurationUtils.getCassandraReplicationFactor());
+  }
 
-	@Test
-	void testGetCassandraReplicationFactor() {
-		assertDoesNotThrow(() -> configurationUtils.getCassandraReplicationFactor());
-	}
+  @Test
+  void testGetCassandraNode() {
+    assertDoesNotThrow(() -> configurationUtils.getCassandraNode());
+  }
 
-	@Test
-	void testGetCassandraNode() {
-		assertDoesNotThrow(() -> configurationUtils.getCassandraNode());
-	}
+  @Test
+  void testGetCassandraPort() {
+    assertDoesNotThrow(() -> configurationUtils.getCassandraPort());
+  }
 
-	@Test
-	void testGetCassandraPort() {
-		assertDoesNotThrow(() -> configurationUtils.getCassandraPort());
-	}
+  @Test
+  void testGetCassandraDataCenter() {
+    assertDoesNotThrow(() -> configurationUtils.getCassandraDataCenter());
+  }
 
-	@Test
-	void testGetCassandraDataCenter() {
-		assertDoesNotThrow(() -> configurationUtils.getCassandraDataCenter());
-	}
+  @Test
+  void testGetCassandraCheckpoint() {
+    assertDoesNotThrow(() -> configurationUtils.getCassandraCheckpoint());
+  }
 
-	@Test
-	void testGetCassandraCheckpoint() {
-		assertDoesNotThrow(() -> configurationUtils.getCassandraCheckpoint());
-	}
+  @Test
+  void testGetModelClassName() {
+    assertDoesNotThrow(() -> configurationUtils.getModelClassName());
+  }
 
-//    @Test
-//    void testGetCassandraCheckpointFailure() {
-//        assertThrows(ConfigurationException.class, () -> configurationUtils.getCassandraCheckpoint());
-//    }
+  @Test
+  void testCreateTableModelMissingClassName() {
+    assertThrows(ConfigurationException.class, () -> configurationUtils.createTableModel(""));
+  }
 
-	@Test
-	void testGetModelClassName() {
-		assertDoesNotThrow(() -> configurationUtils.getModelClassName());
-	}
+  @Test
+  void testCreateTableModelGenericException() {
+    assertThrows(ConfigurationException.class, () -> configurationUtils.createTableModel("test"));
+  }
 
-	@Test
-	void testCreateTableModelMissingClassName() {
-		assertThrows(ConfigurationException.class, () -> configurationUtils.createTableModel(""));
-	}
+  @Test
+  void testCreateTableModelNoValidBinding() {
+    assertThrows(
+        ConfigurationException.class,
+        () -> configurationUtils.createTableModel(ConfigurationUtils.class.getName()));
+  }
 
-	@Test
-	void testCreateTableModelGenericException() {
-		assertThrows(ConfigurationException.class, () -> configurationUtils.createTableModel("test"));
-	}
-
-	@Test
-	void testCreateTableModelNoValidBinding() {
-		assertThrows(ConfigurationException.class,
-				() -> configurationUtils.createTableModel(ConfigurationUtils.class.getName()));
-	}
-
-	@Test
-	void testCreateTableModelSuccess() {
-		assertDoesNotThrow(() -> configurationUtils.createTableModel(TableModelExample.class.getName()));
-	}
+  @Test
+  void testCreateTableModelSuccess() {
+    assertDoesNotThrow(
+        () -> configurationUtils.createTableModel(TableModelExample.class.getName()));
+  }
 }

@@ -1,17 +1,8 @@
 package com.smartshaped.chameleon.ml;
 
-import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.common.utils.CassandraUtils;
-import com.smartshaped.chameleon.ml.blackBox.BlackBox;
-import com.smartshaped.chameleon.ml.blackBox.exception.BlackBoxException;
-import com.smartshaped.chameleon.ml.exception.HdfsReaderException;
-import com.smartshaped.chameleon.ml.exception.MLLayerException;
-import com.smartshaped.chameleon.ml.exception.ModelSaverException;
-import com.smartshaped.chameleon.ml.exception.PipelineException;
-import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.sedona.spark.SedonaContext;
@@ -20,8 +11,19 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.smartshaped.chameleon.common.exception.CassandraException;
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.CassandraUtils;
+import com.smartshaped.chameleon.ml.blackbox.BlackBox;
+import com.smartshaped.chameleon.ml.blackbox.exception.BlackBoxException;
+import com.smartshaped.chameleon.ml.exception.HdfsReaderException;
+import com.smartshaped.chameleon.ml.exception.MLLayerException;
+import com.smartshaped.chameleon.ml.exception.ModelSaverException;
+import com.smartshaped.chameleon.ml.exception.PipelineException;
+import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Abstract class for the entry point of the machine learning layer; all ml related components will
@@ -36,20 +38,30 @@ public abstract class MLLayer {
   private List<HdfsReader> readerList;
   private Pipeline pipeline;
   private ModelSaver modelSaver;
-  private SparkSession sedona;
+  private SparkSession sparkSession;
   private MLConfigurationUtils configurationUtils;
+  private CassandraUtils cassandraUtils;
   private BlackBox blackBox;
 
-  protected MLLayer() throws ConfigurationException, MLLayerException {
+  protected MLLayer() throws ConfigurationException, MLLayerException, CassandraException {
 
     this.setConfigurationUtils(MLConfigurationUtils.getMlConf());
+    logger.info("ML configurations loaded correctly");
+    this.cassandraUtils = CassandraUtils.getCassandraUtils(configurationUtils);
+    logger.info("Cassandra utils loaded correctly");
     this.setReaderList(this.configurationUtils.getHdfsReaders());
+    logger.info("HdfsReaders list loaded correctly");
     this.setPipeline(this.configurationUtils.getPipeline());
+    logger.info("Pipeline loaded correctly");
     this.setModelSaver(this.configurationUtils.getModelSaver());
+    logger.info("Model saver loaded correctly");
     this.setBlackBox(this.configurationUtils.getBlackBox());
+    logger.info("BlackBox loaded correctly");
 
-    logger.info(pipeline == null ? "Pipeline is null" : "Pipeline is not null");
-    logger.info(blackBox == null ? "BlackBox is null" : "BlackBox is not null");
+    String pipelineLog = (pipeline == null ? "Pipeline is null" : "Pipeline is not null");
+    logger.debug(pipelineLog);
+    String blackBoxLog = (blackBox == null ? "BlackBox is null" : "BlackBox is not null");
+    logger.debug(blackBoxLog);
 
     // one between pipeline and blackbox must be not null
     if (this.pipeline == null && this.blackBox == null) {
@@ -64,7 +76,7 @@ public abstract class MLLayer {
       logger.info("Instantiating Spark Session");
 
       SparkSession config = SedonaContext.builder().config(sedonaConf).getOrCreate();
-      this.setSedona(SedonaContext.create(config));
+      this.setSparkSession(SedonaContext.create(config));
 
       logger.info("Spark Session with Sedona created");
 
@@ -110,9 +122,11 @@ public abstract class MLLayer {
     for (HdfsReader reader : this.readerList) {
       logger.info("Starting {}", reader.getClass().getName());
 
-      reader.start(this.sedona);
+      reader.start();
       datasets.add(reader.getDataframe());
     }
+
+    logger.debug("Datasets size: {}", datasets.size());
 
     if (this.pipeline != null) {
 
@@ -124,10 +138,10 @@ public abstract class MLLayer {
       if (this.modelSaver != null && pipeline.getPredictions() != null) {
         modelSaver.saveModel(pipeline);
       } else {
-        logger.info("Model Saver skipped");
+        logger.warn("Model Saver skipped");
       }
     } else {
-      logger.info("Pipeline skipped");
+      logger.warn("Pipeline skipped");
     }
 
     if (this.blackBox != null) {
@@ -139,12 +153,13 @@ public abstract class MLLayer {
       if (this.modelSaver != null && blackBox.getPredictions() != null) {
         modelSaver.saveModel(blackBox);
       } else {
-        logger.info("Model Saver skipped");
+        logger.warn("Model Saver skipped");
       }
+    } else {
+      logger.warn("BlackBox skipped");
     }
 
-    CassandraUtils cassandraUtils = CassandraUtils.getCassandraUtils(configurationUtils);
-    cassandraUtils.close();
-    sedona.stop();
+    this.cassandraUtils.close();
+    sparkSession.stop();
   }
 }

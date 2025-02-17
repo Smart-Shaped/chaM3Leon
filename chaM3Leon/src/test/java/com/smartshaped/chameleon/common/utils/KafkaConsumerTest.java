@@ -7,6 +7,7 @@ import org.apache.spark.sql.streaming.DataStreamReader;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashMap;
@@ -14,34 +15,36 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class KafkaConsumerTest {
 
-	@Mock
-	SparkSession sparkSession;
+  @Mock SparkSession sparkSession;
+  @Mock DataStreamReader dsr;
+  @Mock Dataset<Row> dataset;
+  @Mock scala.Option<SparkSession> option;
 
-	@Mock
-	DataStreamReader dsr;
+  Map<String, String> properties = new HashMap<>();
 
-	@Mock
-	Dataset<Row> dataset;
+  @Test
+  void testKafkaRead() {
 
-	Map<String, String> properties = new HashMap<>();
+    properties.put("topics", "topic1");
+    properties.put("servers", "kafka.bootstrap.servers");
 
-	@Test
-	void testKafkaRead() {
+    try (MockedStatic<SparkSession> sparkSessionMockedStatic = mockStatic(SparkSession.class)) {
 
-		properties.put("topics", "topic1");
-		properties.put("servers", "kafka.bootstrap.servers");
+      sparkSessionMockedStatic.when(SparkSession::getActiveSession).thenReturn(option);
 
-		when(sparkSession.readStream()).thenReturn(dsr);
-		when(dsr.format("kafka")).thenReturn(dsr);
-		when(dsr.option(anyString(), anyString())).thenReturn(dsr);
-		when(dsr.load()).thenReturn(dataset);
+      when(option.get()).thenReturn(sparkSession);
+      when(sparkSession.readStream()).thenReturn(dsr);
+      when(dsr.format("kafka")).thenReturn(dsr);
+      when(dsr.option(anyString(), anyString())).thenReturn(dsr);
+      when(dsr.load()).thenReturn(dataset);
 
-		assertDoesNotThrow(() -> KafkaConsumer.kafkaRead(properties, sparkSession));
-	}
-
+      assertDoesNotThrow(() -> KafkaConsumer.kafkaRead(properties));
+    }
+  }
 }

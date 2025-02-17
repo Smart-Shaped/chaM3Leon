@@ -122,7 +122,7 @@ ml:
       name: "test"
       replication_factor: 1
   blackBox:
-    class: "com.smartshaped.chameleon.ml.blackBox.PythonBlackBoxExample"
+    class: "com.smartshaped.chameleon.ml.blackbox.PythonBlackBoxExample"
     inputs: "input"
     output: "output"
     modelPath: "model_path"

@@ -1,5 +1,16 @@
 package com.smartshaped.chameleon.batch;
 
+import java.util.Map;
+import java.util.Objects;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.spark.SparkConf;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.streaming.StreamingQueryException;
+
 import com.smartshaped.chameleon.batch.exception.BatchLayerException;
 import com.smartshaped.chameleon.batch.exception.BatchUpdaterException;
 import com.smartshaped.chameleon.batch.exception.HdfsSaverException;
@@ -9,16 +20,6 @@ import com.smartshaped.chameleon.common.exception.KafkaConsumerException;
 import com.smartshaped.chameleon.common.utils.KafkaConsumer;
 import com.smartshaped.chameleon.preprocessing.Preprocessor;
 import com.smartshaped.chameleon.preprocessing.exception.PreprocessorException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.spark.SparkConf;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.streaming.StreamingQueryException;
-
-import java.util.Map;
-import java.util.Objects;
 
 public abstract class BatchLayer {
 
@@ -45,7 +46,7 @@ public abstract class BatchLayer {
     logger.info("Spark configurations loaded correctly");
 
     try {
-      logger.info("Instantiating Spark Session");
+      logger.info("Instantiating Spark Session...");
       sparkSession = SparkSession.builder().config(sparkConf).getOrCreate();
       logger.info("Spark Session created");
     } catch (Exception e) {
@@ -88,7 +89,7 @@ public abstract class BatchLayer {
           BatchLayerException {
     logger.info("Starting BatchLayer...");
 
-    Dataset<Row> df = KafkaConsumer.kafkaRead(kafkaConfig, sparkSession);
+    Dataset<Row> df = KafkaConsumer.kafkaRead(kafkaConfig);
 
     logger.info("Starting preprocessing and save to HDFS...");
     preprocessAndSave(df);
@@ -96,7 +97,7 @@ public abstract class BatchLayer {
     if (Objects.isNull(batchUpdater)) {
       logger.info("No batchUpdater found in configuration,skipping it...");
     } else {
-      batchUpdater.startUpdate(df, sparkSession, Long.parseLong(kafkaConfig.get("intervalMs")));
+      batchUpdater.startUpdate(df, Long.parseLong(kafkaConfig.get("intervalMs")));
       logger.info("BatchUpdater completed.");
     }
 
@@ -122,10 +123,9 @@ public abstract class BatchLayer {
    */
   private void preprocessAndSave(Dataset<Row> df) throws PreprocessorException, HdfsSaverException {
 
+    logger.debug("Getting kafka topics to iterate on them");
     String topics = kafkaConfig.get("topics");
     Long intervalMs = Long.parseLong(kafkaConfig.get("intervalMs"));
-
-    logger.info("Dataset subscribed to kafka.");
 
     String[] topicArray = topics.split(",");
     Dataset<Row> tmpDf;
@@ -136,13 +136,13 @@ public abstract class BatchLayer {
 
       tmpDf = df.filter(df.col("topic").equalTo(topic));
 
-      logger.info("Loading preprocessor for topic:{}", topic);
+      logger.debug("Loading preprocessor for topic:{}", topic);
 
       if (!preprocessors.isEmpty()) {
         if (preprocessors.get(topic) != null) {
           tmpDf = preprocessors.get(topic).preprocess(tmpDf);
         } else {
-          logger.info("No preprocessor defined for topic: {}", topic);
+          logger.warn("No preprocessor defined for topic: {}", topic);
         }
       }
 

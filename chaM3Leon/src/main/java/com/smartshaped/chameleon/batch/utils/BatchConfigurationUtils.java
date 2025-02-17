@@ -1,18 +1,19 @@
 package com.smartshaped.chameleon.batch.utils;
 
-import com.smartshaped.chameleon.batch.BatchUpdater;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.common.utils.ConfigurationUtils;
-import com.smartshaped.chameleon.preprocessing.Preprocessor;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import com.smartshaped.chameleon.batch.BatchUpdater;
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.ConfigurationUtils;
+import com.smartshaped.chameleon.preprocessing.Preprocessor;
 
 public class BatchConfigurationUtils extends ConfigurationUtils {
 
@@ -34,6 +35,8 @@ public class BatchConfigurationUtils extends ConfigurationUtils {
   private BatchConfigurationUtils() throws ConfigurationException {
     super();
     this.setConfRoot(ROOT.concat(SEPARATOR));
+
+    logger.debug("BatchConfigurationUtils created");
   }
 
   /**
@@ -47,10 +50,9 @@ public class BatchConfigurationUtils extends ConfigurationUtils {
    *     instance.
    */
   public static BatchConfigurationUtils getBatchConf() throws ConfigurationException {
-    logger.info("Loading batch configuration");
+    logger.debug("Loading batch configuration");
     if (configuration == null) {
-      logger.info("No previous batch configuration found, loading new configurations.");
-
+      logger.debug("No previous batch configuration found, loading new configurations.");
       configuration = new BatchConfigurationUtils();
     }
 
@@ -67,7 +69,7 @@ public class BatchConfigurationUtils extends ConfigurationUtils {
    */
   public Map<String, Preprocessor> getPreprocessors() throws ConfigurationException {
 
-    logger.info("Loading preprocessors");
+    logger.debug("Loading preprocessors");
 
     List<HierarchicalConfiguration<ImmutableNode>> topicList =
         config.childConfigurationsAt(BATCH_KAFKA_TOPICS);
@@ -86,6 +88,9 @@ public class BatchConfigurationUtils extends ConfigurationUtils {
       topicName = config.getString(key.concat(SEPARATOR).concat(NAME));
 
       preprocessorClassName = config.getString(key.concat(SEPARATOR).concat(CLASS));
+
+      logger.debug("Topic name: {}", topicName);
+      logger.debug("Preprocessor class name: {}", preprocessorClassName);
 
       try {
         preprocessorMap.put(topicName, loadInstanceOf(preprocessorClassName, Preprocessor.class));
@@ -117,14 +122,14 @@ public class BatchConfigurationUtils extends ConfigurationUtils {
    *     required key is not defined.
    */
   public Map<String, String> getKafkaConfig() throws ConfigurationException {
-    logger.info("Loading Kafka configuration");
+    logger.debug("Loading Kafka configuration");
     Map<String, String> kafkaConfig = new HashMap<>();
 
     String kafkaServer = config.getString(BATCH_KAFKA_SERVER);
 
     if (!Objects.isNull(kafkaServer)) {
       kafkaConfig.put("servers", kafkaServer);
-      logger.info("Kafka server: {}", kafkaServer);
+      logger.debug("Kafka server: {}", kafkaServer);
     } else {
       throw new ConfigurationException(
           "Missing server definition in " + BATCH_KAFKA_SERVER + " configuration key");
@@ -133,6 +138,7 @@ public class BatchConfigurationUtils extends ConfigurationUtils {
     String intervalMs = config.getString(BATCH_KAFKA_INTERVAL);
 
     if (!Objects.isNull(intervalMs)) {
+      logger.debug("Kafka interval: {}", intervalMs);
       kafkaConfig.put("intervalMs", intervalMs);
     } else {
       throw new ConfigurationException(
@@ -164,13 +170,13 @@ public class BatchConfigurationUtils extends ConfigurationUtils {
           topicValue.concat(SEPARATOR).concat(CHECKPOINT),
           config.getString(key.concat(SEPARATOR).concat(CHECKPOINT)));
       stringBuilder.append(topicValue).append(",");
-      logger.info("Added Kafka topic: {}", topicValue);
+      logger.debug("Added Kafka topic: {}", topicValue);
     }
 
     stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-    logger.info("Kafka topics: {}", stringBuilder);
+    logger.debug("Kafka topics: {}", stringBuilder);
     kafkaConfig.put("topics", stringBuilder.toString());
-    logger.info("Kafka configuration retrieved successfully");
+    logger.debug("Kafka configuration retrieved successfully");
     return kafkaConfig;
   }
 
@@ -187,9 +193,8 @@ public class BatchConfigurationUtils extends ConfigurationUtils {
    *     class can not be instantiated.
    */
   public BatchUpdater getBatchUpdater() throws ConfigurationException {
-    logger.info("Loading BatchUpdater class.");
+    logger.debug("Loading BatchUpdater class");
     String batchClassName = config.getString(BATCH_UPDATER_CLASS);
-    logger.info("{}", batchClassName);
 
     if (batchClassName == null || batchClassName.trim().isEmpty()) {
       logger.warn("No BatchUpdater class configured");
@@ -198,7 +203,7 @@ public class BatchConfigurationUtils extends ConfigurationUtils {
 
     try {
       BatchUpdater updater = loadInstanceOf(batchClassName, BatchUpdater.class);
-      logger.info("BatchUpdater instantiated successfully: {}", batchClassName);
+      logger.debug("BatchUpdater instantiated successfully: {}", batchClassName);
       return updater;
     } catch (ConfigurationException e) {
       throw new ConfigurationException(

@@ -2,11 +2,11 @@ package com.smartshaped.chameleon.common.utils;
 
 public class TableModelExample1 extends TableModel {
 
-	String test1;
-	String test2;
+  String test1;
+  String test2;
 
-	@Override
-	protected String choosePrimaryKey() {
-		return "test1";
-	}
+  @Override
+  protected String choosePrimaryKey() {
+    return "test1";
+  }
 }

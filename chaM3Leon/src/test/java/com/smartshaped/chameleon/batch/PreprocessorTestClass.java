@@ -8,9 +8,8 @@ import com.smartshaped.chameleon.preprocessing.exception.PreprocessorException;
 
 public class PreprocessorTestClass extends Preprocessor {
 
-	@Override
-	public Dataset<Row> preprocess(Dataset<Row> df) throws PreprocessorException {
-		return df;
-	}
-
+  @Override
+  public Dataset<Row> preprocess(Dataset<Row> df) throws PreprocessorException {
+    return df;
+  }
 }
