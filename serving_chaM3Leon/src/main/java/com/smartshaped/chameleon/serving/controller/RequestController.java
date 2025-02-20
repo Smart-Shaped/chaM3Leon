@@ -2,12 +2,11 @@ package com.smartshaped.chameleon.serving.controller;
 
 import com.smartshaped.chameleon.serving.model.Request;
 import com.smartshaped.chameleon.serving.repository.RequestRepository;
+import java.util.List;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/requests")
@@ -32,6 +31,4 @@ public class RequestController {
     Request req = requestRepository.findById(id).orElse(null);
     return ResponseEntity.ok(req);
   }
-
-
 }

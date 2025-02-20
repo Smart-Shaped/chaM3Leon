@@ -1,3 +1,3 @@
 package com.smartshaped.chameleon.serving.model;
 
-public abstract class BatchModel {}
+public abstract class MLModel {}

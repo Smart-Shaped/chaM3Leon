@@ -1,9 +1,8 @@
 package com.smartshaped.chameleon.serving.model;
 
+import java.util.UUID;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
-
-import java.util.UUID;
 
 @Table("request")
 public class Request {
