@@ -9,28 +9,29 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.smartshaped.chameleon.serving.repository.BatchGenericRepository;
+import com.smartshaped.chameleon.serving.model.BatchModel;
+import com.smartshaped.chameleon.serving.repository.BatchRepository;
 
-public abstract class BatchGenericController<BatchBaseModel, ID> {
+public abstract class BatchController<T extends BatchModel, ID> {
 
-	private final BatchGenericRepository<BatchBaseModel, ID> repository;
+	private final BatchRepository<T, ID> repository;
 
-	protected BatchGenericController(BatchGenericRepository<BatchBaseModel, ID> repository) {
+	protected BatchController(BatchRepository<T, ID> repository) {
 		this.repository = repository;
 	}
 
 	@PostMapping
-	public BatchBaseModel create(@RequestBody BatchBaseModel entity) {
+	public T create(@RequestBody T entity) {
 		return repository.save(entity);
 	}
 
 	@GetMapping("/{id}")
-	public Optional<BatchBaseModel> getById(@PathVariable ID id) {
+	public Optional<T> getById(@PathVariable ID id) {
 		return repository.findById(id);
 	}
 
 	@GetMapping
-	public List<BatchBaseModel> getAll() {
+	public List<T> getAll() {
 		return repository.findAll();
 	}
 

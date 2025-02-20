@@ -5,7 +5,7 @@ import java.time.Instant;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import com.smartshaped.chameleon.serving.model.BatchBaseModel;
+import com.smartshaped.chameleon.serving.model.BatchModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @Table("toptenmodel")
-public class BatchModel extends BatchBaseModel{
+public class TopTenModel extends BatchModel{
 
 	@PrimaryKey
 	private String asin;

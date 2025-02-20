@@ -3,13 +3,13 @@ package com.smartshaped.chameleon.serving.impl;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.smartshaped.chameleon.serving.controller.BatchGenericController;
+import com.smartshaped.chameleon.serving.controller.BatchController;
 
 @RestController
 @RequestMapping("/batch")
-public class BatchController extends BatchGenericController<BatchModel, String>{
+public class TopTenController extends BatchController<TopTenModel, String>{
 
-	protected BatchController(BatchRepository repository) {
+	protected TopTenController(TopTenRepository repository) {
 		super(repository);
 	}
 

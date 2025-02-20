@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/topolino")
+@RequestMapping("/api/requests")
 public class RequestController {
 
   @Autowired private RequestRepository requestRepository;

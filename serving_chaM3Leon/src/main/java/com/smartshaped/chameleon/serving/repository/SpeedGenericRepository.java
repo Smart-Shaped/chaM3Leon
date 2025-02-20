@@ -3,7 +3,9 @@ package com.smartshaped.chameleon.serving.repository;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
+import com.smartshaped.chameleon.serving.model.SpeedBaseModel;
+
 @NoRepositoryBean
-public interface BatchGenericRepository<BatchBaseModel,ID> extends CassandraRepository<BatchBaseModel,ID> {
+public interface SpeedGenericRepository<T extends SpeedBaseModel,ID> extends CassandraRepository<T,ID> {
 
 }
