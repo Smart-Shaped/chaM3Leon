@@ -9,19 +9,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.smartshaped.chameleon.serving.model.SpeedBaseModel;
-import com.smartshaped.chameleon.serving.repository.SpeedGenericRepository;
+import com.smartshaped.chameleon.serving.model.SpeedModel;
+import com.smartshaped.chameleon.serving.repository.SpeedRepository;
 
-public abstract class SpeedGenericController<T extends SpeedBaseModel, ID> {
+public abstract class SpeedController<T extends SpeedModel, ID> {
 
-	private final SpeedGenericRepository<T, ID> repository;
+	private final SpeedRepository<T, ID> repository;
 
-	protected SpeedGenericController(SpeedGenericRepository<T, ID> repository) {
+	protected SpeedController(SpeedRepository<T, ID> repository) {
 		this.repository = repository;
 	}
 
 	@PostMapping
-	public SpeedBaseModel create(@RequestBody T entity) {
+	public SpeedModel create(@RequestBody T entity) {
 		return repository.save(entity);
 	}
 
