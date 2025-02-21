@@ -2,6 +2,11 @@ package com.smartshaped.chameleon.ml.blackbox;
 
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.ml.blackbox.exception.BlackBoxException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -10,18 +15,13 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-
 /** Specialization of the {@link BlackBox} class for Python-based black boxes. */
 public abstract class PythonBlackBox extends BlackBox {
 
   private static final Logger logger = LogManager.getLogger(PythonBlackBox.class);
 
   protected String pythonScriptPath;
+  protected String pythonExtraScripts;
   protected String pythonLibraries;
   public static JavaSparkContext javaSparkContext;
 
@@ -30,6 +30,7 @@ public abstract class PythonBlackBox extends BlackBox {
     super();
 
     this.pythonScriptPath = mlConfigurationUtils.getBlackBoxPythonScriptPath();
+    this.pythonExtraScripts = mlConfigurationUtils.getBlackBoxPythonExtraScripts();
     this.pythonLibraries = mlConfigurationUtils.getBlackBoxPythonLibraries();
 
     logger.debug("PythonBlackBox initialized");
@@ -48,8 +49,11 @@ public abstract class PythonBlackBox extends BlackBox {
     // install required python libraries
     installLibraries();
 
-    // copy python script to make it executable
+    // copy python scripts to make them executable
     copyResourceToDestination(pythonScriptPath);
+    for (String script : pythonExtraScripts.split(",")) {
+      copyResourceToDestination(script);
+    }
 
     // prepare SparkSession to be accessed by python
     javaSparkContext = new JavaSparkContext(SparkSession.getActiveSession().get().sparkContext());
@@ -141,38 +145,55 @@ public abstract class PythonBlackBox extends BlackBox {
   }
 
   /**
-   * Cleans up the Python script used in the black box.
+   * Cleans up the black box folder.
    *
-   * <p>This method deletes the Python script from the filesystem if it exists. It is intended to be
-   * used as part of the cleanup process for Python-based black boxes. If the deletion process
-   * encounters any issues, a {@link BlackBoxException} is thrown.
+   * <p>This method is implemented to remove the Python script used in the black box from the
+   * filesystem. It takes the path of the script as a parameter and deletes it. If an {@link
+   * IOException} is thrown during the deletion process, a {@link BlackBoxException} is thrown.
    *
-   * @throws BlackBoxException if an error occurs while deleting the Python script
+   * @throws BlackBoxException if an error occurs during the cleanup process
    */
   @Override
   protected void cleanBlackBoxFolder() throws BlackBoxException {
 
-    // delete python script
-    try {
-      Files.deleteIfExists(new File(pythonScriptPath).toPath());
-    } catch (IOException e) {
-      throw new BlackBoxException("Error deleting python script", e);
+    deleteResourceFromFS(pythonScriptPath);
+    for (String script : pythonExtraScripts.split(",")) {
+      deleteResourceFromFS(script);
     }
 
     logger.info("PythonBlackBox cleanup completed");
   }
 
   /**
+   * Deletes a resource from the filesystem.
+   *
+   * <p>This method is intended to be used to delete the Python script used in the black box. It
+   * takes the path of the resource to be deleted as a parameter and deletes it.If an {@link
+   * IOException} is thrown during the deletion process, a {@link BlackBoxException} is thrown with
+   * the error details.
+   *
+   * @param resourcePath the path of the resource to be deleted
+   * @throws BlackBoxException if an error occurs while deleting the resource
+   */
+  private void deleteResourceFromFS(String resourcePath) throws BlackBoxException {
+    // delete python script
+    try {
+      Files.deleteIfExists(new File(resourcePath).toPath());
+      logger.debug("Python script deleted successfully at: {}", resourcePath);
+    } catch (IOException e) {
+      throw new BlackBoxException("Error deleting python script at: " + resourcePath, e);
+    }
+  }
+
+  /**
    * Runs the machine learning script.
    *
-   * <p>This method overrides the base class implementation to execute the Python-based machine
-   * learning script. It uses the Apache Spark's {@link PythonRunner} to execute the script with the
-   * input paths, output path, and model path as command-line arguments.
+   * <p>This method runs the machine learning script using the PythonRunner class. It takes the
+   * python script path, the extra scripts to be used, the inputs, the output path and the model
+   * path as parameters. If any error occurs during the execution of the script, a BlackBoxException
+   * is thrown.
    *
-   * <p>If the script execution fails due to any exception, a {@link BlackBoxException} is thrown
-   * with the error details.
-   *
-   * @throws BlackBoxException if an error occurs during the script execution
+   * @throws BlackBoxException if an error occurs while running the ML script
    */
   @Override
   protected void runML() throws BlackBoxException {
@@ -180,7 +201,7 @@ public abstract class PythonBlackBox extends BlackBox {
     try {
       logger.info("Running ML script...");
       PythonRunner.main(
-          new String[] {pythonScriptPath, pythonScriptPath, inputs, output, modelPath});
+          new String[] {pythonScriptPath, pythonExtraScripts, inputs, output, modelPath});
     } catch (Exception e) {
       throw new BlackBoxException("Error running ML script", e);
     }

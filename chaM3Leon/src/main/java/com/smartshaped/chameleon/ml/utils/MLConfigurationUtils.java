@@ -1,18 +1,16 @@
 package com.smartshaped.chameleon.ml.utils;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.ConfigurationUtils;
 import com.smartshaped.chameleon.ml.HdfsReader;
 import com.smartshaped.chameleon.ml.ModelSaver;
 import com.smartshaped.chameleon.ml.Pipeline;
 import com.smartshaped.chameleon.ml.blackbox.BlackBox;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Utility class that extends {@link ConfigurationUtils} for reading configuration files related to
@@ -37,6 +35,7 @@ public class MLConfigurationUtils extends ConfigurationUtils {
   private static final String ML_BLACK_BOX_PYTHON_SCRIPT_PATH = "ml.blackBox.pythonScriptPath";
   private static final String ML_BLACK_BOX_CLASS = "ml.blackBox.class";
   private static final String ML_BLACK_BOX_PYTHON_LIBRARIES = "ml.blackBox.pythonLibraries";
+  private static final String ML_BLACK_BOX_PYTHON_EXTRA_SCRIPTS = "ml.blackBox.pythonExtraScripts";
 
   private static MLConfigurationUtils configuration;
 
@@ -308,5 +307,17 @@ public class MLConfigurationUtils extends ConfigurationUtils {
    */
   public String getBlackBoxPythonLibraries() {
     return config.getString(ML_BLACK_BOX_PYTHON_LIBRARIES, "");
+  }
+
+  /**
+   * Returns the comma-separated list of extra Python scripts required by the PythonBlackBox.
+   *
+   * <p>The value is read from the configuration key {@link #ML_BLACK_BOX_PYTHON_EXTRA_SCRIPTS}. If
+   * the key is not defined, an empty string is returned.
+   *
+   * @return the comma-separated list of extra Python scripts required by the BlackBox
+   */
+  public String getBlackBoxPythonExtraScripts() {
+    return config.getString(ML_BLACK_BOX_PYTHON_EXTRA_SCRIPTS, "");
   }
 }

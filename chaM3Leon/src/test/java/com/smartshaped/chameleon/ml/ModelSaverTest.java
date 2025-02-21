@@ -104,7 +104,7 @@ class ModelSaverTest {
   }
 
   @Test
-  void testSaveModelBlackBoxSuccess() throws ConfigurationException {
+  void testSaveModelBlackBoxSuccess() throws ConfigurationException, CassandraException {
     when(blackBox.getPredictions()).thenReturn(predictions);
 
     try (MockedStatic<CassandraUtils> mockedStatic = mockStatic(CassandraUtils.class)) {
