@@ -127,6 +127,7 @@ ml:
     output: "output"
     modelPath: "model_path"
     pythonScriptPath: "path/script.py"
+    pythonExtraScripts: "path/extra_script.py"
     pythonLibraries: "library1,library2"
   pipeline:
     class: "com.smartshaped.chameleon.ml.PipelineExample"

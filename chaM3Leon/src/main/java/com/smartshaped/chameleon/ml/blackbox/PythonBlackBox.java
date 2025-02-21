@@ -52,7 +52,9 @@ public abstract class PythonBlackBox extends BlackBox {
     // copy python scripts to make them executable
     copyResourceToDestination(pythonScriptPath);
     for (String script : pythonExtraScripts.split(",")) {
-      copyResourceToDestination(script);
+      if (!script.trim().isEmpty()) {
+        copyResourceToDestination(script);
+      }
     }
 
     // prepare SparkSession to be accessed by python
@@ -158,7 +160,9 @@ public abstract class PythonBlackBox extends BlackBox {
 
     deleteResourceFromFS(pythonScriptPath);
     for (String script : pythonExtraScripts.split(",")) {
-      deleteResourceFromFS(script);
+      if (!script.trim().isEmpty()) {
+        deleteResourceFromFS(script);
+      }
     }
 
     logger.info("PythonBlackBox cleanup completed");

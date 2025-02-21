@@ -2,18 +2,21 @@ package com.smartshaped.chameleon.ml.utils;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.CassandraUtils;
+import java.util.Iterator;
 import org.apache.commons.configuration2.YAMLConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Iterator;
 
 @ExtendWith(MockitoExtension.class)
 class MLConfigurationUtilsTest {
@@ -63,7 +66,13 @@ class MLConfigurationUtilsTest {
 
   @Test
   void testGetModelSaver() {
-    assertDoesNotThrow(() -> mlConfigurationUtils.getModelSaver());
+
+    try (MockedStatic<CassandraUtils> mockedStatic = mockStatic(CassandraUtils.class)) {
+
+      mockedStatic.when(() -> CassandraUtils.getCassandraUtils(any())).thenReturn(null);
+
+      assertDoesNotThrow(() -> mlConfigurationUtils.getModelSaver());
+    }
   }
 
   @Test
@@ -99,5 +108,10 @@ class MLConfigurationUtilsTest {
   @Test
   void testGetBlackBoxPythonLibraries() {
     assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxPythonLibraries());
+  }
+
+  @Test
+  void testGetBlackBoxPythonExtraScripts() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxPythonExtraScripts());
   }
 }
