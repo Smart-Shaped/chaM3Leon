@@ -1,10 +1,12 @@
-# Apps Naming guidelines
+# Application Naming Guidelines
 
-Every project will have a project_id.
+Each project will have a `project_id`. The following naming conventions apply to different layers of applications.
 
-## Common
+## General Naming Conventions
 
-Apps pom details:
+### Maven POM Configuration
+
+Each application's `pom.xml` should follow these conventions:
 
 ```xml
 <artifactId>{project_id}-{layer_name}</artifactId>
@@ -12,44 +14,46 @@ Apps pom details:
 <description>{layer_name} App for {project_id}</description>
 ```
 
-Main classes: {base_package}.{project_id}.{layer_name}.{project_id}App
+### Java Class Naming
 
-Layer classes: {base_package}.{project_id}.{layer_name}.{project_id}Layer
+- **Main Application Class**: `{base_package}.{project_id}.{layer_name}.{project_id}App`
+- **Layer Class**: `{base_package}.{project_id}.{layer_name}.{project_id}Layer`
 
-## Batch App
+---
 
-Updater class: {base_package}.{project_id}.batch.{project_id}BatchUpdater
+## Batch Application
 
-Preprocessor class: {base_package}.{project_id}.batch.{project_id}BatchPreprocessor
+- **Updater Class**: `{base_package}.{project_id}.batch.{project_id}BatchUpdater`
+- **Preprocessor Class**: `{base_package}.{project_id}.batch.{project_id}BatchPreprocessor`
+- **Cassandra Model Class**: `{base_package}.{project_id}.batch.model.{table_name}`
 
-Cassandra model class: {base_package}.{project_id}.batch.model.{table_name}
+---
 
-## Speed App
+## Speed Application
 
-Updater class: {base_package}.{project_id}.speed.{project_id}SpeedUpdater
+- **Updater Class**: `{base_package}.{project_id}.speed.{project_id}SpeedUpdater`
+- **Preprocessor Class**: `{base_package}.{project_id}.speed.{project_id}SpeedPreprocessor`
+- **Cassandra Model Class**: `{base_package}.{project_id}.speed.model.{table_name}`
 
-Preprocessor class: {base_package}.{project_id}.speed.{project_id}SpeedPreprocessor
+---
 
-Cassandra model class: {base_package}.{project_id}.speed.model.{table_name}
+## Machine Learning (ML) Application
 
-## ML App
+- **HDFS Reader Class**: `{base_package}.{project_id}.ml.{project_id}HdfsReader`
+- **Pipeline Class**: `{base_package}.{project_id}.ml.{project_id}Pipeline`
+- **Blackbox Class**: `{base_package}.{project_id}.ml.{project_id}Blackbox`
+- **Model Saver Class**: `{base_package}.{project_id}.ml.{project_id}ModelSaver`
+- **Cassandra Model Class**: `{base_package}.{project_id}.ml.model.{table_name}`
 
-HDFS reader class: {base_package}.{project_id}.ml.{project_id}HdfsReader
+---
 
-Pipeline class: {base_package}.{project_id}.ml.{project_id}Pipeline
+## Harvester Application
 
-Blackbox class: {base_package}.{project_id}.ml.{project_id}Blackbox
+- **Harvester Class**: `{base_package}.{project_id}.harvester.harvesters.{project_id}Harvester`
+- **Downloader Class**: `{base_package}.{project_id}.harvester.downloaders.{project_id}Downloader`
+- **Transformer Class**: `{base_package}.{project_id}.harvester.transformers.{project_id}Transformer`
+- **Preprocessor Class**: `{base_package}.{project_id}.harvester.preprocessors.{project_id}Preprocessor`
 
-Model saver class: {base_package}.{project_id}.ml.{project_id}ModelSaver
+---
 
-Cassandra model class: {base_package}.{project_id}.ml.model.{table_name}
-
-## Harvester App
-
-Harvester classes: {base_package}.{project_id}.harvester.harvesters.{project_id}Harvester
-
-Downloader classes: {base_package}.{project_id}.harvester.downloaders.{project_id}Downloader
-
-Transformer classes: {base_package}.{project_id}.harvester.transformers.{project_id}Transformer
-
-Preprocessor classes: {base_package}.{project_id}.harvester.preprocessors.{project_id}Preprocessor
+By adhering to these naming conventions, consistency across different layers of applications is maintained, ensuring better readability, maintainability, and scalability.
