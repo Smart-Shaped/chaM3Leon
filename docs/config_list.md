@@ -1,10 +1,50 @@
 # chaM3Leon Configuration
 
+## Common Configurations
+
+### Apache Spark
+
+{layer}.spark.*: Defines Spark environment configurations (master, deploy-mode, app-name, interval-sec, etc.)
+
+### Apache Cassandra
+
+The following configurations are shared among Batch, Speed, and ML layers:
+
+{layer}.spark.cassandra.connection.host: Specifies the Cassandra node hostname
+
+{layer}.spark.cassandra.connection.port: Specifies the Cassandra node connection port
+
+{layer}.cassandra.model.class: Specifies the fully qualified class name of the Cassandra model, including package path
+
+{layer}.cassandra.datacenter: Defines the reference Cassandra datacenter
+
+{layer}.cassandra.checkpoint: Specifies the path for storing Cassandra data checkpoints
+
+{layer}.cassandra.keyspace.name: Defines the Cassandra keyspace name (will be created if non-existent)
+
+{layer}.cassandra.keyspace.replication_factor: Defines the replication factor for the Cassandra keyspace (required for keyspace creation)
+
+### Apache Kafka
+
+The following configurations are shared between Batch and Speed layers:
+
+{layer}.kafka.server: Specifies the Kafka server in hostname:port format
+
+{layer}.kafka.intervalMs: Defines the interval in milliseconds between consecutive Kafka reads
+
+{layer}.kafka.topics.{topic_identifier}.name: Specifies the Kafka topic name
+
+{layer}.kafka.topics.{topic_identifier}.class: Specifies the fully qualified class name of the preprocessor for Kafka topic data, including package path
+
+{layer}.kafka.topics.{topic_identifier}.path: Defines the destination path for storing data from the Kafka topic
+
+{layer}.kafka.topics.{topic_identifier}.checkpoint: Specifies the path for storing checkpoints of data from the Kafka topic
+
 ## Batch Layer
 
 batch.updater.class: Specifies the fully qualified class name of the Updater, including package path
 
-## Speed Layer 
+## Speed Layer
 
 speed.updater.class: Specifies the fully qualified class name of the Updater, including package path
 
@@ -57,43 +97,3 @@ harvester.harvesters.{harvester_identifier}.transformer: Specifies the fully qua
 harvester.harvesters.{harvester_identifier}.preprocessor: Specifies the fully qualified class name of the preprocessor, including package path
 
 harvester.harvesters.{harvester_identifier}.saver.path: Defines the destination path for storing data processed by the saver
-
-## Common Configurations
-
-### Apache Spark
-
-{layer}.spark.*: Defines Spark environment configurations (master, deploy-mode, app-name, interval-sec, etc.)
-
-### Apache Cassandra
-
-The following configurations are shared among Batch, Speed, and ML layers:
-
-{layer}.spark.cassandra.connection.host: Specifies the Cassandra node hostname
-
-{layer}.spark.cassandra.connection.port: Specifies the Cassandra node connection port
-
-{layer}.cassandra.model.class: Specifies the fully qualified class name of the Cassandra model, including package path
-
-{layer}.cassandra.datacenter: Defines the reference Cassandra datacenter
-
-{layer}.cassandra.checkpoint: Specifies the path for storing Cassandra data checkpoints
-
-{layer}.cassandra.keyspace.name: Defines the Cassandra keyspace name (will be created if non-existent)
-
-{layer}.cassandra.keyspace.replication_factor: Defines the replication factor for the Cassandra keyspace (required for keyspace creation)
-
-### Apache Kafka
-
-The following configurations are shared between Batch and Speed layers:
-
-{layer}.kafka.server: Specifies the Kafka server in hostname:port format
-
-{layer}.kafka.intervalMs: Defines the interval in milliseconds between consecutive Kafka reads
-
-{layer}.kafka.topics.{topic_identifier}.name: Specifies the Kafka topic name
-
-{layer}.kafka.topics.{topic_identifier}.class: Specifies the fully qualified class name of the preprocessor for Kafka topic data, including package path
-
-{layer}.kafka.topics.{topic_identifier}.path: Defines the destination path for storing data from the Kafka topic
-
-{layer}.kafka.topics.{topic_identifier}.checkpoint: Specifies the path for storing checkpoints of data from the Kafka topic
