@@ -57,17 +57,18 @@ public abstract class Downloader<T> {
    * @param paramList The list of parameters to be used in the URI.
    * @return A list of URI strings.
    */
-  protected abstract List<String> createUriList(List<String> paramList);
+  protected abstract List<String> createUriList(List<String> paramList, Request request)
+      throws DownloaderException;
 
   /**
    * Downloads the data specified by the request and the given parameters.
    *
-   * @param reqParams The list of parameters needed for the download.
-   * @param req The request that contains the parameters needed for the download.
+   * @param paramList The list of parameters needed for the download.
+   * @param request The request that contains the parameters needed for the download.
    * @return The downloaded data.
    * @throws DownloaderException If there is an error during the download process.
    * @throws ConfigurationException If there is an error with the configuration.
    */
-  public abstract T download(List<String> reqParams, Request req)
+  public abstract T download(List<String> paramList, Request request)
       throws DownloaderException, ConfigurationException;
 }

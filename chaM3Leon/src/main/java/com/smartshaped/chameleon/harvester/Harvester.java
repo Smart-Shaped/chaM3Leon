@@ -31,9 +31,9 @@ public abstract class Harvester {
   protected String outputPath;
   protected String inputPath;
   protected SparkSession session;
-  @Getter private String harvesterId;
+  @Getter private final String harvesterId;
   private final Preprocessor preprocessor;
-  private HarvesterConfigurationUtils configurationUtils;
+  private final HarvesterConfigurationUtils configurationUtils;
   private final DatasetTransformer transformer;
   private final Downloader downloader;
 

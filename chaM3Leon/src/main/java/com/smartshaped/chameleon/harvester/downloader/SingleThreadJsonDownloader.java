@@ -28,7 +28,7 @@ public abstract class SingleThreadJsonDownloader extends Downloader<JsonNode> {
   public JsonNode download(List<String> reqParams, Request req) throws DownloaderException {
 
     logger.info("Starting downloading process...");
-    List<String> uriList = createUriList(reqParams);
+    List<String> uriList = createUriList(reqParams, req);
     List<HttpResponse<String>> responses = new LinkedList<>();
     HttpResponse<String> response = null;
     HttpClient client = HttpClient.newHttpClient();
