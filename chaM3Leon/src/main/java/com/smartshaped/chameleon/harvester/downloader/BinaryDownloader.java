@@ -3,9 +3,6 @@ package com.smartshaped.chameleon.harvester.downloader;
 import static org.apache.spark.sql.functions.udf;
 import static org.apache.spark.sql.types.DataTypes.StringType;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.harvester.exception.DownloaderException;
-import com.smartshaped.chameleon.harvester.request.Request;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -13,16 +10,24 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.spark.sql.*;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoders;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.expressions.UserDefinedFunction;
 
-public abstract class BinaryDownloader extends Downloader<Dataset<Row>> {
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.harvester.exception.DownloaderException;
+import com.smartshaped.chameleon.harvester.request.Request;
+
+public abstract class BinaryDownloader extends Downloader {
   private static final Logger logger = LogManager.getLogger(BinaryDownloader.class);
   private final HttpClient httpClient;
   private static final String HDFS_DESTINATION_PATH = "/user/spark/Downloads/GencastNc";

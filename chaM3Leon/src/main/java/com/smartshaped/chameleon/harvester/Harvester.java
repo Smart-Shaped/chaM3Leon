@@ -14,7 +14,6 @@ import com.smartshaped.chameleon.harvester.exception.DownloaderException;
 import com.smartshaped.chameleon.harvester.exception.HarvesterException;
 import com.smartshaped.chameleon.harvester.request.Request;
 import com.smartshaped.chameleon.harvester.saver.HarvesterSaver;
-import com.smartshaped.chameleon.harvester.transformer.DatasetTransformer;
 import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
 import com.smartshaped.chameleon.preprocessing.Preprocessor;
 import com.smartshaped.chameleon.preprocessing.exception.PreprocessorException;
@@ -34,7 +33,6 @@ public abstract class Harvester {
   @Getter private final String harvesterId;
   private final Preprocessor preprocessor;
   private final HarvesterConfigurationUtils configurationUtils;
-  private final DatasetTransformer transformer;
   private final Downloader downloader;
 
   protected Harvester() throws ConfigurationException {
@@ -49,8 +47,6 @@ public abstract class Harvester {
     logger.debug("inputPath \\\"{}\\\" loaded correctly", inputPath);
     logger.info("Loading preprocessor...");
     preprocessor = configurationUtils.getPreprocessor(harvesterId);
-    logger.info("Loading transformer...");
-    transformer = configurationUtils.getTransformer(harvesterId);
     logger.info("Loading downloaader...");
     downloader = configurationUtils.getDownloader(harvesterId);
   }
@@ -76,7 +72,7 @@ public abstract class Harvester {
     logger.debug("Extracted params: {}", paramList);
 
     logger.info("Downloading and transforming data...");
-    Dataset<Row> data = downloadAndTransform(paramList, req);
+    Dataset<Row> data = download(paramList, req);
     logger.info("Downloaded and transformed data");
 
     logger.info("Starting preprocessing...");
@@ -96,17 +92,11 @@ public abstract class Harvester {
    * @return The downloaded and transformed data.
    * @throws HarvesterException If there is an error during the downloading or transforming process.
    */
-  public Dataset<Row> downloadAndTransform(List<String> paramList, Request req)
-      throws HarvesterException {
+  public Dataset<Row> download(List<String> paramList, Request req) throws HarvesterException {
     Dataset<Row> df;
 
     try {
-      if (transformer == null) {
-        logger.warn("Transformer not defined for Harvester {}", harvesterId);
-        df = (Dataset<Row>) downloader.download(paramList, req);
-      } else {
-        df = transformer.transform(downloader.download(paramList, req));
-      }
+      df = downloader.download(paramList, req);
     } catch (DownloaderException | ConfigurationException e) {
       throw new HarvesterException("Error downloading or transforming data.", e);
     }

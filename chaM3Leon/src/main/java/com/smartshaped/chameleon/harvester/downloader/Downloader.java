@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.harvester.exception.DownloaderException;
@@ -12,7 +14,7 @@ import com.smartshaped.chameleon.harvester.request.Request;
 import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
 
 /** An abstract class representing a downloader that downloads data from a source. */
-public abstract class Downloader<T> {
+public abstract class Downloader {
 
   protected static final Logger logger = LogManager.getLogger(Downloader.class);
   protected HarvesterConfigurationUtils configurationUtils;
@@ -23,30 +25,17 @@ public abstract class Downloader<T> {
   protected Downloader() throws ConfigurationException {
     logger.info("Initializing Downloader...");
 
-    try {
-      configurationUtils = HarvesterConfigurationUtils.getHarvesterConf();
-    } catch (ConfigurationException e) {
-      throw new ConfigurationException("Unable to retrieve configuration.", e);
-    }
+    configurationUtils = HarvesterConfigurationUtils.getHarvesterConf();
+    logger.info("Harvester configurations loaded correctly");
 
     className = this.getClass().getSimpleName();
     logger.debug("Class name set to: {}", className);
 
-    try {
-      queryParams = configurationUtils.getQueryParam(className);
-      logger.debug("Query parameters retrieved: {}", queryParams);
-    } catch (ConfigurationException e) {
-      throw new ConfigurationException(
-          "Failed to retrieve query parameters for class: ".concat(className), e);
-    }
+    queryParams = configurationUtils.getQueryParam(className);
+    logger.debug("Query parameters retrieved: {}", queryParams);
 
-    try {
-      urlParams = configurationUtils.getUrlParams(className);
-      logger.debug("URL parameters retrieved: {}", urlParams);
-    } catch (ConfigurationException e) {
-      throw new ConfigurationException(
-          "Failed to retrieve URL parameters for class: ".concat(className), e);
-    }
+    urlParams = configurationUtils.getUrlParams(className);
+    logger.debug("URL parameters retrieved: {}", urlParams);
 
     logger.info("Downloader initialized successfully.");
   }
@@ -69,6 +58,6 @@ public abstract class Downloader<T> {
    * @throws DownloaderException If there is an error during the download process.
    * @throws ConfigurationException If there is an error with the configuration.
    */
-  public abstract T download(List<String> paramList, Request request)
+  public abstract Dataset<Row> download(List<String> paramList, Request request)
       throws DownloaderException, ConfigurationException;
 }

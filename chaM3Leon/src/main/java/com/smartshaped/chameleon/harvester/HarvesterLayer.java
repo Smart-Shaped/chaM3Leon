@@ -91,15 +91,12 @@ public class HarvesterLayer {
                       logger.info("Request value: {}", request);
                       killedHandler.updateRequestState(request, "blocked");
                     } catch (CassandraException | ConfigurationException e) {
-                      try {
-                        throw new HarvesterException(e);
-                      } catch (HarvesterException ex) {
-                        throw new RuntimeException(ex);
-                      }
+                      throw new RuntimeException(e.getMessage(), e);
                     }
                   }));
       logger.debug("Processing request: {}", request);
       state = "inProgress";
+      handler.updateRequestState(request, state);
       try {
         filteredHarvesters = filterHarvesters(harvesters, request);
         for (Harvester harvester : filteredHarvesters) {
