@@ -17,7 +17,7 @@ Each application's `pom.xml` should follow these conventions:
 ### Java Class Naming
 
 - **Main Application Class**: `{base_package}.{project_id}.{layer_name}.{project_id}App`
-- **Layer Class**: `{base_package}.{project_id}.{layer_name}.{project_id}Layer`
+- **Layer Class**: `{base_package}.{project_id}.{layer_name}.{project_id}{layer_name}Layer`
 
 ---
 
