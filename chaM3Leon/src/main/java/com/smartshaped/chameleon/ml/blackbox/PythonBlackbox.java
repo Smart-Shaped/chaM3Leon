@@ -138,13 +138,7 @@ public abstract class PythonBlackbox extends Blackbox {
         throw new BlackboxException("Resource not found: " + resourcePath);
       }
       File destination = new File(destinationPath).getParentFile();
-      if (!destination.exists()) {
-        logger.warn("Destination folder does not exist: {}", destinationPath);
-        boolean created = destination.mkdirs();
-        if (created) {
-          logger.debug("Destination folder created: {}", destinationPath);
-        }
-      }
+      Files.createDirectories(destination.toPath());
       Files.copy(is, new File(destinationPath).toPath(), StandardCopyOption.REPLACE_EXISTING);
 
       logger.info("Resource copied successfully");
