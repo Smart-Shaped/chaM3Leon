@@ -9,7 +9,7 @@ import com.smartshaped.chameleon.common.exception.CassandraException;
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.CassandraUtils;
 import com.smartshaped.chameleon.common.utils.TableModel;
-import com.smartshaped.chameleon.ml.blackbox.BlackBox;
+import com.smartshaped.chameleon.ml.blackbox.Blackbox;
 import com.smartshaped.chameleon.ml.exception.ModelSaverException;
 import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
 import org.apache.spark.ml.Model;
@@ -31,7 +31,8 @@ class ModelSaverTest {
   @Mock MLConfigurationUtils mlConfigurationUtils;
   @Mock TableModel tableModel;
   @Mock Pipeline pipeline;
-  @Mock BlackBox blackBox;
+  @Mock
+  Blackbox blackBox;
   Model model;
   @Mock MLWriter mlWriter;
   @Mock Dataset<Row> predictions;

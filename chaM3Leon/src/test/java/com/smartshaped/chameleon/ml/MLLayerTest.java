@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.CassandraUtils;
-import com.smartshaped.chameleon.ml.blackbox.BlackBox;
+import com.smartshaped.chameleon.ml.blackbox.Blackbox;
 import com.smartshaped.chameleon.ml.exception.MLLayerException;
 import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
 import java.util.ArrayList;
@@ -35,7 +35,8 @@ class MLLayerTest {
   List<HdfsReader> readerList;
   @Mock SparkSession sedona;
   @Mock Pipeline pipeline;
-  @Mock BlackBox blackBox;
+  @Mock
+  Blackbox blackBox;
   @Mock ModelSaver modelSaver;
   @Mock MLConfigurationUtils configurationUtils;
   @Mock HdfsReader reader;

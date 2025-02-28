@@ -1,7 +1,7 @@
 package com.smartshaped.chameleon.ml.blackbox;
 
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.ml.blackbox.exception.BlackBoxException;
+import com.smartshaped.chameleon.ml.blackbox.exception.BlackboxException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,23 +15,33 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
-/** Specialization of the {@link BlackBox} class for Python-based black boxes. */
-public abstract class PythonBlackBox extends BlackBox {
+/** Specialization of the {@link Blackbox} class for Python-based black boxes. */
+public abstract class PythonBlackbox extends Blackbox {
 
-  private static final Logger logger = LogManager.getLogger(PythonBlackBox.class);
+  private static final Logger logger = LogManager.getLogger(PythonBlackbox.class);
 
   protected String pythonScriptPath;
   protected String pythonExtraScripts;
   protected String pythonLibraries;
+  protected String requirementsPath;
   public static JavaSparkContext javaSparkContext;
 
-  protected PythonBlackBox() throws ConfigurationException {
+  protected PythonBlackbox() throws ConfigurationException {
 
     super();
 
-    this.pythonScriptPath = mlConfigurationUtils.getBlackBoxPythonScriptPath();
-    this.pythonExtraScripts = mlConfigurationUtils.getBlackBoxPythonExtraScripts();
-    this.pythonLibraries = mlConfigurationUtils.getBlackBoxPythonLibraries();
+    this.pythonScriptPath =
+        this.blackboxFolder + '/' + mlConfigurationUtils.getBlackBoxPythonScriptPath();
+    logger.debug("Python script path: {}", pythonScriptPath);
+    this.pythonExtraScripts =
+        this.blackboxFolder + '/' + mlConfigurationUtils.getBlackBoxPythonExtraScripts();
+    logger.debug("Python extra scripts: {}", pythonExtraScripts);
+    this.pythonLibraries =
+        this.blackboxFolder + '/' + mlConfigurationUtils.getBlackBoxPythonLibraries();
+    logger.debug("Python libraries: {}", pythonLibraries);
+    this.requirementsPath =
+        this.blackboxFolder + '/' + mlConfigurationUtils.getBlackBoxPythonRequirementsPath();
+    logger.debug("Python requirements path: {}", requirementsPath);
 
     logger.debug("PythonBlackBox initialized");
   }
@@ -41,13 +51,10 @@ public abstract class PythonBlackBox extends BlackBox {
    *
    * <p>This includes installing required Python libraries and making the Python script executable.
    *
-   * @throws BlackBoxException if any error occurs during preparation
+   * @throws BlackboxException if any error occurs during preparation
    */
   @Override
-  protected void extraPreparation() throws BlackBoxException {
-
-    // install required python libraries
-    installLibraries();
+  protected void extraPreparation() throws BlackboxException {
 
     // copy python scripts to make them executable
     copyResourceToDestination(pythonScriptPath);
@@ -56,6 +63,13 @@ public abstract class PythonBlackBox extends BlackBox {
         copyResourceToDestination(script);
       }
     }
+    // copy requirements file if it exists
+    if (!requirementsPath.trim().isEmpty()) {
+      copyResourceToDestination(requirementsPath);
+    }
+
+    // install required python libraries
+    installLibraries();
 
     // prepare SparkSession to be accessed by python
     javaSparkContext = new JavaSparkContext(SparkSession.getActiveSession().get().sparkContext());
@@ -69,9 +83,12 @@ public abstract class PythonBlackBox extends BlackBox {
    * <p>If the configuration contains a list of Python libraries, this method will install them
    * using pip3.
    *
-   * @throws BlackBoxException if there is an error during the libraries installation
+   * <p>If a requirements file is specified in the configuration, it will be used to install the
+   * required libraries.
+   *
+   * @throws BlackboxException if there is an error during the libraries installation
    */
-  private void installLibraries() throws BlackBoxException {
+  private void installLibraries() throws BlackboxException {
 
     if (!pythonLibraries.trim().isEmpty()) {
 
@@ -86,6 +103,11 @@ public abstract class PythonBlackBox extends BlackBox {
     } else {
       logger.warn("No Python libraries specified in the configuration");
     }
+
+    if (!requirementsPath.trim().isEmpty()) {
+      ProcessBuilder processBuilder = new ProcessBuilder("pip3", "install", "-r", requirementsPath);
+      runCommand(processBuilder);
+    }
   }
 
   /**
@@ -96,12 +118,12 @@ public abstract class PythonBlackBox extends BlackBox {
    * is overwritten.
    *
    * <p>If the resource is not found in the classpath or if the copy operation fails, a {@link
-   * BlackBoxException} is thrown.
+   * BlackboxException} is thrown.
    *
    * @param destinationPath the path where the resource will be copied
-   * @throws BlackBoxException if the resource is not found or the copy operation fails
+   * @throws BlackboxException if the resource is not found or the copy operation fails
    */
-  private void copyResourceToDestination(String destinationPath) throws BlackBoxException {
+  private void copyResourceToDestination(String destinationPath) throws BlackboxException {
 
     String[] pathElements = destinationPath.split("/");
     String resourcePath = pathElements[pathElements.length - 1];
@@ -110,7 +132,7 @@ public abstract class PythonBlackBox extends BlackBox {
 
     try (InputStream is = getClass().getClassLoader().getResourceAsStream(resourcePath)) {
       if (is == null) {
-        throw new BlackBoxException("Resource not found: " + resourcePath);
+        throw new BlackboxException("Resource not found: " + resourcePath);
       }
       File destination = new File(destinationPath).getParentFile();
       if (!destination.exists()) {
@@ -124,23 +146,27 @@ public abstract class PythonBlackBox extends BlackBox {
 
       logger.info("Resource copied successfully");
     } catch (IOException e) {
-      throw new BlackBoxException("Error copying resource", e);
+      throw new BlackboxException("Error copying resource", e);
     }
   }
 
   /**
    * Validates the parameters of this BlackBox.
    *
-   * <p>It checks if the python script path is not empty and throws a {@link BlackBoxException} if
-   * it is.
+   * <p>This method checks if the Python script path is not empty and if the requirements file path
+   * is empty or has a .txt extension. If any of these checks fail, a {@link BlackboxException} is
+   * thrown with the error details.
    *
-   * @throws BlackBoxException if the python script path is empty
+   * @throws BlackboxException if the parameters are invalid
    */
   @Override
-  protected void validateParams() throws BlackBoxException {
+  protected void validateParams() throws BlackboxException {
 
     if (pythonScriptPath.trim().isEmpty()) {
-      throw new BlackBoxException("The python script path is empty");
+      throw new BlackboxException("The python script path is empty");
+    }
+    if (!requirementsPath.trim().isEmpty() && !requirementsPath.endsWith(".txt")) {
+      throw new BlackboxException("The requirements file must be a .txt file");
     }
 
     logger.debug("PythonBlackBox validation completed");
@@ -151,18 +177,21 @@ public abstract class PythonBlackBox extends BlackBox {
    *
    * <p>This method is implemented to remove the Python script used in the black box from the
    * filesystem. It takes the path of the script as a parameter and deletes it. If an {@link
-   * IOException} is thrown during the deletion process, a {@link BlackBoxException} is thrown.
+   * IOException} is thrown during the deletion process, a {@link BlackboxException} is thrown.
    *
-   * @throws BlackBoxException if an error occurs during the cleanup process
+   * @throws BlackboxException if an error occurs during the cleanup process
    */
   @Override
-  protected void cleanBlackBoxFolder() throws BlackBoxException {
+  protected void cleanBlackBoxFolder() throws BlackboxException {
 
     deleteResourceFromFS(pythonScriptPath);
     for (String script : pythonExtraScripts.split(",")) {
       if (!script.trim().isEmpty()) {
         deleteResourceFromFS(script);
       }
+    }
+    if (!requirementsPath.trim().isEmpty()) {
+      deleteResourceFromFS(requirementsPath);
     }
 
     logger.info("PythonBlackBox cleanup completed");
@@ -173,19 +202,19 @@ public abstract class PythonBlackBox extends BlackBox {
    *
    * <p>This method is intended to be used to delete the Python script used in the black box. It
    * takes the path of the resource to be deleted as a parameter and deletes it.If an {@link
-   * IOException} is thrown during the deletion process, a {@link BlackBoxException} is thrown with
+   * IOException} is thrown during the deletion process, a {@link BlackboxException} is thrown with
    * the error details.
    *
    * @param resourcePath the path of the resource to be deleted
-   * @throws BlackBoxException if an error occurs while deleting the resource
+   * @throws BlackboxException if an error occurs while deleting the resource
    */
-  private void deleteResourceFromFS(String resourcePath) throws BlackBoxException {
+  private void deleteResourceFromFS(String resourcePath) throws BlackboxException {
     // delete python script
     try {
       Files.deleteIfExists(new File(resourcePath).toPath());
       logger.debug("Python script deleted successfully at: {}", resourcePath);
     } catch (IOException e) {
-      throw new BlackBoxException("Error deleting python script at: " + resourcePath, e);
+      throw new BlackboxException("Error deleting python script at: " + resourcePath, e);
     }
   }
 
@@ -197,17 +226,17 @@ public abstract class PythonBlackBox extends BlackBox {
    * path as parameters. If any error occurs during the execution of the script, a BlackBoxException
    * is thrown.
    *
-   * @throws BlackBoxException if an error occurs while running the ML script
+   * @throws BlackboxException if an error occurs while running the ML script
    */
   @Override
-  protected void runML() throws BlackBoxException {
+  protected void runML() throws BlackboxException {
 
     try {
       logger.info("Running ML script...");
       PythonRunner.main(
           new String[] {pythonScriptPath, pythonExtraScripts, inputs, output, modelPath});
     } catch (Exception e) {
-      throw new BlackBoxException("Error running ML script", e);
+      throw new BlackboxException("Error running ML script", e);
     }
 
     logger.info("ML script completed successfully");
@@ -227,10 +256,10 @@ public abstract class PythonBlackBox extends BlackBox {
    *
    * @param outputInfo the name of the output view
    * @return the output of the machine learning script as a Spark Dataset
-   * @throws BlackBoxException if an error occurs while reading the output
+   * @throws BlackboxException if an error occurs while reading the output
    */
   @Override
-  protected Dataset<Row> readOutput(String outputInfo) throws BlackBoxException {
+  protected Dataset<Row> readOutput(String outputInfo) throws BlackboxException {
 
     logger.debug("Reading output from view: {}", outputInfo);
     SparkSession sparkSession = SparkSession.getActiveSession().get();
@@ -246,11 +275,11 @@ public abstract class PythonBlackBox extends BlackBox {
    *
    * @param dataset the dataset to be saved as a view
    * @param inputInfo the name of the view
-   * @throws BlackBoxException if an error occurs during the saving process
+   * @throws BlackboxException if an error occurs during the saving process
    */
   @Override
   protected void makeDatasetAccessible(Dataset<Row> dataset, String inputInfo)
-      throws BlackBoxException {
+      throws BlackboxException {
 
     logger.debug("Saving dataset to view: {}", inputInfo);
     dataset.createOrReplaceTempView(inputInfo);
