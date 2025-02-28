@@ -106,9 +106,10 @@ public abstract class PythonBlackbox extends Blackbox {
       logger.warn("No Python libraries specified in the configuration");
     }
 
-    if (!requirementsPath.trim().isEmpty()) {
+    if (requirementsDefined) {
       ProcessBuilder processBuilder = new ProcessBuilder("pip3", "install", "-r", requirementsPath);
       runCommand(processBuilder);
+      logger.info("Python requirements installed successfully");
     }
   }
 
