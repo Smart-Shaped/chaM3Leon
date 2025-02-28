@@ -49,6 +49,7 @@ public abstract class Blackbox {
   public void start(List<Dataset<Row>> datasets) throws BlackboxException {
 
     logger.info("Starting BlackBox...");
+    validateParams();
     writeInputs(datasets);
 
     extraPreparation();

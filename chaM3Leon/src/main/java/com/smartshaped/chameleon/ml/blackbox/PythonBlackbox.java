@@ -24,24 +24,26 @@ public abstract class PythonBlackbox extends Blackbox {
   protected String pythonExtraScripts;
   protected String pythonLibraries;
   protected String requirementsPath;
+  protected boolean requirementsDefined;
+  private boolean extraScriptsDefined;
+
   public static JavaSparkContext javaSparkContext;
 
   protected PythonBlackbox() throws ConfigurationException {
 
     super();
 
-    this.pythonScriptPath =
-        this.blackboxFolder + '/' + mlConfigurationUtils.getBlackBoxPythonScriptPath();
+    this.pythonScriptPath = mlConfigurationUtils.getBlackBoxPythonScriptPath();
     logger.debug("Python script path: {}", pythonScriptPath);
-    this.pythonExtraScripts =
-        this.blackboxFolder + '/' + mlConfigurationUtils.getBlackBoxPythonExtraScripts();
+    this.pythonExtraScripts = mlConfigurationUtils.getBlackBoxPythonExtraScripts();
     logger.debug("Python extra scripts: {}", pythonExtraScripts);
-    this.pythonLibraries =
-        this.blackboxFolder + '/' + mlConfigurationUtils.getBlackBoxPythonLibraries();
+    this.pythonLibraries = mlConfigurationUtils.getBlackBoxPythonLibraries();
     logger.debug("Python libraries: {}", pythonLibraries);
-    this.requirementsPath =
-        this.blackboxFolder + '/' + mlConfigurationUtils.getBlackBoxPythonRequirementsPath();
+    this.requirementsPath = mlConfigurationUtils.getBlackBoxPythonRequirementsPath();
     logger.debug("Python requirements path: {}", requirementsPath);
+
+    this.requirementsDefined = false;
+    this.extraScriptsDefined = false;
 
     logger.debug("PythonBlackBox initialized");
   }
@@ -57,15 +59,15 @@ public abstract class PythonBlackbox extends Blackbox {
   protected void extraPreparation() throws BlackboxException {
 
     // copy python scripts to make them executable
-    copyResourceToDestination(pythonScriptPath);
-    for (String script : pythonExtraScripts.split(",")) {
-      if (!script.trim().isEmpty()) {
-        copyResourceToDestination(script);
+    copyResourceToDestination(this.blackboxFolder + "/" + pythonScriptPath);
+    if (extraScriptsDefined) {
+      for (String script : pythonExtraScripts.split(",")) {
+        copyResourceToDestination(this.blackboxFolder + "/" + script);
       }
     }
     // copy requirements file if it exists
-    if (!requirementsPath.trim().isEmpty()) {
-      copyResourceToDestination(requirementsPath);
+    if (requirementsDefined) {
+      copyResourceToDestination(this.blackboxFolder + "/" + requirementsPath);
     }
 
     // install required python libraries
@@ -165,7 +167,24 @@ public abstract class PythonBlackbox extends Blackbox {
     if (pythonScriptPath.trim().isEmpty()) {
       throw new BlackboxException("The python script path is empty");
     }
-    if (!requirementsPath.trim().isEmpty() && !requirementsPath.endsWith(".txt")) {
+    if (!pythonScriptPath.endsWith(".py")) {
+      throw new BlackboxException("The python script path must end with .py");
+    }
+    if (!pythonExtraScripts.trim().isEmpty()) {
+      this.extraScriptsDefined = true;
+    }
+    if (extraScriptsDefined) {
+      String[] scripts = pythonExtraScripts.split(",");
+      for (String script : scripts) {
+        if (!script.trim().isEmpty() && !script.endsWith(".py")) {
+          throw new BlackboxException("Every script in pythonExtraScripts must end with .py");
+        }
+      }
+    }
+    if (!requirementsPath.trim().isEmpty()) {
+      this.requirementsDefined = true;
+    }
+    if (requirementsDefined && !requirementsPath.endsWith(".txt")) {
       throw new BlackboxException("The requirements file must be a .txt file");
     }
 
@@ -184,14 +203,16 @@ public abstract class PythonBlackbox extends Blackbox {
   @Override
   protected void cleanBlackBoxFolder() throws BlackboxException {
 
-    deleteResourceFromFS(pythonScriptPath);
-    for (String script : pythonExtraScripts.split(",")) {
-      if (!script.trim().isEmpty()) {
-        deleteResourceFromFS(script);
+    deleteResourceFromFS(this.blackboxFolder + "/" + pythonScriptPath);
+    if (extraScriptsDefined) {
+      for (String script : pythonExtraScripts.split(",")) {
+        if (!script.trim().isEmpty()) {
+          deleteResourceFromFS(this.blackboxFolder + "/" + script);
+        }
       }
     }
-    if (!requirementsPath.trim().isEmpty()) {
-      deleteResourceFromFS(requirementsPath);
+    if (requirementsDefined) {
+      deleteResourceFromFS(this.blackboxFolder + "/" + requirementsPath);
     }
 
     logger.info("PythonBlackBox cleanup completed");
