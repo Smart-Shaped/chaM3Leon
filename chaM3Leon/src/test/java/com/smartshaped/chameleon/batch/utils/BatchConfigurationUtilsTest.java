@@ -34,7 +34,7 @@ class BatchConfigurationUtilsTest {
   @Mock private TableModel tableModel;
 
   @BeforeEach
-  public void resetSingleton()
+  void resetSingleton()
       throws SecurityException,
           NoSuchFieldException,
           IllegalArgumentException,

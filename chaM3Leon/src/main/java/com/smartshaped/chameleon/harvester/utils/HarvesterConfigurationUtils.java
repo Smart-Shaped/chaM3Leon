@@ -10,8 +10,6 @@ import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
 
 import com.smartshaped.chameleon.common.exception.CassandraException;
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
@@ -19,7 +17,6 @@ import com.smartshaped.chameleon.common.utils.ConfigurationUtils;
 import com.smartshaped.chameleon.harvester.Harvester;
 import com.smartshaped.chameleon.harvester.downloader.Downloader;
 import com.smartshaped.chameleon.harvester.request.RequestHandler;
-import com.smartshaped.chameleon.harvester.transformer.DatasetTransformer;
 import com.smartshaped.chameleon.ml.HdfsReader;
 import com.smartshaped.chameleon.preprocessing.EmptyPreprocessor;
 import com.smartshaped.chameleon.preprocessing.Preprocessor;
@@ -38,7 +35,6 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
   private static final String PATH = "path";
   private static final String SAVER = "saver";
   private static final String PREPROCESSOR = "preprocessor";
-  private static final String TRANSFORMER = "transformer";
   private static final String DOWNLOADER = "downloader";
   private static final String HARVESTERS = "harvester.harvesters";
   private static final String URL = "url";
@@ -49,7 +45,7 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
 
   private static HarvesterConfigurationUtils configuration;
 
-  protected HarvesterConfigurationUtils() throws ConfigurationException {
+  private HarvesterConfigurationUtils() throws ConfigurationException {
     super();
     this.setConfRoot(ROOT.concat(SEPARATOR));
   }
@@ -346,37 +342,6 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
   }
 
   /**
-   * Retrieves a transformer instance based on the transformer name configured for the provided
-   * harvester ID.
-   *
-   * <p>If no transformer is specified in the configurations for the given harvester ID, null is
-   * returned.
-   *
-   * <p>
-   *
-   * @param harvesterId the ID of the harvester for which the transformer is being retrieved.
-   * @return an instance of the transformer class configured for the given harvester ID, or null if
-   *     none is specified.
-   * @throws ConfigurationException if there is an error while loading the transformer instance.
-   */
-  public DatasetTransformer<Dataset<Row>> getTransformer(String harvesterId)
-      throws ConfigurationException {
-    String transformerName = config.getString(harvesterId + SEPARATOR.concat(TRANSFORMER), "");
-
-    if (transformerName.trim().isEmpty()) {
-      logger.warn("No transformer specified in the configurations, using empty one...");
-      return null;
-    }
-
-    try {
-      return loadInstanceOf(transformerName, DatasetTransformer.class);
-    } catch (ConfigurationException e) {
-      throw new ConfigurationException(
-          COULD_NOT_INSTANTIATE + RequestHandler.class + DUE_TO_EXCEPTION, e);
-    }
-  }
-
-  /**
    * Retrieves a Downloader instance based on the downloader name configured for the given harvester
    * ID.
    *
@@ -409,6 +374,33 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
       throw new ConfigurationException(
           COULD_NOT_INSTANTIATE + Downloader.class + DUE_TO_EXCEPTION, e);
     }
+  }
+
+  /**
+   * Retrieves the HDFS path for a specified downloader class.
+   *
+   * <p>This method constructs the HDFS path using the provided class name by appending it to the
+   * base path defined in the configuration. If the constructed path is null, a
+   * ConfigurationException is thrown.
+   *
+   * <p>
+   *
+   * @param className the name of the downloader class for which the HDFS path is being retrieved.
+   * @return the HDFS path for the specified downloader class.
+   * @throws ConfigurationException if no HDFS path is specified in the configurations.
+   */
+  public String getDownloaderHdfPath(String className) throws ConfigurationException {
+    logger.debug("Attempting to retrieve downloader hdfs path String ");
+    logger.debug("Downloader : {}", className);
+
+    return confRoot
+        + DOWNLOADER
+        + SEPARATOR
+        + className
+        + SEPARATOR
+        + PATH
+        + SEPARATOR
+        + "hdfs-path";
   }
 
   /**

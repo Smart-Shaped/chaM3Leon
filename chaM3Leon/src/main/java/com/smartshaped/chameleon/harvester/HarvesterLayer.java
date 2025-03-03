@@ -67,7 +67,6 @@ public class HarvesterLayer {
    * @throws ConfigurationException If there is an error in the configuration
    * @throws HdfsReaderException If there is an error when reading from HDFS
    * @throws CassandraException If there is an error when interacting with Cassandra
-   * @throws HarvesterException If there is an error during the harvesting process
    */
   public void start()
       throws ConfigurationException,
@@ -82,7 +81,22 @@ public class HarvesterLayer {
     List<Harvester> filteredHarvesters;
 
     for (Request request : requests) {
+      Runtime.getRuntime()
+          .addShutdownHook(
+              new Thread(
+                  () -> {
+                    logger.info("Closing Spark Application...");
+                    try {
+                      RequestHandler killedHandler = configurationUtils.getRequestHandler();
+                      logger.info("Request value: {}", request);
+                      killedHandler.updateRequestState(request, "blocked");
+                    } catch (CassandraException | ConfigurationException e) {
+                      throw new RuntimeException(e.getMessage(), e);
+                    }
+                  }));
       logger.debug("Processing request: {}", request);
+      state = "inProgress";
+      handler.updateRequestState(request, state);
       try {
         filteredHarvesters = filterHarvesters(harvesters, request);
         for (Harvester harvester : filteredHarvesters) {

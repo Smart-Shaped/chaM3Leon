@@ -52,16 +52,14 @@ class HarvesterLayerTest {
             mockStatic(HarvesterConfigurationUtils.class);
         MockedStatic<CassandraUtils> harvSaver = mockStatic(CassandraUtils.class);
         MockedStatic<SedonaContext> sedonaContext = mockStatic(SedonaContext.class)) {
-      confUtils
-          .when(() -> HarvesterConfigurationUtils.getHarvesterConf())
-          .thenReturn(configurationUtils);
-      sedonaContext.when(() -> SedonaContext.builder()).thenReturn(builder);
+      confUtils.when(HarvesterConfigurationUtils::getHarvesterConf).thenReturn(configurationUtils);
+      sedonaContext.when(SedonaContext::builder).thenReturn(builder);
       when(configurationUtils.getRequestHandler()).thenReturn(requestHandler);
       when(configurationUtils.getSparkConf()).thenReturn(sparkConf);
       when(builder.config(sparkConf)).thenReturn(builder);
       when(builder.getOrCreate()).thenReturn(sparkSession);
 
-      assertDoesNotThrow(() -> new HarvesterLayer());
+      assertDoesNotThrow(HarvesterLayer::new);
     }
   }
 
@@ -70,12 +68,10 @@ class HarvesterLayerTest {
     try (MockedStatic<HarvesterConfigurationUtils> confUtils =
             mockStatic(HarvesterConfigurationUtils.class);
         MockedStatic<CassandraUtils> harvSaver = mockStatic(CassandraUtils.class)) {
-      confUtils
-          .when(() -> HarvesterConfigurationUtils.getHarvesterConf())
-          .thenReturn(configurationUtils);
+      confUtils.when(HarvesterConfigurationUtils::getHarvesterConf).thenReturn(configurationUtils);
       when(configurationUtils.getRequestHandler()).thenReturn(requestHandler);
 
-      assertThrows(ConfigurationException.class, () -> new HarvesterLayer());
+      assertThrows(ConfigurationException.class, HarvesterLayer::new);
     }
   }
 
@@ -85,10 +81,8 @@ class HarvesterLayerTest {
             mockStatic(HarvesterConfigurationUtils.class);
         MockedStatic<CassandraUtils> harvSaver = mockStatic(CassandraUtils.class);
         MockedStatic<SedonaContext> sedonaContext = mockStatic(SedonaContext.class)) {
-      confUtils
-          .when(() -> HarvesterConfigurationUtils.getHarvesterConf())
-          .thenReturn(configurationUtils);
-      sedonaContext.when(() -> SedonaContext.builder()).thenReturn(builder);
+      confUtils.when(HarvesterConfigurationUtils::getHarvesterConf).thenReturn(configurationUtils);
+      sedonaContext.when(SedonaContext::builder).thenReturn(builder);
       when(configurationUtils.getRequestHandler()).thenReturn(requestHandler);
       when(configurationUtils.getSparkConf()).thenReturn(sparkConf);
       when(configurationUtils.getHarvesters()).thenReturn(harvesterlist);
@@ -100,7 +94,7 @@ class HarvesterLayerTest {
       when(harvester.getHarvesterId()).thenReturn("harvester.harvesters.harvester1");
 
       HarvesterLayer harvetserLayer = new HarvesterLayer();
-      assertDoesNotThrow(() -> harvetserLayer.start());
+      assertDoesNotThrow(harvetserLayer::start);
     }
   }
 }

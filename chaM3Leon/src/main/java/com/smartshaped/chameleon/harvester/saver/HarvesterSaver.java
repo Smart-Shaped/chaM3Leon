@@ -31,4 +31,6 @@ public class HarvesterSaver {
     logger.debug("Trying to write dataset to defined path: {}", parquetPath);
     df.write().mode("append").parquet(parquetPath);
   }
+
+
 }

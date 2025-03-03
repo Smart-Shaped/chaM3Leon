@@ -2,15 +2,17 @@ package com.smartshaped.chameleon.harvester.downloader;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.harvester.request.Request;
 import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.harvester.request.Request;
+
 class DownloaderTest {
 
-  @Mock private List paramList;
+  @Mock private List<String> paramList;
   @Mock private Request request;
 
   @Test

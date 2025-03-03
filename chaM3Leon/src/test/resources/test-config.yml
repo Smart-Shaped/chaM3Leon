@@ -155,6 +155,8 @@ harvester:
         schema: "https"
         authority: "super.auth"
         path: "/api/some/path"
+      path:
+        hdfs-path: "/user/spark/Downloads/CopernicusMaps"
   preprocessor:
     TifRescalerPreprocessor:
       params:
@@ -173,7 +175,7 @@ harvester:
       inputPath: ""
       class: "com.smartshaped.chameleon.harvester.HarvesterExample"
       downloader:
-          class: "com.smartshaped.chameleon.harvester.DownloaderExample"
+        class: "com.smartshaped.chameleon.harvester.DownloaderExample"
       transformer: "com.smartshaped.chameleon.harvester.TransformerExample"
       preprocessor: "com.smartshaped.chameleon.harvester.PreprocessorExample"
       saver:
