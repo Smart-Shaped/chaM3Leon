@@ -177,6 +177,7 @@ public abstract class PythonBlackbox extends Blackbox {
           scripts[i] = this.blackboxFolder + "/" + script;
         }
       }
+      this.pythonExtraScripts = String.join(",", scripts);
     }
 
     this.requirementsDefined = !requirementsPath.trim().isEmpty();
