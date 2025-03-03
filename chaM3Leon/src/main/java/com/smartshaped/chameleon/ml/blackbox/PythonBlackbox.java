@@ -107,7 +107,8 @@ public abstract class PythonBlackbox extends Blackbox {
     }
 
     if (requirementsDefined) {
-      ProcessBuilder processBuilder = new ProcessBuilder("pip3", "install", "-r", requirementsPath);
+      ProcessBuilder processBuilder =
+          new ProcessBuilder("pip3", "install", "-r", this.blackboxFolder + "/" + requirementsPath);
       runCommand(processBuilder);
       logger.info("Python requirements installed successfully");
     }
