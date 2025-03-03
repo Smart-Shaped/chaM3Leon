@@ -1,7 +1,16 @@
 package com.smartshaped.chameleon.ml.blackbox;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.ml.blackbox.exception.BlackBoxException;
+import com.smartshaped.chameleon.ml.blackbox.exception.BlackboxException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -15,18 +24,8 @@ import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
-class BlackBoxTest {
+class BlackboxTest {
 
   @Mock Dataset<Row> dataset;
   @Mock FileSystem fileSystem;
@@ -41,19 +40,19 @@ class BlackBoxTest {
 
   @Test
   void testConstructor() {
-    assertDoesNotThrow(BlackBoxExample::new);
+    assertDoesNotThrow(BlackboxExample::new);
   }
 
   @Test
   void testStartInputMismatch() throws ConfigurationException {
-    BlackBoxExample blackBox = new BlackBoxExample();
+    BlackboxExample blackBox = new BlackboxExample();
     datasets.add(dataset);
-    assertThrows(BlackBoxException.class, () -> blackBox.start(datasets));
+    assertThrows(BlackboxException.class, () -> blackBox.start(datasets));
   }
 
   @Test
   void testStart() throws ConfigurationException {
-    BlackBoxExample blackBox = new BlackBoxExample();
+    BlackboxExample blackBox = new BlackboxExample();
     assertDoesNotThrow(() -> blackBox.start(datasets));
   }
 
@@ -70,7 +69,7 @@ class BlackBoxTest {
 
       when(fileSystem.exists(any(Path.class))).thenReturn(true);
 
-      BlackBoxExample blackBox = new BlackBoxExample();
+      BlackboxExample blackBox = new BlackboxExample();
       assertDoesNotThrow(() -> blackBox.deleteHdfsFolder("testPath"));
     }
   }
@@ -89,7 +88,7 @@ class BlackBoxTest {
       when(fileSystem.exists(any(Path.class))).thenReturn(true);
       when(fileSystem.delete(any(Path.class), anyBoolean())).thenReturn(true);
 
-      BlackBoxExample blackBox = new BlackBoxExample();
+      BlackboxExample blackBox = new BlackboxExample();
       assertDoesNotThrow(() -> blackBox.deleteHdfsFolder("testPath"));
     }
   }
@@ -108,8 +107,8 @@ class BlackBoxTest {
       when(fileSystem.exists(any(Path.class))).thenReturn(true);
       when(fileSystem.delete(any(Path.class), anyBoolean())).thenThrow(IOException.class);
 
-      BlackBoxExample blackBox = new BlackBoxExample();
-      assertThrows(BlackBoxException.class, () -> blackBox.deleteHdfsFolder("testPath"));
+      BlackboxExample blackBox = new BlackboxExample();
+      assertThrows(BlackboxException.class, () -> blackBox.deleteHdfsFolder("testPath"));
     }
   }
 
@@ -121,7 +120,7 @@ class BlackBoxTest {
 
       when(processBuilder.start()).thenReturn(process);
 
-      BlackBoxExample blackBox = new BlackBoxExample();
+      BlackboxExample blackBox = new BlackboxExample();
       assertDoesNotThrow(() -> blackBox.runCommand(processBuilder));
     }
   }
@@ -136,8 +135,8 @@ class BlackBoxTest {
       when(processBuilder.start()).thenReturn(process);
       when(process.waitFor()).thenReturn(1);
 
-      BlackBoxExample blackBox = new BlackBoxExample();
-      assertThrows(BlackBoxException.class, (() -> blackBox.runCommand(processBuilder)));
+      BlackboxExample blackBox = new BlackboxExample();
+      assertThrows(BlackboxException.class, (() -> blackBox.runCommand(processBuilder)));
     }
   }
 
@@ -151,8 +150,8 @@ class BlackBoxTest {
       when(processBuilder.start()).thenReturn(process);
       when(process.waitFor()).thenThrow(InterruptedException.class);
 
-      BlackBoxExample blackBox = new BlackBoxExample();
-      assertThrows(BlackBoxException.class, (() -> blackBox.runCommand(processBuilder)));
+      BlackboxExample blackBox = new BlackboxExample();
+      assertThrows(BlackboxException.class, (() -> blackBox.runCommand(processBuilder)));
     }
   }
 }

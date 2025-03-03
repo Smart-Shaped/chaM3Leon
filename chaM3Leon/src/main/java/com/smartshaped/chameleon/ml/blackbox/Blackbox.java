@@ -1,10 +1,13 @@
 package com.smartshaped.chameleon.ml.blackbox;
 
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.ml.blackbox.exception.BlackboxException;
+import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
-
+import lombok.Getter;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -13,42 +16,40 @@ import org.apache.logging.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.ml.blackbox.exception.BlackBoxException;
-import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
-
-import lombok.Getter;
-
 /** Java abstract class representing a black box for machine learning. */
-public abstract class BlackBox {
+public abstract class Blackbox {
 
-  private static final Logger logger = LogManager.getLogger(BlackBox.class);
+  private static final Logger logger = LogManager.getLogger(Blackbox.class);
 
   protected MLConfigurationUtils mlConfigurationUtils;
   protected String inputs;
   protected String output;
   protected String modelPath;
+  protected String blackboxFolder;
 
   @Getter private Dataset<Row> predictions;
 
-  protected BlackBox() throws ConfigurationException {
+  protected Blackbox() throws ConfigurationException {
 
     this.mlConfigurationUtils = MLConfigurationUtils.getMlConf();
     logger.info("ML configurations loaded correctly");
 
-    this.inputs = mlConfigurationUtils.getBlackBoxInputs();
+    this.inputs = mlConfigurationUtils.getBlackboxInputs();
     logger.debug("Retrieved input paths: {}", inputs);
-    this.output = mlConfigurationUtils.getBlackBoxOutput();
+    this.output = mlConfigurationUtils.getBlackboxOutput();
     logger.debug("Retrieved output path: {}", output);
-    this.modelPath = mlConfigurationUtils.getBlackBoxModelPath();
+    this.modelPath = mlConfigurationUtils.getBlackboxModelPath();
     logger.debug("Retrieved model path: {}", modelPath);
+    this.blackboxFolder = mlConfigurationUtils.getBlackboxFolder();
+    logger.debug("Retrieved blackbox folder: {}", blackboxFolder);
 
     logger.debug("BlackBox initialized");
   }
 
-  public void start(List<Dataset<Row>> datasets) throws BlackBoxException {
+  public void start(List<Dataset<Row>> datasets) throws BlackboxException {
 
     logger.info("Starting BlackBox...");
+    validateParams();
     writeInputs(datasets);
 
     extraPreparation();
@@ -73,9 +74,9 @@ public abstract class BlackBox {
    * <p>
    *
    * @param folderPath the path of the folder to be deleted
-   * @throws BlackBoxException if an error occurs during the deletion process
+   * @throws BlackboxException if an error occurs during the deletion process
    */
-  protected void deleteHdfsFolder(String folderPath) throws BlackBoxException {
+  protected void deleteHdfsFolder(String folderPath) throws BlackboxException {
 
     Configuration configuration = new Configuration();
 
@@ -97,7 +98,7 @@ public abstract class BlackBox {
 
       fileSystem.close();
     } catch (IOException e) {
-      throw new BlackBoxException("Error deleting folder " + folderPath, e);
+      throw new BlackboxException("Error deleting folder " + folderPath, e);
     }
   }
 
@@ -106,12 +107,12 @@ public abstract class BlackBox {
    *
    * <p>This method starts the given command and logs its output line by line. After the command has
    * finished running, it logs the exit code of the command. If the command exited with a non-zero
-   * exit code, this method throws a {@link BlackBoxException}.
+   * exit code, this method throws a {@link BlackboxException}.
    *
    * @param processBuilder the process builder containing the command to run
-   * @throws BlackBoxException if the command exited with a non-zero exit code
+   * @throws BlackboxException if the command exited with a non-zero exit code
    */
-  protected void runCommand(ProcessBuilder processBuilder) throws BlackBoxException {
+  protected void runCommand(ProcessBuilder processBuilder) throws BlackboxException {
     try {
       logger.info("Running command {}", processBuilder.command());
       Process process = processBuilder.start();
@@ -124,26 +125,26 @@ public abstract class BlackBox {
 
       int exitCode = process.waitFor();
       if (exitCode != 0) {
-        throw new BlackBoxException("Error running command, exit code: " + exitCode);
+        throw new BlackboxException("Error running command, exit code: " + exitCode);
       } else {
         logger.info("Command completed successfully");
       }
 
     } catch (IOException e) {
-      throw new BlackBoxException("Error running command", e);
+      throw new BlackboxException("Error running command", e);
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
-      throw new BlackBoxException("Error running command", e);
+      throw new BlackboxException("Error running command", e);
     }
   }
 
-  private void writeInputs(List<Dataset<Row>> datasets) throws BlackBoxException {
+  private void writeInputs(List<Dataset<Row>> datasets) throws BlackboxException {
 
     String[] inputsSplit = this.inputs.split(",");
     datasets = mergeDatasetsIfNecessary(datasets);
 
     if (inputsSplit.length != datasets.size()) {
-      throw new BlackBoxException("Number of input paths does not match number of datasets");
+      throw new BlackboxException("Number of input paths does not match number of datasets");
     }
     for (int i = 0; i < inputsSplit.length; i++) {
       makeDatasetAccessible(datasets.get(i), inputsSplit[i]);
@@ -156,9 +157,9 @@ public abstract class BlackBox {
    * <p>This method must be implemented by the subclasses and should perform the actual machine
    * learning process using the provided input paths, output path, and model path.
    *
-   * @throws BlackBoxException if any error occurs during the black box process
+   * @throws BlackboxException if any error occurs during the black box process
    */
-  protected abstract void runML() throws BlackBoxException;
+  protected abstract void runML() throws BlackboxException;
 
   /**
    * Performs any necessary preparation before executing the machine learning script.
@@ -167,7 +168,7 @@ public abstract class BlackBox {
    * preparation required before the ML script is run. This could include operations such as
    * installing python libraries.
    */
-  protected abstract void extraPreparation() throws BlackBoxException;
+  protected abstract void extraPreparation() throws BlackboxException;
 
   /**
    * Merges the datasets if necessary.
@@ -183,17 +184,17 @@ public abstract class BlackBox {
    *
    * @param datasets the list of datasets
    * @return the merged list of datasets
-   * @throws BlackBoxException if any error occurs during the merging
+   * @throws BlackboxException if any error occurs during the merging
    */
   protected abstract List<Dataset<Row>> mergeDatasetsIfNecessary(List<Dataset<Row>> datasets)
-      throws BlackBoxException;
+      throws BlackboxException;
 
   /**
    * Post-processing step after the machine learning script has finished running.
    *
    * <p>Subclasses can override this method to perform any additional post-processing steps.
    */
-  protected abstract void postRunning() throws BlackBoxException;
+  protected abstract void postRunning() throws BlackboxException;
 
   /**
    * Reads the output of the machine learning script and returns it as a Spark Dataset<Row>.
@@ -208,7 +209,7 @@ public abstract class BlackBox {
    *
    * <p>The method should throw a BlackBoxException if any error occurs while reading the output.
    */
-  protected abstract Dataset<Row> readOutput(String output) throws BlackBoxException;
+  protected abstract Dataset<Row> readOutput(String output) throws BlackboxException;
 
   /**
    * Makes the given dataset accessible to the machine learning script.
@@ -220,10 +221,10 @@ public abstract class BlackBox {
    * @param dataset the dataset to be made accessible
    * @param inputInfo the information about the input (e.g. the path where the dataset will be
    *     written)
-   * @throws BlackBoxException if any error occurs during the process
+   * @throws BlackboxException if any error occurs during the process
    */
   protected abstract void makeDatasetAccessible(Dataset<Row> dataset, String inputInfo)
-      throws BlackBoxException;
+      throws BlackboxException;
 
   /**
    * Cleans up the black box folder.
@@ -232,20 +233,20 @@ public abstract class BlackBox {
    * specific to the black box implementation. It should remove any temporary or intermediate files
    * created during the machine learning process.
    *
-   * <p>If any error occurs during the cleanup process, a {@link BlackBoxException} is thrown.
+   * <p>If any error occurs during the cleanup process, a {@link BlackboxException} is thrown.
    *
-   * @throws BlackBoxException if an error occurs during the cleanup process
+   * @throws BlackboxException if an error occurs during the cleanup process
    */
-  protected abstract void cleanBlackBoxFolder() throws BlackBoxException;
+  protected abstract void cleanBlackBoxFolder() throws BlackboxException;
 
   /**
    * Validates the parameters of the black box.
    *
    * <p>This method is intended to be implemented by subclasses to validate the parameters of the
    * black box. It should check the parameters set by the configuration and throw a {@link
-   * BlackBoxException} if any of the parameters is invalid.
+   * BlackboxException} if any of the parameters is invalid.
    *
-   * @throws BlackBoxException if any of the parameters is invalid
+   * @throws BlackboxException if any of the parameters is invalid
    */
-  protected abstract void validateParams() throws BlackBoxException;
+  protected abstract void validateParams() throws BlackboxException;
 }

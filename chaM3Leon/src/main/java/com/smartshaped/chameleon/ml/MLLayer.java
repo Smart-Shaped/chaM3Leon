@@ -14,8 +14,8 @@ import org.apache.spark.sql.SparkSession;
 import com.smartshaped.chameleon.common.exception.CassandraException;
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.CassandraUtils;
-import com.smartshaped.chameleon.ml.blackbox.BlackBox;
-import com.smartshaped.chameleon.ml.blackbox.exception.BlackBoxException;
+import com.smartshaped.chameleon.ml.blackbox.Blackbox;
+import com.smartshaped.chameleon.ml.blackbox.exception.BlackboxException;
 import com.smartshaped.chameleon.ml.exception.HdfsReaderException;
 import com.smartshaped.chameleon.ml.exception.MLLayerException;
 import com.smartshaped.chameleon.ml.exception.ModelSaverException;
@@ -41,7 +41,7 @@ public abstract class MLLayer {
   private SparkSession sparkSession;
   private MLConfigurationUtils configurationUtils;
   private CassandraUtils cassandraUtils;
-  private BlackBox blackBox;
+  private Blackbox blackBox;
 
   protected MLLayer() throws ConfigurationException, MLLayerException, CassandraException {
 
@@ -55,7 +55,7 @@ public abstract class MLLayer {
     logger.info("Pipeline loaded correctly");
     this.setModelSaver(this.configurationUtils.getModelSaver());
     logger.info("Model saver loaded correctly");
-    this.setBlackBox(this.configurationUtils.getBlackBox());
+    this.setBlackBox(this.configurationUtils.getBlackbox());
     logger.info("BlackBox loaded correctly");
 
     String pipelineLog = (pipeline == null ? "Pipeline is null" : "Pipeline is not null");
@@ -106,7 +106,7 @@ public abstract class MLLayer {
    * @throws ConfigurationException If an error occurs during configuration retrieval.
    * @throws CassandraException If an error occurs while interacting with Cassandra.
    * @throws PipelineException If an error occurs during pipeline execution.
-   * @throws BlackBoxException If an error occurs during black box execution.
+   * @throws BlackboxException If an error occurs during black box execution.
    */
   public void start()
       throws MLLayerException,
@@ -115,7 +115,7 @@ public abstract class MLLayer {
           ConfigurationException,
           CassandraException,
           PipelineException,
-          BlackBoxException {
+          BlackboxException {
 
     List<Dataset<Row>> datasets = new ArrayList<>();
 

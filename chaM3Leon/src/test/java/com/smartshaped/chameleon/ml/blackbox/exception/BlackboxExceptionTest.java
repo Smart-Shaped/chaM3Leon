@@ -4,21 +4,21 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BlackBoxExceptionTest {
+class BlackboxExceptionTest {
 
   @Test
   void testBlackBoxExceptionThrown() {
     assertThrows(
-        BlackBoxException.class,
+        BlackboxException.class,
         () -> {
-          throw new BlackBoxException("Test exception");
+          throw new BlackboxException("Test exception");
         });
   }
 
   @Test
   void testConstructorWithMessage() {
     String errorMessage = "Exception in the blackbox";
-    BlackBoxException exception = new BlackBoxException(errorMessage);
+    BlackboxException exception = new BlackboxException(errorMessage);
 
     String expectedMessage = "Exception in the blackbox. Caused by: \n" + errorMessage;
     assertEquals(expectedMessage, exception.getMessage());
@@ -27,11 +27,11 @@ class BlackBoxExceptionTest {
   @Test
   void testExceptionThrownWithCause() {
     Throwable cause = new IllegalArgumentException("Original cause");
-    BlackBoxException exception =
+    BlackboxException exception =
         assertThrows(
-            BlackBoxException.class,
+            BlackboxException.class,
             () -> {
-              throw new BlackBoxException("Test exception", cause);
+              throw new BlackboxException("Test exception", cause);
             });
     assertEquals(cause, exception.getCause());
   }
@@ -39,7 +39,7 @@ class BlackBoxExceptionTest {
   @Test
   void testBlackBoxExceptionWithThrowable() {
     Throwable cause = new RuntimeException("Runtime error");
-    BlackBoxException exception = new BlackBoxException(cause);
+    BlackboxException exception = new BlackboxException(cause);
 
     assertAll(
         () -> assertNotNull(exception),
@@ -52,7 +52,7 @@ class BlackBoxExceptionTest {
   void testBlackBoxExceptionWithMessageAndThrowable() {
     String errorMessage = "Error when reading from hdfs";
     Throwable cause = new IllegalArgumentException("Invalid argument");
-    BlackBoxException exception = new BlackBoxException(errorMessage, cause);
+    BlackboxException exception = new BlackboxException(errorMessage, cause);
 
     assertAll(
         () -> assertNotNull(exception),

@@ -8,6 +8,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
+import com.smartshaped.chameleon.common.exception.CassandraException;
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.CassandraUtils;
+import com.smartshaped.chameleon.common.utils.TableModel;
+import com.smartshaped.chameleon.ml.blackbox.Blackbox;
+import com.smartshaped.chameleon.ml.exception.ModelSaverException;
+import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
 import org.apache.spark.ml.Model;
 import org.apache.spark.ml.util.MLWritable;
 import org.apache.spark.ml.util.MLWriter;
@@ -21,21 +28,14 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.common.utils.CassandraUtils;
-import com.smartshaped.chameleon.common.utils.TableModel;
-import com.smartshaped.chameleon.ml.blackbox.BlackBox;
-import com.smartshaped.chameleon.ml.exception.ModelSaverException;
-import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
-
 @ExtendWith(MockitoExtension.class)
 class ModelSaverTest {
 
   @Mock MLConfigurationUtils mlConfigurationUtils;
   @Mock TableModel tableModel;
   @Mock Pipeline pipeline;
-  @Mock BlackBox blackBox;
+  @Mock
+  Blackbox blackBox;
   Model model;
   @Mock MLWriter mlWriter;
   @Mock Dataset<Row> predictions;
@@ -53,9 +53,14 @@ class ModelSaverTest {
   @Test
   void testConstructor() throws ConfigurationException {
 
-    try (MockedStatic<MLConfigurationUtils> mockedStatic = mockStatic(MLConfigurationUtils.class)) {
+    try (MockedStatic<MLConfigurationUtils> mockedStatic = mockStatic(MLConfigurationUtils.class);
+        MockedStatic<CassandraUtils> mockedStaticModel = mockStatic(CassandraUtils.class)) {
 
       mockedStatic.when(MLConfigurationUtils::getMlConf).thenReturn(mlConfigurationUtils);
+
+      mockedStaticModel
+          .when(() -> CassandraUtils.getCassandraUtils(any()))
+          .thenReturn(cassandraUtils);
 
       when(mlConfigurationUtils.getModelDir()).thenReturn(modelDir);
       when(mlConfigurationUtils.getModelClassName()).thenReturn(modelName);

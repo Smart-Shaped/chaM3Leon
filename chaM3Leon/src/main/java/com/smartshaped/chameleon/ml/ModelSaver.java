@@ -12,7 +12,7 @@ import com.smartshaped.chameleon.common.exception.CassandraException;
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.CassandraUtils;
 import com.smartshaped.chameleon.common.utils.TableModel;
-import com.smartshaped.chameleon.ml.blackbox.BlackBox;
+import com.smartshaped.chameleon.ml.blackbox.Blackbox;
 import com.smartshaped.chameleon.ml.exception.ModelSaverException;
 import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
 
@@ -86,7 +86,7 @@ public abstract class ModelSaver {
    * @throws CassandraException if an error occurs while saving the predictions to Cassandra
    * @throws ModelSaverException if any other error occurs during the saving process
    */
-  public void saveModel(BlackBox blackBox)
+  public void saveModel(Blackbox blackBox)
       throws ConfigurationException, CassandraException, ModelSaverException {
 
     Dataset<Row> predictions = blackBox.getPredictions();
