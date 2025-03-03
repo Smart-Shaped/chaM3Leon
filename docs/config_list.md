@@ -7,6 +7,7 @@
 ```yml
 {layer}.spark.*     # Defines Spark environment configurations (master, deploy-mode, app-name, interval-sec, etc.)
 ```
+
 ### Apache Cassandra
 
 The following configurations are shared among Batch, Speed, and ML layers:
@@ -53,13 +54,15 @@ ml.hdfs.readers.default                     # Defines the default path for stori
 ml.hdfs.readers.{reader_identifier}.class   # Specifies the fully qualified class name of the reader, including package path
 ml.hdfs.readers.{reader_identifier}.path    # Defines the destination path for storing data processed by the reader
 ml.hdfs.modelDir                            # Specifies the storage path for the model when using Pipeline class for machine learning
-ml.blackBox.class                           # Specifies the fully qualified class name of the BlackBox (including package). Note: not compatible with pipeline usage
-ml.blackBox.inputs                          # Defines the parameters required for data acquisition by the blackbox
-ml.blackBox.output                          # Defines the parameters required for acquiring output produced by the blackbox
-ml.blackBox.modelPath                       # Specifies the storage path for the BlackBox model
-ml.blackBox.pythonScriptPath                # Defines the path where the PythonBlackBox script will be copied
-ml.blackBox.pythonExtraScripts              # Lists the paths of additional PythonBlackBox scripts, comma-separated
-ml.blackBox.pythonLibraries                 # Lists the Python dependencies required for PythonBlackBox, comma-separated
+ml.blackbox.class                           # Specifies the fully qualified class name of the BlackBox (including package). Note: not compatible with pipeline usage
+ml.blackbox.folder                          # Defines the folder path for the BlackBox
+ml.blackbox.inputs                          # Defines the parameters required for data acquisition by the blackbox
+ml.blackbox.output                          # Defines the parameters required for acquiring output produced by the blackbox
+ml.blackbox.modelPath                       # Specifies the storage path for the BlackBox model
+ml.blackbox.python.scriptPath               # Defines where the main Python script will be copied, or just the name in the resources folder if ml.blackbox.folder is set
+ml.blackbox.python.extraScripts             # Lists the paths of additional Python scripts, comma-separated
+ml.blackbox.python.libraries                # Lists the Python dependencies required, comma-separated
+ml.blackbox.python.requirementsPath         # Defines the path to the requirements.txt file for the Python script
 ml.pipeline.class                           # Specifies the fully qualified class name of the pipeline (including package). Note: not compatible with blackbox usage
 ml.modelSaver.class                         # Specifies the fully qualified class name of the model saver, including package path
 ```
