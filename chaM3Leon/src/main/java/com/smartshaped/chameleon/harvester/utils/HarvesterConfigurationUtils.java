@@ -42,6 +42,7 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
   private static final String DUE_TO_EXCEPTION = " due to exception";
   private static final String COULD_NOT_INSTANTIATE = "Could not instantiate ";
   private static final String INPUT_PATH = "inputPath";
+  private static final String HDFS_PATH = "hdfs-path";
 
   private static HarvesterConfigurationUtils configuration;
 
@@ -389,18 +390,11 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
    * @return the HDFS path for the specified downloader class.
    * @throws ConfigurationException if no HDFS path is specified in the configurations.
    */
-  public String getDownloaderHdfPath(String className) throws ConfigurationException {
+  public String getDownloaderHdfsPath(String className) throws ConfigurationException {
     logger.debug("Attempting to retrieve downloader hdfs path String ");
     logger.debug("Downloader : {}", className);
 
-    return confRoot
-        + DOWNLOADER
-        + SEPARATOR
-        + className
-        + SEPARATOR
-        + PATH
-        + SEPARATOR
-        + "hdfs-path";
+    return confRoot + DOWNLOADER + SEPARATOR + className + SEPARATOR + PATH + SEPARATOR + HDFS_PATH;
   }
 
   /**
