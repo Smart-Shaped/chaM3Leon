@@ -15,16 +15,21 @@ public class DownloaderExample extends Downloader {
     super();
   }
 
+  /**
+   * @param paramList The list of parameters to be used in the URI.
+   * @param request
+   * @return
+   */
   @Override
-  public Object download(List reqParams, Request req)
+  protected List<String> createUriList(List paramList, Request request) {
+    return List.of();
+  }
+
+  @Override
+  public Dataset download(List reqParams, Request req)
       throws DownloaderException, ConfigurationException {
     SparkSession sparkSession = SparkSession.getActiveSession().get();
     Dataset<Row> df = sparkSession.createDataFrame(List.of(), Row.class);
     return df;
-  }
-
-  @Override
-  protected List<String> createUriList(List paramList) {
-    return List.of();
   }
 }

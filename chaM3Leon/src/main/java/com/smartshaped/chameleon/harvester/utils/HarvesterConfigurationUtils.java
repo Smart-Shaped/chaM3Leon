@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.logging.log4j.LogManager;
@@ -374,6 +373,33 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
       throw new ConfigurationException(
           COULD_NOT_INSTANTIATE + Downloader.class + DUE_TO_EXCEPTION, e);
     }
+  }
+
+  /**
+   * Retrieves the HDFS path for a specified downloader class.
+   *
+   * <p>This method constructs the HDFS path using the provided class name by appending it to the
+   * base path defined in the configuration. If the constructed path is null, a
+   * ConfigurationException is thrown.
+   *
+   * <p>
+   *
+   * @param className the name of the downloader class for which the HDFS path is being retrieved.
+   * @return the HDFS path for the specified downloader class.
+   * @throws ConfigurationException if no HDFS path is specified in the configurations.
+   */
+  public String getDownloaderHdfPath(String className) throws ConfigurationException {
+    logger.debug("Attempting to retrieve downloader hdfs path String ");
+    logger.debug("Downloader : {}", className);
+
+    return confRoot
+        + DOWNLOADER
+        + SEPARATOR
+        + className
+        + SEPARATOR
+        + PATH
+        + SEPARATOR
+        + "hdfs-path";
   }
 
   /**

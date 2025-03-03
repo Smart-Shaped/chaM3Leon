@@ -3,14 +3,17 @@ package com.smartshaped.chameleon.harvester.downloader;
 import static org.apache.spark.sql.functions.udf;
 import static org.apache.spark.sql.types.DataTypes.StringType;
 
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.harvester.exception.DownloaderException;
+import com.smartshaped.chameleon.harvester.request.Request;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -23,18 +26,15 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.expressions.UserDefinedFunction;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.harvester.exception.DownloaderException;
-import com.smartshaped.chameleon.harvester.request.Request;
-
 public abstract class BinaryDownloader extends Downloader {
   private static final Logger logger = LogManager.getLogger(BinaryDownloader.class);
   private final HttpClient httpClient;
-  private static final String HDFS_DESTINATION_PATH = "/user/spark/Downloads/GencastNc";
+  private final String hdfsPath;
 
   protected BinaryDownloader() throws ConfigurationException {
     super();
     this.httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
+    this.hdfsPath = configurationUtils.getDownloaderHdfPath(className);
   }
 
   @Override
@@ -73,7 +73,7 @@ public abstract class BinaryDownloader extends Downloader {
     }
   }
 
-  private void downloadFile(String url) throws DownloaderException {
+  protected void downloadFile(String url) throws DownloaderException {
     try {
       logger.info("Downloading file: {}", url);
       HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(url)).build();
@@ -81,28 +81,27 @@ public abstract class BinaryDownloader extends Downloader {
           httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
       if (response.statusCode() == 200) {
         String fileName = createStructuredFileName(url);
-        logger.info(
-            "File downloaded successfully. Creating HDFS path: {}, {}",
-            HDFS_DESTINATION_PATH,
-            fileName);
+        logger.info("File downloaded successfully. Creating HDFS path: {}, {}", hdfsPath, fileName);
         Configuration configuration = new Configuration();
-        FileSystem hdfs = FileSystem.get(new URI(HDFS_DESTINATION_PATH), configuration);
-        Path hdfsPath = new Path(HDFS_DESTINATION_PATH.concat("/").concat(fileName));
-        if (!hdfs.exists(hdfsPath)) {
+        FileSystem hdfs = FileSystem.get(new URI(hdfsPath), configuration);
+        Path finalPath = new Path(hdfsPath.concat("/").concat(fileName));
+        if (!hdfs.exists(finalPath)) {
           logger.info("File does not exist on HDFS. Creating file.");
-          writeFileToHDFS(response, hdfs, hdfsPath);
+          writeFileToHDFS(response, hdfs, finalPath);
           logger.info("File created successfully on HDFS: {}", fileName);
         } else {
           logger.info("File already exists on HDFS: {}", fileName);
         }
         hdfs.close();
       } else {
-        logger.info("Error downloading file: {}. Status code: {}", url, response.statusCode());
+        throw new DownloaderException(
+            "Error downloading file with status code: "
+                + response.statusCode()
+                + " from url : "
+                + url);
       }
-    } catch (InterruptedException e) {
+    } catch (InterruptedException | IOException | URISyntaxException e) {
       Thread.currentThread().interrupt();
-      throw new DownloaderException("Failed to download or save the file: " + url, e);
-    } catch (Exception e) {
       throw new DownloaderException("Failed to download or save the file: " + url, e);
     }
   }

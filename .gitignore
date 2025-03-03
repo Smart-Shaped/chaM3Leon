@@ -53,3 +53,5 @@ build/
 ## cassandra workbench
 .cassandraWorkbench.jsonc
 /.cassandraWorkbench
+/identifier.sqlite
+/localhost
