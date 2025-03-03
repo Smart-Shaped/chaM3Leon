@@ -97,7 +97,7 @@ class MLLayerTest {
           .thenReturn(cassandraUtils);
 
       when(configurationUtils.getPipeline()).thenReturn(null);
-      when(configurationUtils.getBlackBox()).thenReturn(null);
+      when(configurationUtils.getBlackbox()).thenReturn(null);
       assertThrows(MLLayerException.class, CustomMlLayer::new);
     }
   }
@@ -109,7 +109,7 @@ class MLLayerTest {
 
       mockedStatic.when(MLConfigurationUtils::getMlConf).thenReturn(configurationUtils);
       when(configurationUtils.getPipeline()).thenReturn(pipeline);
-      when(configurationUtils.getBlackBox()).thenReturn(blackBox);
+      when(configurationUtils.getBlackbox()).thenReturn(blackBox);
 
       try (MockedStatic<CassandraUtils> mockedStaticModel = mockStatic(CassandraUtils.class)) {
 

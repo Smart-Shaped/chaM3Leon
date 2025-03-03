@@ -81,37 +81,47 @@ class MLConfigurationUtilsTest {
   }
 
   @Test
-  void testGetBlackBox() {
-    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBox());
+  void testGetBlackbox() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackbox());
   }
 
   @Test
-  void testGetBlackBoxInputs() {
-    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxInputs());
+  void testGetBlackboxInputs() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackboxInputs());
   }
 
   @Test
-  void testGetBlackBoxOutput() {
-    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxOutput());
+  void testGetBlackboxOutput() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackboxOutput());
   }
 
   @Test
-  void testGetBlackBoxModelPath() {
-    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxModelPath());
+  void testGetBlackboxModelPath() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackboxModelPath());
   }
 
   @Test
-  void testGetBlackBoxPythonScriptPath() {
-    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxPythonScriptPath());
+  void testGetBlackboxPythonScriptPath() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackboxPythonScriptPath());
   }
 
   @Test
-  void testGetBlackBoxPythonLibraries() {
-    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxPythonLibraries());
+  void testGetBlackboxPythonLibraries() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackboxPythonLibraries());
   }
 
   @Test
-  void testGetBlackBoxPythonExtraScripts() {
-    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackBoxPythonExtraScripts());
+  void testGetBlackboxPythonExtraScripts() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackboxPythonExtraScripts());
+  }
+
+  @Test
+  void testGetBlackboxPythonRequirementsPath() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackboxPythonRequirementsPath());
+  }
+
+  @Test
+  void testGetBlackboxFolder() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackboxFolder());
   }
 }

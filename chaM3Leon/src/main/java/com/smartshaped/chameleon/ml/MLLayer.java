@@ -55,7 +55,7 @@ public abstract class MLLayer {
     logger.info("Pipeline loaded correctly");
     this.setModelSaver(this.configurationUtils.getModelSaver());
     logger.info("Model saver loaded correctly");
-    this.setBlackBox(this.configurationUtils.getBlackBox());
+    this.setBlackBox(this.configurationUtils.getBlackbox());
     logger.info("BlackBox loaded correctly");
 
     String pipelineLog = (pipeline == null ? "Pipeline is null" : "Pipeline is not null");

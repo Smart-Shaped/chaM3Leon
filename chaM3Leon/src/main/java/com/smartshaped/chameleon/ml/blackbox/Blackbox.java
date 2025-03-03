@@ -34,13 +34,13 @@ public abstract class Blackbox {
     this.mlConfigurationUtils = MLConfigurationUtils.getMlConf();
     logger.info("ML configurations loaded correctly");
 
-    this.inputs = mlConfigurationUtils.getBlackBoxInputs();
+    this.inputs = mlConfigurationUtils.getBlackboxInputs();
     logger.debug("Retrieved input paths: {}", inputs);
-    this.output = mlConfigurationUtils.getBlackBoxOutput();
+    this.output = mlConfigurationUtils.getBlackboxOutput();
     logger.debug("Retrieved output path: {}", output);
-    this.modelPath = mlConfigurationUtils.getBlackBoxModelPath();
+    this.modelPath = mlConfigurationUtils.getBlackboxModelPath();
     logger.debug("Retrieved model path: {}", modelPath);
-    this.blackboxFolder = mlConfigurationUtils.getBlackBoxFolder();
+    this.blackboxFolder = mlConfigurationUtils.getBlackboxFolder();
     logger.debug("Retrieved blackbox folder: {}", blackboxFolder);
 
     logger.debug("BlackBox initialized");

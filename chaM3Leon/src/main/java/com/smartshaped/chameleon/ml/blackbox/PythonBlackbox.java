@@ -33,13 +33,13 @@ public abstract class PythonBlackbox extends Blackbox {
 
     super();
 
-    this.pythonScriptPath = mlConfigurationUtils.getBlackBoxPythonScriptPath();
+    this.pythonScriptPath = mlConfigurationUtils.getBlackboxPythonScriptPath();
     logger.debug("Python script path: {}", pythonScriptPath);
-    this.pythonExtraScripts = mlConfigurationUtils.getBlackBoxPythonExtraScripts();
+    this.pythonExtraScripts = mlConfigurationUtils.getBlackboxPythonExtraScripts();
     logger.debug("Python extra scripts: {}", pythonExtraScripts);
-    this.pythonLibraries = mlConfigurationUtils.getBlackBoxPythonLibraries();
+    this.pythonLibraries = mlConfigurationUtils.getBlackboxPythonLibraries();
     logger.debug("Python libraries: {}", pythonLibraries);
-    this.requirementsPath = mlConfigurationUtils.getBlackBoxPythonRequirementsPath();
+    this.requirementsPath = mlConfigurationUtils.getBlackboxPythonRequirementsPath();
     logger.debug("Python requirements path: {}", requirementsPath);
 
     this.requirementsDefined = false;
@@ -107,8 +107,7 @@ public abstract class PythonBlackbox extends Blackbox {
     }
 
     if (requirementsDefined) {
-      ProcessBuilder processBuilder =
-          new ProcessBuilder("pip3", "install", "-r", requirementsPath);
+      ProcessBuilder processBuilder = new ProcessBuilder("pip3", "install", "-r", requirementsPath);
       runCommand(processBuilder);
       logger.info("Python requirements installed successfully");
     }

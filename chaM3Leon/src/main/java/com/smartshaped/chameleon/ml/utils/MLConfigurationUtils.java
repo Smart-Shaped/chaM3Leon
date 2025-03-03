@@ -37,7 +37,8 @@ public class MLConfigurationUtils extends ConfigurationUtils {
   private static final String ML_BLACK_BOX_CLASS = "ml.blackbox.class";
   private static final String ML_BLACK_BOX_PYTHON_LIBRARIES = "ml.blackbox.python.libraries";
   private static final String ML_BLACK_BOX_PYTHON_EXTRA_SCRIPTS = "ml.blackbox.python.extraScripts";
-  private static final String ML_BLACK_BOX_PYTHON_REQUIREMENTS_PATH = "ml.blackbox.python.requirementsPath";
+  private static final String ML_BLACK_BOX_PYTHON_REQUIREMENTS_PATH =
+      "ml.blackbox.python.requirementsPath";
 
   private static MLConfigurationUtils configuration;
 
@@ -233,18 +234,18 @@ public class MLConfigurationUtils extends ConfigurationUtils {
    * @throws ConfigurationException if any error occurs while loading the configuration, or if the
    *     class cannot be instantiated
    */
-  public Blackbox getBlackBox() throws ConfigurationException {
-    String blackBoxClassName = config.getString(ML_BLACK_BOX_CLASS, "");
+  public Blackbox getBlackbox() throws ConfigurationException {
+    String blackboxClassName = config.getString(ML_BLACK_BOX_CLASS, "");
 
-    if (blackBoxClassName.trim().isEmpty()) {
+    if (blackboxClassName.trim().isEmpty()) {
       logger.debug("Missing or empty configuration for key: " + ML_BLACK_BOX_CLASS);
       return null;
     }
 
-    logger.debug("BlackBox class: {}", blackBoxClassName);
+    logger.debug("Blackbox class: {}", blackboxClassName);
 
     try {
-      return loadInstanceOf(blackBoxClassName, Blackbox.class);
+      return loadInstanceOf(blackboxClassName, Blackbox.class);
     } catch (ConfigurationException e) {
       throw new ConfigurationException(
           "Could not instantiate " + Blackbox.class + " due to exception", e);
@@ -252,98 +253,98 @@ public class MLConfigurationUtils extends ConfigurationUtils {
   }
 
   /**
-   * Returns the comma-separated list of input paths for the BlackBox.
+   * Returns the comma-separated list of input paths for the Blackbox.
    *
    * <p>The value is read from the configuration key {@link #ML_BLACK_BOX_INPUTS}. If the key is not
    * defined, an empty string is returned.
    *
-   * @return the input paths for the BlackBox
+   * @return the input paths for the Blackbox
    */
-  public String getBlackBoxInputs() {
+  public String getBlackboxInputs() {
     return config.getString(ML_BLACK_BOX_INPUTS, "");
   }
 
   /**
-   * Returns the output path for the BlackBox.
+   * Returns the output path for the Blackbox.
    *
    * <p>The value is read from the configuration key {@link #ML_BLACK_BOX_OUTPUT}. If the key is not
    * defined, an empty string is returned.
    *
-   * @return the output path for the BlackBox
+   * @return the output path for the Blackbox
    */
-  public String getBlackBoxOutput() {
+  public String getBlackboxOutput() {
     return config.getString(ML_BLACK_BOX_OUTPUT, "");
   }
 
   /**
-   * Returns the model path for the BlackBox.
+   * Returns the model path for the Blackbox.
    *
    * <p>The value is read from the configuration key {@link #ML_BLACK_BOX_MODEL_PATH}. If the key is
    * not defined, an empty string is returned.
    *
-   * @return the model path for the BlackBox
+   * @return the model path for the Blackbox
    */
-  public String getBlackBoxModelPath() {
+  public String getBlackboxModelPath() {
     return config.getString(ML_BLACK_BOX_MODEL_PATH, "");
   }
 
   /**
-   * Returns the Python script path for the PythonBlackBox.
+   * Returns the Python script path for the PythonBlackbox.
    *
    * <p>The value is read from the configuration key {@link #ML_BLACK_BOX_PYTHON_SCRIPT_PATH}. If
    * the key is not defined, an empty string is returned.
    *
-   * @return the Python script path for the BlackBox
+   * @return the Python script path for the Blackbox
    */
-  public String getBlackBoxPythonScriptPath() {
+  public String getBlackboxPythonScriptPath() {
     return config.getString(ML_BLACK_BOX_PYTHON_SCRIPT_PATH, "");
   }
 
   /**
-   * Returns the comma-separated list of Python libraries required by the PythonBlackBox.
+   * Returns the comma-separated list of Python libraries required by the PythonBlackbox.
    *
    * <p>The value is read from the configuration key {@link #ML_BLACK_BOX_PYTHON_LIBRARIES}. If the
    * key is not defined, an empty string is returned.
    *
-   * @return the comma-separated list of Python libraries required by the BlackBox
+   * @return the comma-separated list of Python libraries required by the Blackbox
    */
-  public String getBlackBoxPythonLibraries() {
+  public String getBlackboxPythonLibraries() {
     return config.getString(ML_BLACK_BOX_PYTHON_LIBRARIES, "");
   }
 
   /**
-   * Returns the comma-separated list of extra Python scripts required by the PythonBlackBox.
+   * Returns the comma-separated list of extra Python scripts required by the PythonBlackbox.
    *
    * <p>The value is read from the configuration key {@link #ML_BLACK_BOX_PYTHON_EXTRA_SCRIPTS}. If
    * the key is not defined, an empty string is returned.
    *
-   * @return the comma-separated list of extra Python scripts required by the BlackBox
+   * @return the comma-separated list of extra Python scripts required by the Blackbox
    */
-  public String getBlackBoxPythonExtraScripts() {
+  public String getBlackboxPythonExtraScripts() {
     return config.getString(ML_BLACK_BOX_PYTHON_EXTRA_SCRIPTS, "");
   }
 
   /**
-   * Returns the path to the Python requirements file for the PythonBlackBox.
+   * Returns the path to the Python requirements file for the PythonBlackbox.
    *
    * <p>The value is read from the configuration key {@link #ML_BLACK_BOX_PYTHON_REQUIREMENTS_PATH}.
    * If the key is not defined, an empty string is returned.
    *
-   * @return the path to the Python requirements file for the BlackBox
+   * @return the path to the Python requirements file for the Blackbox
    */
-  public String getBlackBoxPythonRequirementsPath() {
+  public String getBlackboxPythonRequirementsPath() {
     return config.getString(ML_BLACK_BOX_PYTHON_REQUIREMENTS_PATH, "");
   }
 
   /**
-   * Returns the folder path for the BlackBox.
+   * Returns the folder path for the Blackbox.
    *
    * <p>The value is read from the configuration key {@link #ML_BLACK_BOX_FOLDER}. If the key is not
    * defined, an empty string is returned.
    *
-   * @return the folder path for the BlackBox
+   * @return the folder path for the Blackbox
    */
-  public String getBlackBoxFolder() {
+  public String getBlackboxFolder() {
     return config.getString(ML_BLACK_BOX_FOLDER, "");
   }
 }
