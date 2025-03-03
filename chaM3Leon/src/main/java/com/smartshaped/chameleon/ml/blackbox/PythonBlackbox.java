@@ -59,15 +59,15 @@ public abstract class PythonBlackbox extends Blackbox {
   protected void extraPreparation() throws BlackboxException {
 
     // copy python scripts to make them executable
-    copyResourceToDestination(this.blackboxFolder + "/" + pythonScriptPath);
+    copyResourceToDestination(pythonScriptPath);
     if (extraScriptsDefined) {
       for (String script : pythonExtraScripts.split(",")) {
-        copyResourceToDestination(this.blackboxFolder + "/" + script);
+        copyResourceToDestination(script);
       }
     }
     // copy requirements file if it exists
     if (requirementsDefined) {
-      copyResourceToDestination(this.blackboxFolder + "/" + requirementsPath);
+      copyResourceToDestination(requirementsPath);
     }
 
     // install required python libraries
@@ -108,7 +108,7 @@ public abstract class PythonBlackbox extends Blackbox {
 
     if (requirementsDefined) {
       ProcessBuilder processBuilder =
-          new ProcessBuilder("pip3", "install", "-r", this.blackboxFolder + "/" + requirementsPath);
+          new ProcessBuilder("pip3", "install", "-r", requirementsPath);
       runCommand(processBuilder);
       logger.info("Python requirements installed successfully");
     }
@@ -160,28 +160,31 @@ public abstract class PythonBlackbox extends Blackbox {
   @Override
   protected void validateParams() throws BlackboxException {
 
-    if (pythonScriptPath.trim().isEmpty()) {
-      throw new BlackboxException("The python script path is empty");
+    if (pythonScriptPath.trim().isEmpty() || !pythonScriptPath.endsWith(".py")) {
+      throw new BlackboxException("The python script path is empty or must end with .py");
     }
-    if (!pythonScriptPath.endsWith(".py")) {
-      throw new BlackboxException("The python script path must end with .py");
-    }
-    if (!pythonExtraScripts.trim().isEmpty()) {
-      this.extraScriptsDefined = true;
-    }
+    this.pythonScriptPath = this.blackboxFolder + "/" + pythonScriptPath;
+
+    this.extraScriptsDefined = !pythonExtraScripts.trim().isEmpty();
     if (extraScriptsDefined) {
       String[] scripts = pythonExtraScripts.split(",");
-      for (String script : scripts) {
-        if (!script.trim().isEmpty() && !script.endsWith(".py")) {
-          throw new BlackboxException("Every script in pythonExtraScripts must end with .py");
+      for (int i = 0; i < scripts.length; i++) {
+        String script = scripts[i].trim();
+        if (!script.isEmpty()) {
+          if (!script.endsWith(".py")) {
+            throw new BlackboxException("Every script in pythonExtraScripts must end with .py");
+          }
+          scripts[i] = this.blackboxFolder + "/" + script;
         }
       }
     }
-    if (!requirementsPath.trim().isEmpty()) {
-      this.requirementsDefined = true;
-    }
-    if (requirementsDefined && !requirementsPath.endsWith(".txt")) {
-      throw new BlackboxException("The requirements file must be a .txt file");
+
+    this.requirementsDefined = !requirementsPath.trim().isEmpty();
+    if (requirementsDefined) {
+      if (!requirementsPath.endsWith(".txt")) {
+        throw new BlackboxException("The requirements file must be a .txt file");
+      }
+      this.requirementsPath = this.blackboxFolder + "/" + requirementsPath;
     }
 
     logger.debug("PythonBlackBox validation completed");
@@ -199,16 +202,16 @@ public abstract class PythonBlackbox extends Blackbox {
   @Override
   protected void cleanBlackBoxFolder() throws BlackboxException {
 
-    deleteResourceFromFS(this.blackboxFolder + "/" + pythonScriptPath);
+    deleteResourceFromFS(pythonScriptPath);
     if (extraScriptsDefined) {
       for (String script : pythonExtraScripts.split(",")) {
         if (!script.trim().isEmpty()) {
-          deleteResourceFromFS(this.blackboxFolder + "/" + script);
+          deleteResourceFromFS(script);
         }
       }
     }
     if (requirementsDefined) {
-      deleteResourceFromFS(this.blackboxFolder + "/" + requirementsPath);
+      deleteResourceFromFS(requirementsPath);
     }
 
     logger.info("PythonBlackBox cleanup completed");
