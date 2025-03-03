@@ -36,7 +36,7 @@ class BatchConfigurationUtilsYMLMockedTest {
   }
 
   @Test
-  void testGetBatchUpdaterFailure() throws ConfigurationException {
+  void testGetBatchUpdaterFailure() {
 
     doReturn("WrongClassName").when(configuration).getString("batch.updater.class");
 
@@ -50,7 +50,7 @@ class BatchConfigurationUtilsYMLMockedTest {
   }
 
   @Test
-  void testGetKafkaConfigServerFailure() throws ConfigurationException {
+  void testGetKafkaConfigServerFailure() {
 
     doReturn(null).when(configuration).getString("batch.kafka.server");
 
@@ -58,7 +58,7 @@ class BatchConfigurationUtilsYMLMockedTest {
   }
 
   @Test
-  void testGetKafkaConfigIntervalFailure() throws ConfigurationException {
+  void testGetKafkaConfigIntervalFailure() {
 
     doReturn("servers").when(configuration).getString("batch.kafka.server");
 
@@ -68,7 +68,7 @@ class BatchConfigurationUtilsYMLMockedTest {
   }
 
   @Test
-  void testGetKafkaConfigTopicsFailure() throws ConfigurationException {
+  void testGetKafkaConfigTopicsFailure() {
 
     doReturn("servers").when(configuration).getString("batch.kafka.server");
 

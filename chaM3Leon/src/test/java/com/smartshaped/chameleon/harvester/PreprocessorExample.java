@@ -1,12 +1,14 @@
 package com.smartshaped.chameleon.harvester;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.preprocessing.Preprocessor;
-import com.smartshaped.chameleon.preprocessing.exception.PreprocessorException;
 import java.util.List;
+
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.preprocessing.Preprocessor;
+import com.smartshaped.chameleon.preprocessing.exception.PreprocessorException;
 
 public class PreprocessorExample extends Preprocessor {
 

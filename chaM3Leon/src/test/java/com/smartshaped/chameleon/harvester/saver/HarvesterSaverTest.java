@@ -25,7 +25,6 @@ class HarvesterSaverTest {
     when(dataSet.write()).thenReturn(dataFrame);
     when(dataFrame.mode("append")).thenReturn(dataFrame);
 
-    HarvesterSaver saver = new HarvesterSaver();
-    assertDoesNotThrow(() -> saver.save(dataSet, parquetPath));
+    assertDoesNotThrow(() -> HarvesterSaver.save(dataSet, parquetPath));
   }
 }

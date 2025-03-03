@@ -1,7 +1,25 @@
 package com.smartshaped.chameleon.harvester.request;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockedConstruction;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
@@ -10,17 +28,6 @@ import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.CassandraUtils;
 import com.smartshaped.chameleon.common.utils.TableModel;
 import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.MockedConstruction;
-import org.mockito.MockedStatic;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class RequestHandlerTest {
@@ -70,7 +77,7 @@ class RequestHandlerTest {
                   when(mock.isRequestValid(any(Request.class))).thenReturn(true);
                 })) {
           RequestHandler requestHandler = new RequestHandler();
-          assertDoesNotThrow(() -> requestHandler.getRequest());
+          assertDoesNotThrow(requestHandler::getRequest);
         }
       }
     }
@@ -96,7 +103,7 @@ class RequestHandlerTest {
             .thenReturn(cassandraUtils);
 
         RequestHandler requestHandler = new RequestHandler();
-        assertDoesNotThrow(() -> requestHandler.getRequest());
+        assertDoesNotThrow(requestHandler::getRequest);
       }
     }
   }
@@ -118,7 +125,7 @@ class RequestHandlerTest {
             .thenReturn(cassandraUtils);
 
         RequestHandler requestHandler = new RequestHandler();
-        assertDoesNotThrow(() -> requestHandler.getRequest());
+        assertDoesNotThrow(requestHandler::getRequest);
       }
     }
   }
@@ -157,7 +164,7 @@ class RequestHandlerTest {
             .thenReturn(cassandraUtils);
 
         RequestHandler requestHandler = new RequestHandler();
-        assertDoesNotThrow(() -> requestHandler.closeConnection());
+        assertDoesNotThrow(requestHandler::closeConnection);
       }
     }
   }

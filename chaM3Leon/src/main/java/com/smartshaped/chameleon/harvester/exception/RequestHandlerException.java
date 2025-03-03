@@ -5,7 +5,7 @@ public class RequestHandlerException extends Exception {
   private static final long serialVersionUID = 1L;
 
   public RequestHandlerException(String message) {
-    super("Exception in the RequestHandler. Caused by: \n" + message);
+    super("Exception in the RequestHandler. Caused by : \n" + message);
   }
 
   public RequestHandlerException(Throwable err) {

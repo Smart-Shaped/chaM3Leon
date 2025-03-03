@@ -5,7 +5,7 @@ public class HarvesterSaverException extends Exception {
   private static final long serialVersionUID = 1L;
 
   public HarvesterSaverException(String message) {
-    super("Exception in the HarvesterSaver. Caused by: \n" + message);
+    super("Exception in the HarvesterSaver. Caused by : \n" + message);
   }
 
   public HarvesterSaverException(Throwable err) {

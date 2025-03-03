@@ -179,8 +179,6 @@ harvester:
         path: "/some/path"
         checkpoint: ""
     harvester2:
-      downloader:
-        class: "com.smartshaped.chameleon.harvester.DownloaderExample"
 test:
   spark:
     master: "local[*]"

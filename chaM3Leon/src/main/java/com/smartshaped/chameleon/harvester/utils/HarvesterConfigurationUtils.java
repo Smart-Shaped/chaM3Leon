@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.logging.log4j.LogManager;
@@ -44,7 +45,7 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
 
   private static HarvesterConfigurationUtils configuration;
 
-  protected HarvesterConfigurationUtils() throws ConfigurationException {
+  private HarvesterConfigurationUtils() throws ConfigurationException {
     super();
     this.setConfRoot(ROOT.concat(SEPARATOR));
   }

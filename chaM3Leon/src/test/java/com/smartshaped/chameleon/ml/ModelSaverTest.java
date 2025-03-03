@@ -3,10 +3,11 @@ package com.smartshaped.chameleon.ml;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
 
-import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.ml.blackbox.BlackBox;
 import org.apache.spark.ml.Model;
 import org.apache.spark.ml.util.MLWritable;
 import org.apache.spark.ml.util.MLWriter;
@@ -20,9 +21,11 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.smartshaped.chameleon.common.exception.CassandraException;
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.CassandraUtils;
 import com.smartshaped.chameleon.common.utils.TableModel;
+import com.smartshaped.chameleon.ml.blackbox.BlackBox;
 import com.smartshaped.chameleon.ml.exception.ModelSaverException;
 import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
 
@@ -104,7 +107,7 @@ class ModelSaverTest {
   }
 
   @Test
-  void testSaveModelBlackBoxSuccess() throws ConfigurationException {
+  void testSaveModelBlackBoxSuccess() throws ConfigurationException, CassandraException {
     when(blackBox.getPredictions()).thenReturn(predictions);
 
     try (MockedStatic<CassandraUtils> mockedStatic = mockStatic(CassandraUtils.class)) {
