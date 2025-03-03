@@ -73,6 +73,7 @@ ml.modelSaver.class                         # Specifies the fully qualified clas
 harvester.RequestHandler                                        # Specifies the fully qualified class name of the RequestHandler (including package). Use "default" for standard RequestHandler
 harvester.downloader.{downloader_class}.params.*                # Defines the configuration parameters for the downloader
 harvester.downloader.{downloader_class}.url.*                   # Defines the URL-related parameters for the downloader
+harvester.downloader.{downloader_class}.path.hdfs-path          # Defines the HDFS path for a specified downloader class (BinaryDownloader only)
 harvester.preprocessor.{preprocessor_class}.params.*            # Defines the configuration parameters for the preprocessor
 harvester.harvesters.{harvester_identifier}.inputPath           # Specifies the input path for harvester data
 harvester.harvesters.{harvester_identifier}.class               # Specifies the fully qualified class name of the harvester, including package path
