@@ -1,13 +1,11 @@
 package com.smartshaped.chameleon.harvester.downloader;
 
-import java.util.List;
-
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.harvester.exception.DownloaderException;
 import com.smartshaped.chameleon.harvester.request.Request;
+import java.util.List;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 
 public class DownloaderClassTest extends Downloader {
 

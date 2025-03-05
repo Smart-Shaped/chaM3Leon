@@ -1,19 +1,16 @@
 package com.smartshaped.chameleon.harvester.downloader;
 
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.harvester.exception.DownloaderException;
+import com.smartshaped.chameleon.harvester.request.Request;
+import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.harvester.exception.DownloaderException;
-import com.smartshaped.chameleon.harvester.request.Request;
-import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
-
-/** An abstract class representing a downloader that downloads data from a source. */
 public abstract class Downloader {
 
   protected static final Logger logger = LogManager.getLogger(Downloader.class);

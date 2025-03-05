@@ -40,10 +40,6 @@ public class HarvesterLayer {
 
     configurationUtils = HarvesterConfigurationUtils.getHarvesterConf();
     logger.info("Harvester configurations loaded correctly");
-    handler = configurationUtils.getRequestHandler();
-    logger.info("Request handler loaded correctly");
-    harvesters = configurationUtils.getHarvesters();
-    logger.info("Harvesters list loaded correctly");
 
     try {
       logger.info("Loading configuration for spark session...");
@@ -54,6 +50,11 @@ public class HarvesterLayer {
     } catch (Exception e) {
       throw new ConfigurationException("Error getting or creating Sedona SparkSession", e);
     }
+
+    handler = configurationUtils.getRequestHandler();
+    logger.info("Request handler loaded correctly");
+    harvesters = configurationUtils.getHarvesters();
+    logger.info("Harvesters list loaded correctly");
   }
 
   /**
