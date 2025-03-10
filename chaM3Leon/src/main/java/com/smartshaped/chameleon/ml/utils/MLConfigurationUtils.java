@@ -6,9 +6,7 @@ import com.smartshaped.chameleon.ml.HdfsReader;
 import com.smartshaped.chameleon.ml.ModelSaver;
 import com.smartshaped.chameleon.ml.Pipeline;
 import com.smartshaped.chameleon.ml.blackbox.Blackbox;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,6 +37,8 @@ public class MLConfigurationUtils extends ConfigurationUtils {
   private static final String ML_BLACK_BOX_PYTHON_EXTRA_SCRIPTS = "ml.blackbox.python.extraScripts";
   private static final String ML_BLACK_BOX_PYTHON_REQUIREMENTS_PATH =
       "ml.blackbox.python.requirementsPath";
+  private static final String ML_BLACK_BOX_PYTHON_EXTRA_ARGUMENTS =
+      "ml.blackbox.python.extraArguments";
 
   private static MLConfigurationUtils configuration;
 
@@ -346,5 +346,46 @@ public class MLConfigurationUtils extends ConfigurationUtils {
    */
   public String getBlackboxFolder() {
     return config.getString(ML_BLACK_BOX_FOLDER, "");
+  }
+
+  /**
+   * Retrieves a map of extra arguments for the PythonBlackbox.
+   *
+   * <p>This method iterates over the configuration keys under the base path defined by {@link
+   * #ML_BLACK_BOX_PYTHON_EXTRA_ARGUMENTS} and constructs a map where each key is the segment after
+   * the last period in the original key, and the value is the corresponding configuration value.
+   *
+   * @return a map where keys are argument names and values are the corresponding argument values.
+   * @throws ConfigurationException if there is an error retrieving any argument value.
+   */
+  public Map<String, String> getBlackboxPythonExtraArguments() throws ConfigurationException {
+    Map<String, String> params = new HashMap<>();
+
+    Iterator<String> iterator = config.getKeys(ML_BLACK_BOX_PYTHON_EXTRA_ARGUMENTS);
+    if (!iterator.hasNext()) {
+      logger.warn("No keys found under base path: {}", ML_BLACK_BOX_PYTHON_EXTRA_ARGUMENTS);
+    }
+
+    while (iterator.hasNext()) {
+      String key = iterator.next();
+      logger.debug("Processing key: {}", key);
+      try {
+        String originalKey = key;
+        int lastDotIndex = key.lastIndexOf(SEPARATOR);
+        if (lastDotIndex != -1) {
+          key = key.substring(lastDotIndex + 1);
+        }
+        String value = config.getString(originalKey);
+        logger.debug("Retrieved value for key '{}': {}", originalKey, value);
+        params.put(key, value);
+      } catch (Exception e) {
+        throw new ConfigurationException("Failed to retrieve value for key: " + key, e);
+      }
+    }
+
+    logger.info("Finished retrieving parameters");
+    logger.debug("Total parameters: {}", params.size());
+
+    return params;
   }
 }

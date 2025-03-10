@@ -124,4 +124,9 @@ class MLConfigurationUtilsTest {
   void testGetBlackboxFolder() {
     assertDoesNotThrow(() -> mlConfigurationUtils.getBlackboxFolder());
   }
+
+  @Test
+  void testGetBlackboxPythonExtraArguments() {
+    assertDoesNotThrow(() -> mlConfigurationUtils.getBlackboxPythonExtraArguments());
+  }
 }

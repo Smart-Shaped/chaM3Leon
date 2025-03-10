@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -24,8 +27,11 @@ public abstract class PythonBlackbox extends Blackbox {
   protected String pythonExtraScripts;
   protected String pythonLibraries;
   protected String requirementsPath;
-  protected boolean requirementsDefined;
+  protected Map<String, String> extraArguments;
+  private boolean requirementsDefined;
   private boolean extraScriptsDefined;
+
+  private static final String PATH_SEPARATOR = "/";
 
   public static JavaSparkContext javaSparkContext;
 
@@ -37,6 +43,8 @@ public abstract class PythonBlackbox extends Blackbox {
     logger.debug("Python script path: {}", pythonScriptPath);
     this.pythonExtraScripts = mlConfigurationUtils.getBlackboxPythonExtraScripts();
     logger.debug("Python extra scripts: {}", pythonExtraScripts);
+    this.extraArguments = mlConfigurationUtils.getBlackboxPythonExtraArguments();
+    logger.debug("Python extra arguments: {}", extraArguments);
     this.pythonLibraries = mlConfigurationUtils.getBlackboxPythonLibraries();
     logger.debug("Python libraries: {}", pythonLibraries);
     this.requirementsPath = mlConfigurationUtils.getBlackboxPythonRequirementsPath();
@@ -128,7 +136,7 @@ public abstract class PythonBlackbox extends Blackbox {
    */
   private void copyResourceToDestination(String destinationPath) throws BlackboxException {
 
-    String[] pathElements = destinationPath.split("/");
+    String[] pathElements = destinationPath.split(PATH_SEPARATOR);
     String resourcePath = pathElements[pathElements.length - 1];
 
     logger.info("Copying resource: {}", resourcePath);
@@ -162,7 +170,7 @@ public abstract class PythonBlackbox extends Blackbox {
     if (pythonScriptPath.trim().isEmpty() || !pythonScriptPath.endsWith(".py")) {
       throw new BlackboxException("The python script path is empty or must end with .py");
     }
-    this.pythonScriptPath = this.blackboxFolder + "/" + pythonScriptPath;
+    this.pythonScriptPath = this.blackboxFolder + PATH_SEPARATOR + pythonScriptPath;
 
     this.extraScriptsDefined = !pythonExtraScripts.trim().isEmpty();
     if (extraScriptsDefined) {
@@ -173,7 +181,7 @@ public abstract class PythonBlackbox extends Blackbox {
           if (!script.endsWith(".py")) {
             throw new BlackboxException("Every script in pythonExtraScripts must end with .py");
           }
-          scripts[i] = this.blackboxFolder + "/" + script;
+          scripts[i] = this.blackboxFolder + PATH_SEPARATOR + script;
         }
       }
       this.pythonExtraScripts = String.join(",", scripts);
@@ -184,7 +192,7 @@ public abstract class PythonBlackbox extends Blackbox {
       if (!requirementsPath.endsWith(".txt")) {
         throw new BlackboxException("The requirements file must be a .txt file");
       }
-      this.requirementsPath = this.blackboxFolder + "/" + requirementsPath;
+      this.requirementsPath = this.blackboxFolder + PATH_SEPARATOR + requirementsPath;
     }
 
     logger.debug("PythonBlackBox validation completed");
@@ -252,9 +260,17 @@ public abstract class PythonBlackbox extends Blackbox {
   protected void runML() throws BlackboxException {
 
     try {
+
+      List<String> args = new ArrayList<>();
+      args.add(pythonScriptPath);
+      args.add(pythonExtraScripts);
+      args.add(inputs);
+      args.add(output);
+      args.add(modelPath);
+      args.addAll(extraArguments.values());
+
       logger.info("Running ML script...");
-      PythonRunner.main(
-          new String[] {pythonScriptPath, pythonExtraScripts, inputs, output, modelPath});
+      PythonRunner.main(args.toArray(new String[0]));
     } catch (Exception e) {
       throw new BlackboxException("Error running ML script", e);
     }
