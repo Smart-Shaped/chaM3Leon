@@ -4,6 +4,7 @@ import com.smartshaped.chameleon.serving.model.MLModel;
 import com.smartshaped.chameleon.serving.repository.MLRepository;
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.web.bind.annotation.*;
 
 public abstract class MLController<T extends MLModel, ID> {
