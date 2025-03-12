@@ -27,9 +27,4 @@ public abstract class MLController<T extends MLModel, ID> {
   public List<T> getAll() {
     return repository.findAll();
   }
-
-  @DeleteMapping("/{id}")
-  public void delete(@PathVariable ID id) {
-    repository.deleteById(id);
-  }
 }
