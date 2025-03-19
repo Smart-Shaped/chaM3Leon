@@ -12,4 +12,7 @@ public class PreprocessorTestClass extends Preprocessor {
   public Dataset<Row> preprocess(Dataset<Row> df) throws PreprocessorException {
     return df;
   }
+
+  @Override
+  public void closeConnections() throws PreprocessorException {}
 }

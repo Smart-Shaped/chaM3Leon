@@ -1,12 +1,14 @@
 package com.smartshaped.chameleon.harvester;
 
+import java.util.List;
+
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.harvester.downloader.Downloader;
 import com.smartshaped.chameleon.harvester.exception.DownloaderException;
 import com.smartshaped.chameleon.harvester.request.Request;
-import java.util.List;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
 
 public class DownloaderExample extends Downloader {
 
@@ -24,4 +26,7 @@ public class DownloaderExample extends Downloader {
       throws DownloaderException, ConfigurationException {
     return null;
   }
+
+  @Override
+  public void closeConnections() throws DownloaderException {}
 }

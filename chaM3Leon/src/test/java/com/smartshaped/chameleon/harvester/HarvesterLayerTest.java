@@ -69,7 +69,6 @@ class HarvesterLayerTest {
             mockStatic(HarvesterConfigurationUtils.class);
         MockedStatic<CassandraUtils> harvSaver = mockStatic(CassandraUtils.class)) {
       confUtils.when(HarvesterConfigurationUtils::getHarvesterConf).thenReturn(configurationUtils);
-      when(configurationUtils.getRequestHandler()).thenReturn(requestHandler);
 
       assertThrows(ConfigurationException.class, HarvesterLayer::new);
     }
@@ -88,6 +87,7 @@ class HarvesterLayerTest {
       when(configurationUtils.getHarvesters()).thenReturn(harvesterlist);
       when(builder.config(sparkConf)).thenReturn(builder);
       when(builder.getOrCreate()).thenReturn(sparkSession);
+      sedonaContext.when(() -> SedonaContext.create(sparkSession)).thenReturn(sparkSession);
 
       when(requestHandler.getRequest()).thenReturn(requestList);
       when(request.getHarvesterIds()).thenReturn("harvester1");

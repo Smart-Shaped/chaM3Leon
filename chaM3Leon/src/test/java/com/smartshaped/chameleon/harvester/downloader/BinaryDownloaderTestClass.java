@@ -22,4 +22,7 @@ public class BinaryDownloaderTestClass extends BinaryDownloader {
       throws DownloaderException {
     return List.of();
   }
+
+  @Override
+  public void closeConnections() throws DownloaderException {}
 }

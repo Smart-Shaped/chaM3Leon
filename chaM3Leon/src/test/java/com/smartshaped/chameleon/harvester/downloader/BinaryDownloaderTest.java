@@ -41,6 +41,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.harvester.exception.DownloaderException;
 import com.smartshaped.chameleon.harvester.request.Request;
+import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
 
 @ExtendWith(MockitoExtension.class)
 class BinaryDownloaderTest {
@@ -65,6 +66,7 @@ class BinaryDownloaderTest {
   @Mock private Path finalPath;
   @Mock private InputStream inputStream;
   @Mock private FSDataOutputStream fsDataOutputStream;
+  @Mock private HarvesterConfigurationUtils configurationUtils;
 
   @Test
   void downloadSuccess() throws ConfigurationException {
@@ -166,7 +168,10 @@ class BinaryDownloaderTest {
         MockedStatic<HttpClient> httpClient = mockStatic(HttpClient.class);
         MockedStatic<URI> uriMockedStatic = mockStatic(URI.class);
         MockedStatic<FileSystem> fileSystemMockedStatic = mockStatic((FileSystem.class));
-        MockedConstruction<URI> uriMockedConstruction = mockConstruction(URI.class)) {
+        MockedConstruction<URI> uriMockedConstruction = mockConstruction(URI.class);
+        MockedStatic<HarvesterConfigurationUtils> mockedConfig =
+            mockStatic(HarvesterConfigurationUtils.class);
+        MockedConstruction<Path> pathMockedConstruction = mockConstruction(Path.class)) {
 
       when(builderCli.build()).thenReturn(httpclient);
       when(builderCli.version(HttpClient.Version.HTTP_2)).thenReturn(builderCli);
@@ -185,6 +190,11 @@ class BinaryDownloaderTest {
           .thenReturn(hadoopFileSystem);
 
       when(hadoopFileSystem.exists(any())).thenReturn(true);
+
+      mockedConfig
+          .when(HarvesterConfigurationUtils::getHarvesterConf)
+          .thenReturn(configurationUtils);
+      when(configurationUtils.getDownloaderHdfsPath(anyString())).thenReturn("a");
 
       BinaryDownloaderTestClass binaryDownloader = new BinaryDownloaderTestClass();
       assertDoesNotThrow(() -> binaryDownloader.downloadFile(""));

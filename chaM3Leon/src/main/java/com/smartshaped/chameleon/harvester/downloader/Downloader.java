@@ -1,15 +1,17 @@
 package com.smartshaped.chameleon.harvester.downloader;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.harvester.exception.DownloaderException;
-import com.smartshaped.chameleon.harvester.request.Request;
-import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.harvester.exception.DownloaderException;
+import com.smartshaped.chameleon.harvester.request.Request;
+import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
 
 public abstract class Downloader {
 
@@ -57,4 +59,6 @@ public abstract class Downloader {
    */
   public abstract Dataset<Row> download(List<String> paramList, Request request)
       throws DownloaderException, ConfigurationException;
+
+  public abstract void closeConnections() throws DownloaderException;
 }

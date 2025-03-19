@@ -22,4 +22,7 @@ public class PreprocessorExample extends Preprocessor {
     Dataset<Row> df = sparkSession.createDataFrame(List.of(), Row.class);
     return df;
   }
+
+  @Override
+  public void closeConnections() throws PreprocessorException {}
 }

@@ -14,6 +14,7 @@ import org.apache.spark.sql.SparkSession;
 
 import com.smartshaped.chameleon.common.exception.CassandraException;
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.harvester.exception.DownloaderException;
 import com.smartshaped.chameleon.harvester.exception.HarvesterException;
 import com.smartshaped.chameleon.harvester.exception.HarvesterLayerException;
 import com.smartshaped.chameleon.harvester.request.Request;
@@ -35,6 +36,7 @@ public class HarvesterLayer {
   protected SparkSession sparkSession;
   protected RequestHandler handler;
   protected List<Harvester> harvesters;
+  protected List<Harvester> filteredHarvesters;
 
   public HarvesterLayer() throws ConfigurationException, CassandraException {
 
@@ -79,7 +81,6 @@ public class HarvesterLayer {
 
     Request[] requests = handler.getRequest();
     String state = "";
-    List<Harvester> filteredHarvesters;
 
     for (Request request : requests) {
       Runtime.getRuntime()
@@ -99,8 +100,8 @@ public class HarvesterLayer {
       state = "inProgress";
       handler.updateRequestState(request, state);
       try {
-        filteredHarvesters = filterHarvesters(harvesters, request);
-        for (Harvester harvester : filteredHarvesters) {
+        this.filteredHarvesters = filterHarvesters(harvesters, request);
+        for (Harvester harvester : this.filteredHarvesters) {
           logger.debug("Using harvester: {}", harvester.getClass());
           harvester.execute(request);
         }
@@ -114,7 +115,7 @@ public class HarvesterLayer {
 
       logger.info("Request completed");
     }
-    handler.closeConnection();
+    this.closeConnections();
   }
 
   /**
@@ -152,5 +153,21 @@ public class HarvesterLayer {
     logger.debug("Number of filtered harvesters: {}", harvesterList.size());
 
     return harvesterList;
+  }
+
+  private void closeConnections() throws HarvesterLayerException {
+    for (Harvester harvester : this.filteredHarvesters) {
+      try {
+        harvester.closeConnections();
+      } catch (DownloaderException | PreprocessorException e) {
+        throw new HarvesterLayerException(
+            "Exception raised closing pending connections for Harvester: "
+                + harvester.getHarvesterId(),
+            e);
+      }
+    }
+
+    this.handler.closeConnection();
+    this.sparkSession.close();
   }
 }

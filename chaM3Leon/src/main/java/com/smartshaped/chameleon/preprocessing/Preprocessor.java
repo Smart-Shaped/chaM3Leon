@@ -1,8 +1,9 @@
 package com.smartshaped.chameleon.preprocessing;
 
-import com.smartshaped.chameleon.preprocessing.exception.PreprocessorException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+
+import com.smartshaped.chameleon.preprocessing.exception.PreprocessorException;
 
 public abstract class Preprocessor {
 
@@ -15,4 +16,6 @@ public abstract class Preprocessor {
    * @throws PreprocessorException If any error occurs during the preprocessing.
    */
   public abstract Dataset<Row> preprocess(Dataset<Row> df) throws PreprocessorException;
+
+  public abstract void closeConnections() throws PreprocessorException;
 }

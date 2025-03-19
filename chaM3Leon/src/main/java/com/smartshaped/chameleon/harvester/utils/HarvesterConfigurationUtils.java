@@ -1,22 +1,23 @@
 package com.smartshaped.chameleon.harvester.utils;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.apache.commons.configuration2.tree.ImmutableNode;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.smartshaped.chameleon.common.exception.CassandraException;
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.ConfigurationUtils;
 import com.smartshaped.chameleon.harvester.Harvester;
 import com.smartshaped.chameleon.harvester.downloader.Downloader;
 import com.smartshaped.chameleon.harvester.request.RequestHandler;
-import com.smartshaped.chameleon.preprocessing.EmptyPreprocessor;
 import com.smartshaped.chameleon.preprocessing.Preprocessor;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.configuration2.tree.ImmutableNode;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Utility class that extends {@link ConfigurationUtils} for reading configuration files related to
@@ -241,7 +242,7 @@ public class HarvesterConfigurationUtils extends ConfigurationUtils {
 
     if (preprocessorName.trim().isEmpty()) {
       logger.warn("No preprocessor specified in the configurations, using empty one...");
-      return new EmptyPreprocessor();
+      return null;
     }
 
     try {

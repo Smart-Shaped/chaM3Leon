@@ -119,4 +119,9 @@ public abstract class Harvester {
       return preprocessor.preprocess(data);
     }
   }
+
+  public void closeConnections() throws DownloaderException, PreprocessorException {
+    this.downloader.closeConnections();
+    this.preprocessor.closeConnections();
+  }
 }
