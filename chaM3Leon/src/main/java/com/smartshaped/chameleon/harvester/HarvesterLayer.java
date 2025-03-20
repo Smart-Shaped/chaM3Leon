@@ -1,17 +1,5 @@
 package com.smartshaped.chameleon.harvester;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.sedona.spark.SedonaContext;
-import org.apache.spark.SparkConf;
-import org.apache.spark.sql.SparkSession;
-
 import com.smartshaped.chameleon.common.exception.CassandraException;
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.harvester.exception.DownloaderException;
@@ -22,6 +10,16 @@ import com.smartshaped.chameleon.harvester.request.RequestHandler;
 import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
 import com.smartshaped.chameleon.ml.exception.HdfsReaderException;
 import com.smartshaped.chameleon.preprocessing.exception.PreprocessorException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.sedona.spark.SedonaContext;
+import org.apache.spark.SparkConf;
+import org.apache.spark.sql.SparkSession;
 
 /**
  * The HarvesterLayer class is responsible for starting the harvesting process. It reads all the
@@ -37,6 +35,7 @@ public class HarvesterLayer {
   protected RequestHandler handler;
   protected List<Harvester> harvesters;
   protected List<Harvester> filteredHarvesters;
+  private Thread shutdownHook;
 
   public HarvesterLayer() throws ConfigurationException, CassandraException {
 
@@ -83,19 +82,19 @@ public class HarvesterLayer {
     String state = "";
 
     for (Request request : requests) {
-      Runtime.getRuntime()
-          .addShutdownHook(
-              new Thread(
-                  () -> {
-                    logger.info("Closing Spark Application...");
-                    try {
-                      RequestHandler killedHandler = configurationUtils.getRequestHandler();
-                      logger.info("Request value: {}", request);
-                      killedHandler.updateRequestState(request, "blocked");
-                    } catch (CassandraException | ConfigurationException e) {
-                      throw new RuntimeException(e.getMessage(), e);
-                    }
-                  }));
+      this.shutdownHook =
+          new Thread(
+              () -> {
+                logger.info("Closing Spark Application...");
+                try {
+                  RequestHandler killedHandler = configurationUtils.getRequestHandler();
+                  logger.info("Request value: {}", request);
+                  killedHandler.updateRequestState(request, "blocked");
+                } catch (CassandraException | ConfigurationException e) {
+                  throw new RuntimeException(e.getMessage(), e);
+                }
+              });
+      Runtime.getRuntime().addShutdownHook(shutdownHook);
       logger.debug("Processing request: {}", request);
       state = "inProgress";
       handler.updateRequestState(request, state);
@@ -112,7 +111,7 @@ public class HarvesterLayer {
       } finally {
         handler.updateRequestState(request, state);
       }
-
+      closeHarvesterConnections();
       logger.info("Request completed");
     }
     this.closeConnections();
@@ -155,7 +154,13 @@ public class HarvesterLayer {
     return harvesterList;
   }
 
-  private void closeConnections() throws HarvesterLayerException {
+  private void closeConnections() {
+    this.handler.closeConnection();
+    this.sparkSession.close();
+    Runtime.getRuntime().removeShutdownHook(this.shutdownHook);
+  }
+
+  private void closeHarvesterConnections() throws HarvesterLayerException {
     for (Harvester harvester : this.filteredHarvesters) {
       try {
         harvester.closeConnections();
@@ -166,8 +171,5 @@ public class HarvesterLayer {
             e);
       }
     }
-
-    this.handler.closeConnection();
-    this.sparkSession.close();
   }
 }

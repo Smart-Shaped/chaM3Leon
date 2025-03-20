@@ -9,6 +9,10 @@ import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.harvester.exception.DownloaderException;
+import com.smartshaped.chameleon.harvester.request.Request;
+import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -17,7 +21,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -27,9 +30,9 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.functions;
 import org.apache.spark.sql.api.java.UDF1;
 import org.apache.spark.sql.expressions.UserDefinedFunction;
+import org.apache.spark.sql.functions;
 import org.apache.spark.sql.types.StringType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,11 +40,6 @@ import org.mockito.Mock;
 import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.harvester.exception.DownloaderException;
-import com.smartshaped.chameleon.harvester.request.Request;
-import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
 
 @ExtendWith(MockitoExtension.class)
 class BinaryDownloaderTest {
@@ -96,7 +94,10 @@ class BinaryDownloaderTest {
         MockedStatic<HttpClient> httpClient = mockStatic(HttpClient.class);
         MockedStatic<URI> uriMockedStatic = mockStatic(URI.class);
         MockedStatic<FileSystem> fileSystemMockedStatic = mockStatic((FileSystem.class));
-        MockedConstruction<URI> uriMockedConstruction = mockConstruction(URI.class)) {
+        MockedConstruction<URI> uriMockedConstruction = mockConstruction(URI.class);
+        MockedStatic<HarvesterConfigurationUtils> mockedConfig =
+            mockStatic(HarvesterConfigurationUtils.class);
+        MockedConstruction<Path> pathMockedConstruction = mockConstruction(Path.class)) {
 
       when(builderCli.build()).thenReturn(httpclient);
       when(builderCli.version(HttpClient.Version.HTTP_2)).thenReturn(builderCli);
@@ -120,6 +121,11 @@ class BinaryDownloaderTest {
           .thenReturn(fsDataOutputStream);
       when(inputStream.read(any())).thenReturn(-1);
 
+      mockedConfig
+          .when(HarvesterConfigurationUtils::getHarvesterConf)
+          .thenReturn(configurationUtils);
+      when(configurationUtils.getDownloaderHdfsPath(anyString())).thenReturn("a");
+
       BinaryDownloaderTestClass binaryDownloader = new BinaryDownloaderTestClass();
       assertDoesNotThrow(() -> binaryDownloader.downloadFile(""));
     }
@@ -132,7 +138,10 @@ class BinaryDownloaderTest {
         MockedStatic<HttpClient> httpClient = mockStatic(HttpClient.class);
         MockedStatic<URI> uriMockedStatic = mockStatic(URI.class);
         MockedStatic<FileSystem> fileSystemMockedStatic = mockStatic((FileSystem.class));
-        MockedConstruction<URI> uriMockedConstruction = mockConstruction(URI.class)) {
+        MockedConstruction<URI> uriMockedConstruction = mockConstruction(URI.class);
+        MockedStatic<HarvesterConfigurationUtils> mockedConfig =
+            mockStatic(HarvesterConfigurationUtils.class);
+        MockedConstruction<Path> pathMockedConstruction = mockConstruction(Path.class)) {
 
       when(builderCli.build()).thenReturn(httpclient);
       when(builderCli.version(HttpClient.Version.HTTP_2)).thenReturn(builderCli);
@@ -155,6 +164,11 @@ class BinaryDownloaderTest {
       when(hadoopFileSystem.create(any(Path.class), any(Boolean.class)))
           .thenReturn(fsDataOutputStream);
       when(inputStream.read(any())).thenThrow(IOException.class);
+
+      mockedConfig
+          .when(HarvesterConfigurationUtils::getHarvesterConf)
+          .thenReturn(configurationUtils);
+      when(configurationUtils.getDownloaderHdfsPath(anyString())).thenReturn("a");
 
       BinaryDownloaderTestClass binaryDownloader = new BinaryDownloaderTestClass();
       assertThrows(DownloaderException.class, () -> binaryDownloader.downloadFile(""));
