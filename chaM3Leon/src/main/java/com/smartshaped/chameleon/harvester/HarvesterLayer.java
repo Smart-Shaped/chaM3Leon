@@ -1,5 +1,17 @@
 package com.smartshaped.chameleon.harvester;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.sedona.spark.SedonaContext;
+import org.apache.spark.SparkConf;
+import org.apache.spark.sql.SparkSession;
+
 import com.smartshaped.chameleon.common.exception.CassandraException;
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.harvester.exception.DownloaderException;
@@ -10,16 +22,6 @@ import com.smartshaped.chameleon.harvester.request.RequestHandler;
 import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
 import com.smartshaped.chameleon.ml.exception.HdfsReaderException;
 import com.smartshaped.chameleon.preprocessing.exception.PreprocessorException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.sedona.spark.SedonaContext;
-import org.apache.spark.SparkConf;
-import org.apache.spark.sql.SparkSession;
 
 /**
  * The HarvesterLayer class is responsible for starting the harvesting process. It reads all the
@@ -154,12 +156,18 @@ public class HarvesterLayer {
     return harvesterList;
   }
 
+  /** Closes Cassandra connection and Spark Session at the end of the Harvester Layer execution. */
   private void closeConnections() {
     this.handler.closeConnection();
     this.sparkSession.close();
     Runtime.getRuntime().removeShutdownHook(this.shutdownHook);
   }
 
+  /**
+   * Closes all opened connections through filtered Harvester after their execution..
+   *
+   * @throws HarvesterLayerException If there is an error closing harvester pending connections.
+   */
   private void closeHarvesterConnections() throws HarvesterLayerException {
     for (Harvester harvester : this.filteredHarvesters) {
       try {

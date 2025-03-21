@@ -1,5 +1,14 @@
 package com.smartshaped.chameleon.harvester;
 
+import java.io.IOException;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
+
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.harvester.downloader.Downloader;
 import com.smartshaped.chameleon.harvester.exception.DownloaderException;
@@ -9,14 +18,8 @@ import com.smartshaped.chameleon.harvester.saver.HarvesterSaver;
 import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
 import com.smartshaped.chameleon.preprocessing.Preprocessor;
 import com.smartshaped.chameleon.preprocessing.exception.PreprocessorException;
-import java.io.IOException;
-import java.util.List;
+
 import lombok.Getter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;
 
 /**
  * The Harvester class is responsible for downloading and transforming data, and then saving it to a
@@ -118,6 +121,12 @@ public abstract class Harvester {
     }
   }
 
+  /**
+   * Closes all opened connections from the associated downloader or preprocessor.
+   *
+   * @throws DownloaderException If there is an error closing downloader connections.
+   * @throws PreprocessorException If there is an error closing preprocessor connections.
+   */
   public void closeConnections() throws DownloaderException, PreprocessorException {
     this.downloader.closeConnections();
     if (this.preprocessor != null) {
