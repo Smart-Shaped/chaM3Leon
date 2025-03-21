@@ -132,6 +132,10 @@ ml:
       extraScripts: "extra_script.py"
       libraries: "library1,library2"
       requirementsPath: "requirements.txt"
+      extraArguments:
+        key1: "value1"
+        key2: "value2"
+        key3: "value3"
   pipeline:
     class: "com.smartshaped.chameleon.ml.PipelineExample"
   modelSaver:

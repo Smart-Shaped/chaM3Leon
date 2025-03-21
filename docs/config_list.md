@@ -63,6 +63,7 @@ ml.blackbox.python.scriptPath               # Defines where the main Python scri
 ml.blackbox.python.extraScripts             # Lists the paths of additional Python scripts, comma-separated
 ml.blackbox.python.libraries                # Lists the Python dependencies required, comma-separated
 ml.blackbox.python.requirementsPath         # Defines the path to the requirements.txt file for the Python script
+ml.blackbox.python.extraArguments.*         # Defines additional arguments for the Python script
 ml.pipeline.class                           # Specifies the fully qualified class name of the pipeline (including package). Note: not compatible with blackbox usage
 ml.modelSaver.class                         # Specifies the fully qualified class name of the model saver, including package path
 ```
