@@ -17,12 +17,32 @@ import org.apache.spark.sql.expressions.UserDefinedFunction;
 import org.apache.spark.sql.functions;
 import org.apache.spark.sql.types.DataTypes;
 
+/**
+ * Abstract class that implements the Downloader interface for downloading textual data from a given
+ * source. It provides methods to call an API and get a response as a string.
+ */
 public abstract class TextualDownloader extends Downloader {
 
+  /**
+   * Constructor for the TextualDownloader class. It initializes the downloader with the necessary
+   * configuration settings by calling the superclass constructor.
+   *
+   * @throws ConfigurationException If there is an error with the configuration during
+   *     initialization.
+   */
   protected TextualDownloader() throws ConfigurationException {
     super();
   }
 
+  /**
+   * Downloads textual data from the given source and returns a Spark Dataset containing the
+   * parameters and the corresponding responses.
+   *
+   * @param paramList The list of parameters to be used in the download.
+   * @param req The request object containing the common parameters for all the downloads.
+   * @return A Spark Dataset containing the parameters and the corresponding responses.
+   * @throws DownloaderException If there is an error during the download process.
+   */
   @Override
   public Dataset<Row> download(List<String> paramList, Request req) throws DownloaderException {
     SparkSession sparkSession = SparkSession.getActiveSession().get();
@@ -50,6 +70,15 @@ public abstract class TextualDownloader extends Downloader {
     return result;
   }
 
+  /**
+   * Calls the API at the given URI and returns the response as a string.
+   *
+   * @param uri The URI of the API to call.
+   * @return The response as a string.
+   * @throws DownloaderException If there is an error while calling the API. The exception will be
+   *     thrown with the HTTP status code included in the message if the API call fails with a
+   *     status different from 200.
+   */
   protected String callApiAndGetResponse(URI uri) throws DownloaderException {
     HttpClient client = HttpClient.newHttpClient();
     HttpRequest request = HttpRequest.newBuilder().uri(uri).build();
