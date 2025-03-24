@@ -3,13 +3,15 @@ package com.smartshaped.chameleon.harvester.downloader;
 import static org.apache.spark.sql.functions.udf;
 import static org.apache.spark.sql.types.DataTypes.StringType;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.harvester.exception.DownloaderException;
-import com.smartshaped.chameleon.harvester.request.Request;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.List;
+
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
@@ -17,8 +19,16 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.spark.sql.*;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoders;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.functions;
 import org.apache.spark.sql.expressions.UserDefinedFunction;
+
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.harvester.exception.DownloaderException;
+import com.smartshaped.chameleon.harvester.request.Request;
 
 /**
  * Abstract class that implements the Downloader interface for downloading from an FTP server. It
@@ -127,12 +137,11 @@ public abstract class FTPDownloader extends Downloader {
 
     UserDefinedFunction downloadFTPFile =
         udf(
-                (String ftpPath) -> {
-                  logger.info("Downloading file from FTP path: {}", ftpPath);
-                  return downloadFileFromFTP(ftpPath);
-                },
-                StringType)
-            .asNondeterministic();
+            (String ftpPath) -> {
+              logger.info("Downloading file from FTP path: {}", ftpPath);
+              return downloadFileFromFTP(ftpPath);
+            },
+            StringType);
 
     List<String> ftpPaths = createUriList(paramList, request);
 
@@ -148,7 +157,7 @@ public abstract class FTPDownloader extends Downloader {
     Dataset<Row> result =
         ftpPathDataset
             .withColumnRenamed("value", "ftp_path")
-            .withColumn("path", downloadFTPFile.apply(functions.col("ftp_path")));
+            .withColumn("path", downloadFTPFile.apply(ftpPathDataset.col("ftp_path")));
 
     result = addRequest(result, request);
 
