@@ -16,4 +16,7 @@ public class TextualDownloaderTestClass extends TextualDownloader {
       throws DownloaderException {
     return List.of();
   }
+
+  @Override
+  public void closeConnections() throws DownloaderException {}
 }

@@ -6,6 +6,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Represents a request in the system.
+ *
+ * <p>This class models a request with an ID, state, content, and associated harvester IDs. It
+ * extends the TableModel class and overrides the method to choose the primary key as 'id'.
+ */
 @Getter
 @Setter
 @ToString
@@ -16,6 +22,11 @@ public class Request extends TableModel {
   String content;
   String harvesterIds;
 
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The primary key for {@link Request} is the 'id' field.
+   */
   @Override
   protected String choosePrimaryKey() {
     return "id";

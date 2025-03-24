@@ -2,27 +2,25 @@ package com.smartshaped.chameleon.harvester.downloader;
 
 import java.util.List;
 
+import org.apache.commons.net.ftp.FTPClient;
+
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.harvester.exception.DownloaderException;
 import com.smartshaped.chameleon.harvester.request.Request;
 
-public class BinaryDownloaderTestClass extends BinaryDownloader {
+public class FTPDownloaderTestClass extends FTPDownloader {
 
-  protected BinaryDownloaderTestClass() throws ConfigurationException {
+  protected FTPDownloaderTestClass() throws ConfigurationException {
     super();
-  }
-
-  @Override
-  protected String createStructuredFileName(String url) {
-    return "";
   }
 
   @Override
   protected List<String> createUriList(List<String> paramList, Request request)
       throws DownloaderException {
-    return List.of();
+    return List.of("test");
   }
 
-  @Override
-  public void closeConnections() throws DownloaderException {}
+  public void setFtpClient(FTPClient ftpClient) {
+    this.ftpClient = ftpClient;
+  }
 }

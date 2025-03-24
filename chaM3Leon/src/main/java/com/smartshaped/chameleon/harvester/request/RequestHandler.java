@@ -1,15 +1,5 @@
 package com.smartshaped.chameleon.harvester.request;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 import com.smartshaped.chameleon.common.exception.CassandraException;
@@ -17,6 +7,14 @@ import com.smartshaped.chameleon.common.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.CassandraUtils;
 import com.smartshaped.chameleon.common.utils.TableModel;
 import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /** Class for handling requests: retrieving, updating and validating them. */
 public class RequestHandler {
@@ -27,6 +25,9 @@ public class RequestHandler {
   private HarvesterConfigurationUtils configurationUtils;
   private TableModel requestModel;
 
+  /**
+   * Class for handling requests: retrieving, updating and validating them.
+   */
   public RequestHandler() throws ConfigurationException, CassandraException {
     configurationUtils = HarvesterConfigurationUtils.getHarvesterConf();
     logger.info("Harvester configurations loaded correctly");

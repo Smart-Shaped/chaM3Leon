@@ -1,19 +1,8 @@
 package com.smartshaped.chameleon.harvester;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.sedona.spark.SedonaContext;
-import org.apache.spark.SparkConf;
-import org.apache.spark.sql.SparkSession;
-
 import com.smartshaped.chameleon.common.exception.CassandraException;
 import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.harvester.exception.DownloaderException;
 import com.smartshaped.chameleon.harvester.exception.HarvesterException;
 import com.smartshaped.chameleon.harvester.exception.HarvesterLayerException;
 import com.smartshaped.chameleon.harvester.request.Request;
@@ -21,6 +10,16 @@ import com.smartshaped.chameleon.harvester.request.RequestHandler;
 import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
 import com.smartshaped.chameleon.ml.exception.HdfsReaderException;
 import com.smartshaped.chameleon.preprocessing.exception.PreprocessorException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.sedona.spark.SedonaContext;
+import org.apache.spark.SparkConf;
+import org.apache.spark.sql.SparkSession;
 
 /**
  * The HarvesterLayer class is responsible for starting the harvesting process. It reads all the
@@ -35,15 +34,19 @@ public class HarvesterLayer {
   protected SparkSession sparkSession;
   protected RequestHandler handler;
   protected List<Harvester> harvesters;
+  protected List<Harvester> filteredHarvesters;
+  private Thread shutdownHook;
 
+  /**
+   * Constructs a HarvesterLayer instance, initializing necessary configurations.
+   *
+   * @throws ConfigurationException If there is an error in loading configurations
+   * @throws CassandraException If there is an error in establishing Cassandra connection
+   */
   public HarvesterLayer() throws ConfigurationException, CassandraException {
 
     configurationUtils = HarvesterConfigurationUtils.getHarvesterConf();
     logger.info("Harvester configurations loaded correctly");
-    handler = configurationUtils.getRequestHandler();
-    logger.info("Request handler loaded correctly");
-    harvesters = configurationUtils.getHarvesters();
-    logger.info("Harvesters list loaded correctly");
 
     try {
       logger.info("Loading configuration for spark session...");
@@ -54,6 +57,11 @@ public class HarvesterLayer {
     } catch (Exception e) {
       throw new ConfigurationException("Error getting or creating Sedona SparkSession", e);
     }
+
+    handler = configurationUtils.getRequestHandler();
+    logger.info("Request handler loaded correctly");
+    harvesters = configurationUtils.getHarvesters();
+    logger.info("Harvesters list loaded correctly");
   }
 
   /**
@@ -78,28 +86,27 @@ public class HarvesterLayer {
 
     Request[] requests = handler.getRequest();
     String state = "";
-    List<Harvester> filteredHarvesters;
 
     for (Request request : requests) {
-      Runtime.getRuntime()
-          .addShutdownHook(
-              new Thread(
-                  () -> {
-                    logger.info("Closing Spark Application...");
-                    try {
-                      RequestHandler killedHandler = configurationUtils.getRequestHandler();
-                      logger.info("Request value: {}", request);
-                      killedHandler.updateRequestState(request, "blocked");
-                    } catch (CassandraException | ConfigurationException e) {
-                      throw new RuntimeException(e.getMessage(), e);
-                    }
-                  }));
+      this.shutdownHook =
+          new Thread(
+              () -> {
+                logger.info("Closing Spark Application...");
+                try {
+                  RequestHandler killedHandler = configurationUtils.getRequestHandler();
+                  logger.info("Request value: {}", request);
+                  killedHandler.updateRequestState(request, "blocked");
+                } catch (CassandraException | ConfigurationException e) {
+                  throw new RuntimeException(e.getMessage(), e);
+                }
+              });
+      Runtime.getRuntime().addShutdownHook(shutdownHook);
       logger.debug("Processing request: {}", request);
       state = "inProgress";
       handler.updateRequestState(request, state);
       try {
-        filteredHarvesters = filterHarvesters(harvesters, request);
-        for (Harvester harvester : filteredHarvesters) {
+        this.filteredHarvesters = filterHarvesters(harvesters, request);
+        for (Harvester harvester : this.filteredHarvesters) {
           logger.debug("Using harvester: {}", harvester.getClass());
           harvester.execute(request);
         }
@@ -110,10 +117,10 @@ public class HarvesterLayer {
       } finally {
         handler.updateRequestState(request, state);
       }
-
+      closeHarvesterConnections();
       logger.info("Request completed");
     }
-    handler.closeConnection();
+    this.closeConnections();
   }
 
   /**
@@ -151,5 +158,30 @@ public class HarvesterLayer {
     logger.debug("Number of filtered harvesters: {}", harvesterList.size());
 
     return harvesterList;
+  }
+
+  /** Closes Cassandra connection and Spark Session at the end of the Harvester Layer execution. */
+  private void closeConnections() {
+    this.handler.closeConnection();
+    this.sparkSession.close();
+    Runtime.getRuntime().removeShutdownHook(this.shutdownHook);
+  }
+
+  /**
+   * Closes all opened connections through filtered Harvester after their execution..
+   *
+   * @throws HarvesterLayerException If there is an error closing harvester pending connections.
+   */
+  private void closeHarvesterConnections() throws HarvesterLayerException {
+    for (Harvester harvester : this.filteredHarvesters) {
+      try {
+        harvester.closeConnections();
+      } catch (DownloaderException | PreprocessorException e) {
+        throw new HarvesterLayerException(
+            "Exception raised closing pending connections for Harvester: "
+                + harvester.getHarvesterId(),
+            e);
+      }
+    }
   }
 }

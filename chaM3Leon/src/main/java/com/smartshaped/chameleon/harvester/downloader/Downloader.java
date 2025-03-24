@@ -1,19 +1,21 @@
 package com.smartshaped.chameleon.harvester.downloader;
 
+import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.harvester.exception.DownloaderException;
+import com.smartshaped.chameleon.harvester.request.Request;
+import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.harvester.exception.DownloaderException;
-import com.smartshaped.chameleon.harvester.request.Request;
-import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;
-
-/** An abstract class representing a downloader that downloads data from a source. */
+/**
+ * Abstract class that implements the downloading process from different sources. It contains the
+ * common methods for all the downloaders.
+ */
 public abstract class Downloader {
 
   protected static final Logger logger = LogManager.getLogger(Downloader.class);
@@ -22,6 +24,14 @@ public abstract class Downloader {
   protected Map<String, String> queryParams;
   protected Map<String, String> urlParams;
 
+  /**
+   * Initializes the Downloader class.
+   *
+   * <p>This constructor does not have any parameters. It loads the configuration for the downloader
+   * and sets the class name of the downloader.
+   *
+   * @throws ConfigurationException If there is an error with the configuration.
+   */
   protected Downloader() throws ConfigurationException {
     logger.info("Initializing Downloader...");
 
@@ -59,5 +69,12 @@ public abstract class Downloader {
    * @throws ConfigurationException If there is an error with the configuration.
    */
   public abstract Dataset<Row> download(List<String> paramList, Request request)
-      throws DownloaderException, ConfigurationException;
+      throws DownloaderException, ConfigurationException, IOException;
+
+  /**
+   * Closes, if needed, connections opened during the execution of the implemented Downloader.
+   *
+   * @throws DownloaderException If there is an error closing connections.
+   */
+  public abstract void closeConnections() throws DownloaderException;
 }

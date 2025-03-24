@@ -34,10 +34,6 @@ public class RequestValidator {
       return false;
     }
 
-    if (request.getHarvesterIds() == null || request.getHarvesterIds().isBlank()) {
-      return false;
-    }
-
-    return true;
+    return request.getHarvesterIds() != null && !request.getHarvesterIds().isBlank();
   }
 }

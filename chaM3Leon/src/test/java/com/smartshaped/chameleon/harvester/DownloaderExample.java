@@ -26,4 +26,7 @@ public class DownloaderExample extends Downloader {
       throws DownloaderException, ConfigurationException {
     return null;
   }
+
+  @Override
+  public void closeConnections() throws DownloaderException {}
 }
