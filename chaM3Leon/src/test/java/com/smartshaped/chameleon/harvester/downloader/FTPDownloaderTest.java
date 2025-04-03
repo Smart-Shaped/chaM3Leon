@@ -100,7 +100,7 @@ class FTPDownloaderTest {
           .thenReturn(uriDataset);
 
       when(uriDataset.withColumnRenamed("value", "ftp_path")).thenReturn(dataset);
-      when(uriDataset.col(anyString())).thenReturn(column);
+      when(functions.col(anyString())).thenReturn(column);
       when(dwnldFtpFl.apply(column)).thenReturn(column);
       when(dataset.withColumn("path", column)).thenReturn(dataset);
 
@@ -216,7 +216,7 @@ class FTPDownloaderTest {
           .thenReturn(uriDataset);
 
       when(uriDataset.withColumnRenamed("value", "ftp_path")).thenReturn(dataset);
-      when(uriDataset.col(anyString())).thenReturn(column);
+      when(functions.col(anyString())).thenReturn(column);
       when(dwnldFtpFl.apply(column)).thenReturn(column);
       when(dataset.withColumn("path", column)).thenReturn(dataset);
 

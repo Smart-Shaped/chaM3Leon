@@ -157,7 +157,7 @@ public abstract class FTPDownloader extends Downloader {
     Dataset<Row> result =
         ftpPathDataset
             .withColumnRenamed("value", "ftp_path")
-            .withColumn("path", downloadFTPFile.apply(ftpPathDataset.col("ftp_path")));
+            .withColumn("path", downloadFTPFile.apply(functions.col("ftp_path")));
 
     result = addRequest(result, request);
 
