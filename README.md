@@ -175,7 +175,7 @@ To generate the `.jar` file, run the following command from your project directo
 mvn clean install
 ```
 
-Then, follow the [Docker documentation](/docker_chaM3Leon/README.md)
+Then go to our [Docker repository](https://github.com/Smart-Shaped/docker_chaM3Leon) and follow the [Docker documentation](https://github.com/Smart-Shaped/docker_chaM3Leon/blob/public/README.md)
 
 ---
 
