@@ -35,8 +35,8 @@ build/
 .vscode/
 /.metadata/
 /.sonarlint/
-/docker_sp_had/hadoop
-/docker_sp_had/spark_jars
+/docker_chaM3Leon/hadoop
+/docker_chaM3Leon/spark_jars
 
 ### notebooks ###
 /docker_notebook_test/sedona_scripts/data/
@@ -48,8 +48,10 @@ build/
 /docker_sp_had/kafka-windows-docker-data
 
 ## jars
-/docker_sp_had/jars/
+/docker_chaM3Leon/jars
 
 ## cassandra workbench
 .cassandraWorkbench.jsonc
 /.cassandraWorkbench
+/identifier.sqlite
+/localhost

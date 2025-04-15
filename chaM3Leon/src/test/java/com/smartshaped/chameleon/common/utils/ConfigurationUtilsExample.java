@@ -4,9 +4,9 @@ import com.smartshaped.chameleon.common.exception.ConfigurationException;
 
 public class ConfigurationUtilsExample extends ConfigurationUtils {
 
-	protected ConfigurationUtilsExample() throws ConfigurationException {
-		super();
+  protected ConfigurationUtilsExample() throws ConfigurationException {
+    super();
 
-		setConfRoot("test.");
-	}
+    setConfRoot("test.");
+  }
 }

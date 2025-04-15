@@ -17,68 +17,63 @@ import com.smartshaped.chameleon.common.exception.ConfigurationException;
 @ExtendWith(MockitoExtension.class)
 class BatchConfigurationUtilsYMLMockedTest {
 
-	@Mock
-	YAMLConfiguration configuration;
+  @Mock YAMLConfiguration configuration;
 
-	@InjectMocks
-	BatchConfigurationUtils batchConfig;
+  @InjectMocks BatchConfigurationUtils batchConfig;
 
-	@Test
-	void testGetBatchUpdaterNullOrMissing() throws ConfigurationException {
+  @Test
+  void testGetBatchUpdaterNullOrMissing() throws ConfigurationException {
 
-		doReturn("").when(configuration).getString("batch.updater.class");
+    doReturn("").when(configuration).getString("batch.updater.class");
 
-		BatchUpdater batchUpdater = batchConfig.getBatchUpdater();
-		assertNull(batchUpdater);
+    BatchUpdater batchUpdater = batchConfig.getBatchUpdater();
+    assertNull(batchUpdater);
 
-		doReturn(null).when(configuration).getString("batch.updater.class");
+    doReturn(null).when(configuration).getString("batch.updater.class");
 
-		batchUpdater = batchConfig.getBatchUpdater();
-		assertNull(batchUpdater);
+    batchUpdater = batchConfig.getBatchUpdater();
+    assertNull(batchUpdater);
+  }
 
-	}
+  @Test
+  void testGetBatchUpdaterFailure() {
 
-	@Test
-	void testGetBatchUpdaterFailure() throws ConfigurationException {
+    doReturn("WrongClassName").when(configuration).getString("batch.updater.class");
 
-		doReturn("WrongClassName").when(configuration).getString("batch.updater.class");
+    assertThrows(ConfigurationException.class, () -> batchConfig.getBatchUpdater());
 
-		assertThrows(ConfigurationException.class, () -> batchConfig.getBatchUpdater());
+    doReturn("com.smartshaped.fesr.framework.batch.utils.BatchConfigurationUtilsYMLMockedTest")
+        .when(configuration)
+        .getString("batch.updater.class");
 
-		doReturn("com.smartshaped.fesr.framework.batch.utils.BatchConfigurationUtilsYMLMockedTest").when(configuration)
-				.getString("batch.updater.class");
+    assertThrows(ConfigurationException.class, () -> batchConfig.getBatchUpdater());
+  }
 
-		assertThrows(ConfigurationException.class, () -> batchConfig.getBatchUpdater());
+  @Test
+  void testGetKafkaConfigServerFailure() {
 
-	}
+    doReturn(null).when(configuration).getString("batch.kafka.server");
 
-	@Test
-	void testGetKafkaConfigServerFailure() throws ConfigurationException {
+    assertThrows(ConfigurationException.class, () -> batchConfig.getKafkaConfig());
+  }
 
-		doReturn(null).when(configuration).getString("batch.kafka.server");
+  @Test
+  void testGetKafkaConfigIntervalFailure() {
 
-		assertThrows(ConfigurationException.class, () -> batchConfig.getKafkaConfig());
+    doReturn("servers").when(configuration).getString("batch.kafka.server");
 
-	}
+    doReturn(null).when(configuration).getString("batch.kafka.intervalMs");
 
-	@Test
-	void testGetKafkaConfigIntervalFailure() throws ConfigurationException {
+    assertThrows(ConfigurationException.class, () -> batchConfig.getKafkaConfig());
+  }
 
-		doReturn("servers").when(configuration).getString("batch.kafka.server");
+  @Test
+  void testGetKafkaConfigTopicsFailure() {
 
-		doReturn(null).when(configuration).getString("batch.kafka.intervalMs");
+    doReturn("servers").when(configuration).getString("batch.kafka.server");
 
-		assertThrows(ConfigurationException.class, () -> batchConfig.getKafkaConfig());
-	}
+    doReturn("30000").when(configuration).getString("batch.kafka.intervalMs");
 
-	@Test
-	void testGetKafkaConfigTopicsFailure() throws ConfigurationException {
-
-		doReturn("servers").when(configuration).getString("batch.kafka.server");
-
-		doReturn("30000").when(configuration).getString("batch.kafka.intervalMs");
-
-		assertThrows(ConfigurationException.class, () -> batchConfig.getKafkaConfig());
-	}
-
+    assertThrows(ConfigurationException.class, () -> batchConfig.getKafkaConfig());
+  }
 }

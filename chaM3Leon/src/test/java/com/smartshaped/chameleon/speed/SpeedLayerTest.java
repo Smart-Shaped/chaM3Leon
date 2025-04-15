@@ -29,101 +29,93 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class SpeedLayerTest {
 
-	@Mock
-	private SpeedConfigurationUtils configurationUtils;
-	@Mock
-	private CassandraUtils cassandraUtils;
-	@Mock
-	private SparkSession sparkSession;
-	@Mock
-	private SparkSession.Builder sparkSessionBuilder;
-	@Mock
-	private DataFrameReader dataFrameReader;
-	@Mock
-	private Dataset<Row> dataSetRow;
-	@Mock
-	private SparkConf sparkConf;
-	@Mock
-	private Column column;
-	@Mock
-	private StreamingQueryManager streamingQueryManager;
+  @Mock private SpeedConfigurationUtils configurationUtils;
+  @Mock private CassandraUtils cassandraUtils;
+  @Mock private SparkSession sparkSession;
+  @Mock private SparkSession.Builder sparkSessionBuilder;
+  @Mock private DataFrameReader dataFrameReader;
+  @Mock private Dataset<Row> dataSetRow;
+  @Mock private SparkConf sparkConf;
+  @Mock private Column column;
+  @Mock private StreamingQueryManager streamingQueryManager;
 
-	private Map<String, String> kafkaConfig;
+  private Map<String, String> kafkaConfig;
 
-	@BeforeEach
-	void setUp() {
-		kafkaConfig = new HashMap<>();
-		kafkaConfig.put("topics", "testTopic1,testTopic2");
-		kafkaConfig.put("servers", "localhost:9092");
-	}
-	
-	@BeforeEach
-	public void resetSingleton()
-			throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		Field instance = SpeedConfigurationUtils.class.getDeclaredField("configuration");
-		instance.setAccessible(true);
-		instance.set(null, null);
-	}
+  @BeforeEach
+  void setUp() {
+    kafkaConfig = new HashMap<>();
+    kafkaConfig.put("topics", "testTopic1,testTopic2");
+    kafkaConfig.put("servers", "localhost:9092");
+  }
 
-	@Test
-	void testStartSuccess() throws ConfigurationException, SpeedLayerException {
+  @BeforeEach
+  public void resetSingleton()
+      throws SecurityException,
+          NoSuchFieldException,
+          IllegalArgumentException,
+          IllegalAccessException {
+    Field instance = SpeedConfigurationUtils.class.getDeclaredField("configuration");
+    instance.setAccessible(true);
+    instance.set(null, null);
+  }
 
-		try (MockedStatic<SparkSession> mockedStaticSpark = mockStatic(SparkSession.class)) {
-			mockedStaticSpark.when(SparkSession::builder).thenReturn(sparkSessionBuilder);
-			when(sparkSessionBuilder.getOrCreate()).thenReturn(sparkSession);
-			when(sparkSessionBuilder.config(any(SparkConf.class))).thenReturn(sparkSessionBuilder);
-			try (MockedStatic<CassandraUtils> mockedStaticCassandra = mockStatic(CassandraUtils.class)) {
-				mockedStaticCassandra.when(() -> CassandraUtils.getCassandraUtils(any(SpeedConfigurationUtils.class)))
-						.thenReturn(cassandraUtils);
-				try (MockedStatic<KafkaConsumer> mockedStaticKafka = mockStatic(KafkaConsumer.class)) {
-					mockedStaticKafka.when(() -> KafkaConsumer.kafkaRead(kafkaConfig, sparkSession))
-							.thenReturn(dataSetRow);
-					when(sparkSession.streams()).thenReturn(streamingQueryManager);
+  @Test
+  void testStartSuccess() throws ConfigurationException, SpeedLayerException {
 
-					SpeedLayerTestClass speedLayer = new SpeedLayerTestClass();
-					assertDoesNotThrow(speedLayer::start);
-				}
-			}
-		}
+    try (MockedStatic<SparkSession> mockedStaticSpark = mockStatic(SparkSession.class)) {
+      mockedStaticSpark.when(SparkSession::builder).thenReturn(sparkSessionBuilder);
+      when(sparkSessionBuilder.getOrCreate()).thenReturn(sparkSession);
+      when(sparkSessionBuilder.config(any(SparkConf.class))).thenReturn(sparkSessionBuilder);
+      try (MockedStatic<CassandraUtils> mockedStaticCassandra = mockStatic(CassandraUtils.class)) {
+        mockedStaticCassandra
+            .when(() -> CassandraUtils.getCassandraUtils(any(SpeedConfigurationUtils.class)))
+            .thenReturn(cassandraUtils);
+        try (MockedStatic<KafkaConsumer> mockedStaticKafka = mockStatic(KafkaConsumer.class)) {
+          mockedStaticKafka.when(() -> KafkaConsumer.kafkaRead(kafkaConfig)).thenReturn(dataSetRow);
+          when(sparkSession.streams()).thenReturn(streamingQueryManager);
 
-	}
+          SpeedLayerTestClass speedLayer = new SpeedLayerTestClass();
+          assertDoesNotThrow(speedLayer::start);
+        }
+      }
+    }
+  }
 
-	@Test
-	void testConstructorFailure() {
+  @Test
+  void testConstructorFailure() {
 
-		try (MockedStatic<SpeedConfigurationUtils> mockedSSpeedConfig = mockStatic(SpeedConfigurationUtils.class)) {
-			mockedSSpeedConfig.when(SpeedConfigurationUtils::getSpeedConf).thenReturn(configurationUtils);
-			when(configurationUtils.getSparkConf()).thenReturn(sparkConf);
-			try (MockedStatic<SparkSession> mockedStaticSpark = mockStatic(SparkSession.class)) {
-				mockedStaticSpark.when(SparkSession::builder).thenReturn(sparkSessionBuilder);
-				assertThrows(SpeedLayerException.class, SpeedLayerTestClass::new);
-			}
-		}
+    try (MockedStatic<SpeedConfigurationUtils> mockedSSpeedConfig =
+        mockStatic(SpeedConfigurationUtils.class)) {
+      mockedSSpeedConfig.when(SpeedConfigurationUtils::getSpeedConf).thenReturn(configurationUtils);
+      when(configurationUtils.getSparkConf()).thenReturn(sparkConf);
+      try (MockedStatic<SparkSession> mockedStaticSpark = mockStatic(SparkSession.class)) {
+        mockedStaticSpark.when(SparkSession::builder).thenReturn(sparkSessionBuilder);
+        assertThrows(SpeedLayerException.class, SpeedLayerTestClass::new);
+      }
+    }
+  }
 
-	}
+  @Test
+  void testStartFailure()
+      throws ConfigurationException, SpeedLayerException, StreamingQueryException {
 
-	@Test
-	void testStartFailure() throws ConfigurationException, SpeedLayerException, StreamingQueryException {
+    try (MockedStatic<SparkSession> mockedStaticSpark = mockStatic(SparkSession.class)) {
+      mockedStaticSpark.when(SparkSession::builder).thenReturn(sparkSessionBuilder);
+      when(sparkSessionBuilder.getOrCreate()).thenReturn(sparkSession);
+      when(sparkSessionBuilder.config(any(SparkConf.class))).thenReturn(sparkSessionBuilder);
+      try (MockedStatic<CassandraUtils> mockedStaticCassandra = mockStatic(CassandraUtils.class)) {
+        mockedStaticCassandra
+            .when(() -> CassandraUtils.getCassandraUtils(any(SpeedConfigurationUtils.class)))
+            .thenReturn(cassandraUtils);
+        try (MockedStatic<KafkaConsumer> mockedStaticKafka = mockStatic(KafkaConsumer.class)) {
+          mockedStaticKafka.when(() -> KafkaConsumer.kafkaRead(kafkaConfig)).thenReturn(dataSetRow);
+          when(sparkSession.streams()).thenReturn(streamingQueryManager);
+          doThrow(StreamingQueryException.class).when(streamingQueryManager).awaitAnyTermination();
 
-		try (MockedStatic<SparkSession> mockedStaticSpark = mockStatic(SparkSession.class)) {
-			mockedStaticSpark.when(SparkSession::builder).thenReturn(sparkSessionBuilder);
-			when(sparkSessionBuilder.getOrCreate()).thenReturn(sparkSession);
-			when(sparkSessionBuilder.config(any(SparkConf.class))).thenReturn(sparkSessionBuilder);
-			try (MockedStatic<CassandraUtils> mockedStaticCassandra = mockStatic(CassandraUtils.class)) {
-				mockedStaticCassandra.when(() -> CassandraUtils.getCassandraUtils(any(SpeedConfigurationUtils.class)))
-						.thenReturn(cassandraUtils);
-				try (MockedStatic<KafkaConsumer> mockedStaticKafka = mockStatic(KafkaConsumer.class)) {
-					mockedStaticKafka.when(() -> KafkaConsumer.kafkaRead(kafkaConfig, sparkSession))
-							.thenReturn(dataSetRow);
-					when(sparkSession.streams()).thenReturn(streamingQueryManager);
-					doThrow(StreamingQueryException.class).when(streamingQueryManager).awaitAnyTermination();
-
-					SpeedLayerTestClass speedLayer = new SpeedLayerTestClass();
-					assertThrows(SpeedLayerException.class, speedLayer::start);
-				}
-			}
-		}
-
-	}
-
+          SpeedLayerTestClass speedLayer = new SpeedLayerTestClass();
+          assertThrows(SpeedLayerException.class, speedLayer::start);
+        }
+      }
+    }
+  }
 }

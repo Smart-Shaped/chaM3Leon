@@ -5,8 +5,7 @@ import com.smartshaped.chameleon.common.exception.ConfigurationException;
 
 public class BatchLayerTestClass extends BatchLayer {
 
-	public BatchLayerTestClass() throws ConfigurationException, BatchLayerException {
-		super();
-	}
-
+  public BatchLayerTestClass() throws ConfigurationException, BatchLayerException {
+    super();
+  }
 }

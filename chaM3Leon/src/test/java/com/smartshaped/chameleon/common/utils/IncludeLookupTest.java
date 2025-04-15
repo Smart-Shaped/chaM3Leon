@@ -8,15 +8,14 @@ import static org.mockito.Mockito.mock;
 
 class IncludeLookupTest {
 
-	@Test
-	void testIncludeLookup() {
-		assertDoesNotThrow(() -> new IncludeLookup("framework-config.yml"));
-	}
+  @Test
+  void testIncludeLookup() {
+    assertDoesNotThrow(() -> new IncludeLookup("framework-config.yml"));
+  }
 
-	@Test
-	void testLookup() {
-		IncludeLookup includeLookup = mock(IncludeLookup.class, Mockito.CALLS_REAL_METHODS);
-		assertDoesNotThrow(() -> includeLookup.lookup("test"));
-	}
-
+  @Test
+  void testLookup() {
+    IncludeLookup includeLookup = mock(IncludeLookup.class, Mockito.CALLS_REAL_METHODS);
+    assertDoesNotThrow(() -> includeLookup.lookup("test"));
+  }
 }
