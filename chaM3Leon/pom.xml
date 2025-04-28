@@ -5,8 +5,16 @@
 	<groupId>com.smartshaped</groupId>
 	<artifactId>chameleon</artifactId>
 	<version>0.0.1</version>
+	<packaging>pom</packaging>
 	<name>chameleon</name>
 	<description>chaM3Leon Framework</description>
+	<modules>
+		<module>batch</module>
+		<module>common</module>
+		<module>harvester</module>
+		<module>ml</module>
+		<module>speed</module>
+	</modules>
 
 	<properties>
         <java.version>11</java.version>
@@ -30,22 +38,6 @@
 			<groupId>org.apache.spark</groupId>
 			<artifactId>spark-sql_2.12</artifactId>
 			<version>${spark-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-mllib_2.12</artifactId>
-			<version>${spark-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-sql-kafka-0-10_2.12</artifactId>
-			<version>${spark-version}</version>
-		</dependency>
-		
-		<dependency>
-    		<groupId>com.datastax.spark</groupId>
-   			<artifactId>spark-cassandra-connector_2.12</artifactId>
-			<version>3.4.1</version>
 		</dependency>
 		
 		<!-- Apache Sedona dependencies -->
@@ -85,45 +77,7 @@
 			<optional>true</optional>
 			<version>${lombok-version}</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>com.datastax.oss</groupId>
-			<artifactId>java-driver-core</artifactId>
-			<version>4.13.0</version>
-		</dependency>
 
-		<dependency>
-			<groupId>commons-net</groupId>
-			<artifactId>commons-net</artifactId>
-			<version>3.9.0</version>
-		</dependency>
-
-		<!-- Apache Commons BeanUtils -->
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.4</version> <!-- or the latest version -->
-        </dependency>
-
-        <!-- SnakeYAML -->
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>2.2</version> <!-- or the latest version -->
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.15.0</version> <!-- replace with the required version -->
-        </dependency>
-        
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-configuration2</artifactId>
-			<version>2.11.0</version>
-		</dependency>
-		
 		<!--Per ambiente di test-->
 		<dependency>
 		    <groupId>org.junit.jupiter</groupId>
@@ -205,7 +159,6 @@
                 					<Multi-Release>true</Multi-Release>
               					</manifestEntries>                                            
             				  </transformer>
-                              <!-- This bit merges the various GeoTools META-INF/services files  (e.g. referencing plugins) -->
                               <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                           	</transformers>
 						</configuration>
@@ -246,12 +199,6 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <configuration>
-							<excludes>
-								<exclude>com/smartshaped/chameleon/harvester/**</exclude>
-								<exclude>com/smartshaped/chameleon/preprocessing/TifRescalerPreprocessor*</exclude>
-							</excludes>
-						</configuration>
                     </execution>
                     <execution>
                         <id>jacoco-check</id>
@@ -272,14 +219,11 @@
                                     </limits>
                                 </rule>
                             </rules>
-                            <excludes>
-								<exclude>com/smartshaped/chameleon/harvester/**</exclude>
-								<exclude>com/smartshaped/chameleon/preprocessing/TifRescalerPreprcessor</exclude>
-							</excludes>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
 		</plugins>
 	</build>
+
 </project>

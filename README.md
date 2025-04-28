@@ -77,7 +77,7 @@ After this, you can choose to extend any of the following layers:
 
 To develop a batch application using the Batch Layer, follow these steps:
 
-### 1. Create a Class that Extends `com.smartshaped.chameleon.batch.BatchLayer`
+### 1. Create a Class that Extends `com.smartshaped.chameleon.batch.com.smartshaped.chameleon.batch.BatchLayer`
 - Ensure that the class constructor is **public**.
 
 ### 2. Create one or more Classes that Extend `com.smartshaped.chameleon.preprocessing.Preprocessor`
@@ -85,21 +85,21 @@ To develop a batch application using the Batch Layer, follow these steps:
 - Override the `preprocess` method to add custom preprocessing for the incoming streaming data.
 - You can define a Preprocessor for each of the declared kafka topics.
 
-### 3. Create a Class that Extends `com.smartshaped.chameleon.batch.BatchUpdater`
+### 3. Create a Class that Extends `com.smartshaped.chameleon.batch.com.smartshaped.chameleon.batch.BatchUpdater`
 - Ensure that the class constructor is **public**.
 - This is an optional step, create this class if you want to export some analysis/statisctics from your data.
 - Declare this class in the YAML file (batch.updater.class).
 - Override the `updateBatch` method to implement the specific logic (working on Spark Dataframe).
 - It will automatically save results on Cassandra DB.
 
-### 4. Create a Class that Extends `com.smartshaped.chameleon.common.utils.TableModel`
+### 4. Create a Class that Extends `com.smartshaped.chameleon.common.com.smartshaped.chameleon.batch.utils.TableModel`
 - Define the table fields as class attributes.
 - Specify the name of the primary key as a **string**.
 - Create a `typeMapping.yml` file to define the mapping between Java field types and CQL (Cassandra Query Language) types.
 - Declare this class in the YAML file (batch.cassandra.model.class).
 
 ### 5. Create a Class Containing the `main` Method
-- Call the `start` method of `BatchLayer` inside the `main` method.
+- Call the `start` method of `com.smartshaped.chameleon.batch.BatchLayer` inside the `main` method.
 - Specify this class in the `spark-submit` command.
 
 ---
@@ -120,7 +120,7 @@ To develop a batch application using the Speed Layer, follow these steps:
 - Override the `updateSpeed` method to implement the specific logic (working on Spark Dataframe).
 - It will automatically save results on Cassandra DB.
 
-### 3. Create a Class that Extends `com.smartshaped.chameleon.common.utils.TableModel`
+### 3. Create a Class that Extends `com.smartshaped.chameleon.common.com.smartshaped.chameleon.batch.utils.TableModel`
 - Define the table fields as class attributes.
 - Specify the name of the primary key as a **string**.
 - Create a `typeMapping.yml` file to define the mapping between Java field types and CQL (Cassandra Query Language) types.
@@ -155,7 +155,7 @@ To develop a machine learning application using the ML Layer, follow these steps
 - Ensure that the class constructor is **public**.
 - Declare this class in the YAML file.
 
-### 5. Create a Class that Extends `com.smartshaped.chameleon.common.utils.TableModel`
+### 5. Create a Class that Extends `com.smartshaped.chameleon.common.com.smartshaped.chameleon.batch.utils.TableModel`
 - Define the table fields as class attributes.
 - Specify the name of the primary key as a **string**.
 - Create a `typeMapping.yml` file to define the mapping between Java field types and CQL (Cassandra Query Language) types.

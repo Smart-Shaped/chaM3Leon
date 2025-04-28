@@ -1,0 +1,11 @@
+typeMapping:
+  UUID: "uuid"
+  int: "int"
+  Integer: "int"
+  String: "text"
+  long: "bigint"
+  Long: "bigint"
+  boolean: "boolean"
+  Boolean: "boolean"
+  Float: "float"
+  Timestamp: "timestamp"
