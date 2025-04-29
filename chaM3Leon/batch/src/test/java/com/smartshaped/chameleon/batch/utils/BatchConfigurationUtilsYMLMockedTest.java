@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.smartshaped.chameleon.batch.BatchUpdater;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 
 @ExtendWith(MockitoExtension.class)
 class BatchConfigurationUtilsYMLMockedTest {

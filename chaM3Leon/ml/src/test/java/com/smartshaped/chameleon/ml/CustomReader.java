@@ -1,6 +1,6 @@
 package com.smartshaped.chameleon.ml;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 import com.smartshaped.chameleon.ml.exception.HdfsReaderException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;

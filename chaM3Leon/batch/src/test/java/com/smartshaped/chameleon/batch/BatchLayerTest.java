@@ -25,9 +25,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.smartshaped.chameleon.batch.exception.BatchLayerException;
 import com.smartshaped.chameleon.batch.utils.BatchConfigurationUtils;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.KafkaConsumer;
-import com.smartshaped.chameleon.preprocessing.Preprocessor;
+import com.smartshaped.chameleon.common.preprocessing.Preprocessor;
 
 @ExtendWith(MockitoExtension.class)
 class BatchLayerTest {

@@ -7,7 +7,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 import com.smartshaped.chameleon.harvester.request.Request;
 
 class DownloaderTest {

@@ -5,8 +5,8 @@ import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import com.datastax.oss.driver.api.core.cql.BoundStatement;
 import com.datastax.oss.driver.api.core.cql.PreparedStatement;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
-import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.exception.CassandraException;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.streaming.DataStreamWriter;

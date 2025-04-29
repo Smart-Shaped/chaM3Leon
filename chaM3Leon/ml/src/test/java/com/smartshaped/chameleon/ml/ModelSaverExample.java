@@ -1,7 +1,7 @@
 package com.smartshaped.chameleon.ml;
 
-import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.exception.CassandraException;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 
 public class ModelSaverExample extends ModelSaver {
 

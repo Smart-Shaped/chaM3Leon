@@ -1,7 +1,6 @@
 package com.smartshaped.chameleon.ml.blackbox;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.ml.blackbox.PythonBlackbox;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 import com.smartshaped.chameleon.ml.blackbox.exception.BlackboxException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;

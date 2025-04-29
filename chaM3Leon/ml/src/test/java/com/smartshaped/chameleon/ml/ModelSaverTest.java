@@ -8,8 +8,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.exception.CassandraException;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.CassandraUtils;
 import com.smartshaped.chameleon.common.utils.TableModel;
 import com.smartshaped.chameleon.ml.blackbox.Blackbox;

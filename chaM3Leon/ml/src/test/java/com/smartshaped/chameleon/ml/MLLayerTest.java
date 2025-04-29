@@ -8,7 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.CassandraUtils;
 import com.smartshaped.chameleon.ml.blackbox.Blackbox;
 import com.smartshaped.chameleon.ml.exception.MLLayerException;

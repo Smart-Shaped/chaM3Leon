@@ -4,8 +4,8 @@ import com.smartshaped.chameleon.batch.exception.BatchUpdaterException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
-import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.exception.CassandraException;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 
 public class BatchUpdaterTestClass extends BatchUpdater {
 

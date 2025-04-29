@@ -1,6 +1,6 @@
 package com.smartshaped.chameleon.harvester;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 import com.smartshaped.chameleon.harvester.request.Request;
 import java.util.ArrayList;
 import java.util.List;

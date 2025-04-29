@@ -6,9 +6,9 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
-import com.smartshaped.chameleon.preprocessing.Preprocessor;
-import com.smartshaped.chameleon.preprocessing.exception.PreprocessorException;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.preprocessing.Preprocessor;
+import com.smartshaped.chameleon.common.preprocessing.exception.PreprocessorException;
 
 public class PreprocessorExample extends Preprocessor {
 

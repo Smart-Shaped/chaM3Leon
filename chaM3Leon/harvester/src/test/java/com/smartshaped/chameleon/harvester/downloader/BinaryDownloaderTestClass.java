@@ -2,7 +2,7 @@ package com.smartshaped.chameleon.harvester.downloader;
 
 import java.util.List;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 import com.smartshaped.chameleon.harvester.exception.DownloaderException;
 import com.smartshaped.chameleon.harvester.request.Request;
 

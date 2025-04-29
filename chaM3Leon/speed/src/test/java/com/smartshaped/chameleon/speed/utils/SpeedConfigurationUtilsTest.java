@@ -1,6 +1,6 @@
 package com.smartshaped.chameleon.speed.utils;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 import org.apache.commons.configuration2.YAMLConfiguration;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.junit.jupiter.api.BeforeEach;

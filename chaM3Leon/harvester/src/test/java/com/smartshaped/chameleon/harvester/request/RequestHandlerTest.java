@@ -23,8 +23,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
-import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.exception.CassandraException;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.CassandraUtils;
 import com.smartshaped.chameleon.common.utils.TableModel;
 import com.smartshaped.chameleon.harvester.utils.HarvesterConfigurationUtils;

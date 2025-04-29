@@ -3,7 +3,7 @@ package com.smartshaped.chameleon.ml.blackbox;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.*;
 
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 import com.smartshaped.chameleon.ml.utils.MLConfigurationUtils;
 
 import java.lang.reflect.Field;

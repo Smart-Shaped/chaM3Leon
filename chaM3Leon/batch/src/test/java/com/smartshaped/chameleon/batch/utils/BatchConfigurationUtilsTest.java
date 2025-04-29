@@ -19,11 +19,11 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.smartshaped.chameleon.batch.BatchUpdater;
-import com.smartshaped.chameleon.common.exception.CassandraException;
-import com.smartshaped.chameleon.common.exception.ConfigurationException;
+import com.smartshaped.chameleon.common.utils.exception.CassandraException;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.CassandraUtils;
 import com.smartshaped.chameleon.common.utils.TableModel;
-import com.smartshaped.chameleon.preprocessing.Preprocessor;
+import com.smartshaped.chameleon.common.preprocessing.Preprocessor;
 
 @ExtendWith(MockitoExtension.class)
 class BatchConfigurationUtilsTest {
