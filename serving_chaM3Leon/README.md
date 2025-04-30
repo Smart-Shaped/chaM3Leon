@@ -64,18 +64,42 @@ When creating requests, use the following JSON structure:
 ```
 Note that these endpoints are already configured and ready to use in the framework. No additional logic implementation is needed to use these basic functionalities.
 
-### Extending the Framework
-To extend the framework with custom functionality, you can create your own models, controllers, and repositories. Here's how:
- Creating Custom Models
-1. Create a new model class extending the appropriate base class:
-   - BatchModel: for batch processing models
-   - SpeedModel: for real-time processing models
-   - MLModel: for machine learning models
-2. Create a repository interface that extends the appropriate base interface
-3. Create a new controller to expose custom API endpoints
-To start the application, you need to create a main class with the main method.
+## Usage
+To develop an application using the Serving Layer, follow these steps:
 
-Make sure to add appropriate annotations like @SpringBootApplication and @EnableCassandraRepositories to enable the necessary functionalities.
+## Usage
+### 0. Prerequisites
+- Execute mvn clean install of the chaM3Leon framework
+- Create a new Maven project
+- Add the following dependencie to the POM to include the framework serving layer:
+```xml
+        <dependency>
+            <groupId>com.smartshaped.chameleon</groupId>
+            <artifactId>serving</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+```
+
+### 1. Create a Class that extends `com.smartshaped.chameleon.serving.model.**Model`
+- Ensure the class is annotated with @Table.
+- Define table fields as class attributes.
+- Specify the primary key name.
+### 2. Create a Repository Interface that extends CassandraRepository with the model type and primary key type
+- Define custom data access methods if needed.
+- Make sure to specify the model type and primary key type as generic parameters.
+### 3. Create a Controller that extends `com.smartshaped.chameleon.serving.model.**Controller` and esposes API endpoints
+- Annotate the class with @RestController and @RequestMapping.
+- Inject the repository created in the previous step.
+- Implement methods to handle HTTP requests (GET, POST, PUT ...).
+### 4. Configure the application in the application.properties file
+- Specify Cassandra connection settings.
+- Configure the keyspace name.
+- Set schema creation policies.
+### 5. Create a Class containing the main method
+- Annotate the class with @SpringBootApplication.
+- Call the SpringApplication.run() method inside the main method.
+- Specify this class in the application startup command.
 
 ## Error Handling
 The module includes standard Spring Boot error handling:
