@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.smartshaped.chameleon</groupId>
             <artifactId>common</artifactId>
-            <version>0.0.1</version>
+            <version>${chameleon.version}</version>
         </dependency>
 
         <dependency>
