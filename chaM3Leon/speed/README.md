@@ -45,6 +45,8 @@ The module uses YAML configuration files:
 - Cassandra connection details
 - Speed updater class specifications
 
+To see how to set up the configuration, refer to the [Configuration Guide](../../docs/config_list.md).
+
 ## Dependencies
 - Apache Spark
 - Apache Kafka
@@ -66,7 +68,7 @@ To develop a batch application using the Speed Layer, follow these steps:
 - Override the `updateSpeed` method to implement the specific logic (working on Spark Dataframe).
 - It will automatically save results on Cassandra DB.
 
-### 3. Create a Class that Extends `com.smartshaped.chameleon.common.com.smartshaped.chameleon.batch.utils.TableModel`
+### 3. Create a Class that Extends `com.smartshaped.chameleon.common.utils.TableModel`
 - Define the table fields as class attributes.
 - Specify the name of the primary key as a **string**.
 - Create a `typeMapping.yml` file to define the mapping between Java field types and CQL (Cassandra Query Language) types.
