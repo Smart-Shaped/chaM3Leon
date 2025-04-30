@@ -1,28 +1,52 @@
 # chaM3Leon
 
-A modular and scalable framework designed to support machine learning applications - emphasising transparency, interoperability, and usability. It implements a custom lambda architecture, and additional components designed to tackle the limitation of the Speed-Batch coupling for data ingestion and processing.
+A modular and scalable framework designed to support machine learning applications - emphasising transparency, interoperability, and usability. It implements a custom Lambda architecture, and additional components designed to tackle the limitation of the Speed-Batch coupling for data ingestion and processing.
 
 The chaM3Leon architecture is illustrated in the following Component Diagram, highlighting the connections between layers through provided and required interfaces.
 
 ![chaM3Leon architecture](docs/chaM3LeonCD.png)
 
-As of now, we have released three layers (Batch Layer, Speed Layer, and ML Layer). You can refer to our [roadmap](#roadmap) to see the planned release dates for other components.
+As of now, we have released three layers (Batch Layer, Speed Layer, ML Layer and Harvester Layer). You can refer to our [roadmap](#roadmap) to see the planned release dates for other components.
 
-To implement your own version of any abstract layer you have to:
+## Implementation
+
+The chaM3Leon framework is based on Java and Maven. It is designed to be modular and scalable, allowing you to easily add new layers and components to your application.
+
+Here layers can be divided into two types:
+- Spark Layers:
+	- Batch Layer
+	- Speed Layer
+	- ML Layer
+	- Harvester Layer
+- SpringBoot Layer:
+	- Serving Layer
+
+### Spark Layers
+
+Spark Layers are based on Apache Spark with Java 11 and are designed to run on a Spark cluster. They are implemented using the Spark Streaming API and the Spark SQL API.
+
+To implement your own version of any Spark Layer you have to:
 
 - Build the project running at the level of the chaM3Leon pom.xml the following command:
 ```bash
 mvn clean install
 ```
-- Generate a Maven project and add chaM3Leon as dependency on your maven pom.xml as below: 
+- Generate a Maven project and add the chaM3Leon layer you want to implement as dependency on your maven pom.xml as below: 
 
 ```bash
 <dependency>
-	<groupId>com.smartshaped</groupId>
-	<artifactId>chameleon</artifactId>
-	<version>0.0.1</version>
+	<groupId>com.smartshaped.chameleon</groupId>
+	<artifactId>{layer}</artifactId>
+	<version>1.0.0</version>
 </dependency>
 ```
+
+- Where `{layer}` can be:
+	- `batch`
+	- `speed`
+	- `ml`
+	- `harvester`
+
 - Add the maven-shade-plugin to generate a shaded jar in order to submit your layer implementation as a Spark application (keep in mind the framework is based on Java 11)
 
 ```bash
@@ -50,13 +74,20 @@ mvn clean install
 							</filter>
 						</filters>
 						<transformers>
-							<transformer
-									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-									<resource>
-										META-INF/services/org.apache.spark.sql.sources.DataSourceRegister
-									</resource>
-							</transformer>
-						</transformers>
+						  <transformer                                                    
+              				implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+              				<manifestEntries>
+                				<Specification-Title> Java Advanced Imaging Image I/O Tools</Specification-Title>
+                				<Specification-Version>1.1</Specification-Version>          
+                				<Specification-Vendor> Sun Microsystems, Inc. </Specification-Vendor>
+                				<Implementation-Title> com.sun.media.imageio</Implementation-Title>
+                				<Implementation-Version> 1.1</Implementation-Version>       
+                				<Implementation-Vendor> Sun Microsystems, Inc.</Implementation-Vendor>
+                				<Multi-Release>true</Multi-Release>
+              				</manifestEntries>                                            
+            			 </transformer>
+                         <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                        </transformers>
 					</configuration>
 				</execution>
 			</executions>
@@ -65,111 +96,26 @@ mvn clean install
 </build>
 ```
 
-After this, you can choose to extend any of the following layers:
+After this, you can choose to extend any of the layers following their own documentation:
 
-- [Batch Layer](#batch-layer-documentation)
-- [Speed Layer](#speed-layer-documentation)
-- [ML Layer](#ml-layer-documentation)
-
-# Batch Layer Documentation
-
-## How to Develop a Batch Application
-
-To develop a batch application using the Batch Layer, follow these steps:
-
-### 1. Create a Class that Extends `com.smartshaped.chameleon.batch.com.smartshaped.chameleon.batch.BatchLayer`
-- Ensure that the class constructor is **public**.
-
-### 2. Create one or more Classes that Extend `com.smartshaped.chameleon.preprocessing.Preprocessor`
-- Declare this class in the YAML file along with the kafka topics configurations (batch.kafka.topics.<topic_name>.class).
-- Override the `preprocess` method to add custom preprocessing for the incoming streaming data.
-- You can define a Preprocessor for each of the declared kafka topics.
-
-### 3. Create a Class that Extends `com.smartshaped.chameleon.batch.com.smartshaped.chameleon.batch.BatchUpdater`
-- Ensure that the class constructor is **public**.
-- This is an optional step, create this class if you want to export some analysis/statisctics from your data.
-- Declare this class in the YAML file (batch.updater.class).
-- Override the `updateBatch` method to implement the specific logic (working on Spark Dataframe).
-- It will automatically save results on Cassandra DB.
-
-### 4. Create a Class that Extends `com.smartshaped.chameleon.common.com.smartshaped.chameleon.batch.utils.TableModel`
-- Define the table fields as class attributes.
-- Specify the name of the primary key as a **string**.
-- Create a `typeMapping.yml` file to define the mapping between Java field types and CQL (Cassandra Query Language) types.
-- Declare this class in the YAML file (batch.cassandra.model.class).
-
-### 5. Create a Class Containing the `main` Method
-- Call the `start` method of `com.smartshaped.chameleon.batch.BatchLayer` inside the `main` method.
-- Specify this class in the `spark-submit` command.
+- [Batch Layer](/chaM3Leon/batch/README.md)
+- [Speed Layer](/chaM3Leon/speed/README.md)
+- [ML Layer](/chaM3Leon/ml/README.md)
+- [Harvester Layer](/chaM3Leon/harvester/README.md)
 
 ---
 
-# Speed Layer Documentation
+### SpringBoot Layer
 
-## How to Develop a Speed Application
+The Serving Layer is based on SpringBoot 3.4.2 with Java 21.
 
-To develop a batch application using the Speed Layer, follow these steps:
-
-### 1. Create a Class that Extends `com.smartshaped.chameleon.speed.SpeedLayer`
-- Ensure that the class constructor is **public**.
-
-### 2. Create a Class that Extends `com.smartshaped.chameleon.speed.SpeedUpdater`
-- Ensure that the class constructor is **public**.
-- This class permits you to export some partial analysis/statisctics from your streaming data arrived during a window time.
-- Declare this class in the YAML file (speed.updater.class).
-- Override the `updateSpeed` method to implement the specific logic (working on Spark Dataframe).
-- It will automatically save results on Cassandra DB.
-
-### 3. Create a Class that Extends `com.smartshaped.chameleon.common.com.smartshaped.chameleon.batch.utils.TableModel`
-- Define the table fields as class attributes.
-- Specify the name of the primary key as a **string**.
-- Create a `typeMapping.yml` file to define the mapping between Java field types and CQL (Cassandra Query Language) types.
-- Declare this class in the YAML file (speed.cassandra.model.class).
-
-### 4. Create a Class Containing the `main` Method
-- Call the `start` method of `SpeedLayer` inside the `main` method.
-- Specify this class in the `spark-submit` command.
+To implement your own version of the Serving Layer you can follow the [Serving Layer documentation](/serving_chaM3Leon/README.md).
 
 ---
 
-# ML Layer Documentation
+## Execution Instructions (Spark Layers)
 
-## How to Develop an ML Application
-
-To develop a machine learning application using the ML Layer, follow these steps:
-
-### 1. Create a Class that Extends `com.smartshaped.chameleon.ml.MLLayer`
-- Ensure that the class constructor is **public**.
-
-### 2. Create at Least One Class that Extends `com.smartshaped.chameleon.ml.HdfsReader`
-- Ensure that the class constructor is **public**.
-- Declare this class in the YAML file along with the HDFS path from which the data will be read.
-- Optionally, override the `processRawData` method to add custom processing for the raw data.
-
-### 3. Create a Class that Extends `com.smartshaped.chameleon.ml.Pipeline`
-- Declare this class in the YAML file.
-- Override the `start` method to implement the specific machine learning logic. 
-  - Ensure that the `setModel` and `setPredictions` methods are called at the end of the pipeline.
-
-### 4. Create a Class that Extends `com.smartshaped.chameleon.ml.ModelSaver`
-- Ensure that the class constructor is **public**.
-- Declare this class in the YAML file.
-
-### 5. Create a Class that Extends `com.smartshaped.chameleon.common.com.smartshaped.chameleon.batch.utils.TableModel`
-- Define the table fields as class attributes.
-- Specify the name of the primary key as a **string**.
-- Create a `typeMapping.yml` file to define the mapping between Java field types and CQL (Cassandra Query Language) types.
-- Declare this class in the YAML file.
-
-### 6. Create a Class Containing the `main` Method
-- Call the `start` method of `MLLayer` inside the `main` method.
-- Specify this class in the `spark-submit` command.
-
----
-
-# Execution Instructions
-
-To generate the `.jar` file, run the following command from your project directory:
+To generate the `.jar` of your implemented layer (Batch, Speed, ML or Harvester), run the following command from your project directory:
 
 ```bash
 mvn clean install
@@ -179,12 +125,10 @@ Then go to our [Docker repository](https://github.com/Smart-Shaped/docker_chaM3L
 
 ---
 
-# Roadmap
+## Roadmap
 
-- Harvester (JAN 2025)
+- Serving Layer (MAR 2025)
 
-- API Gateway (MAR 2025)
-
-- Serving Layer (Q2 2025)
+- API Gateway (Q2 2025)
 
 - Workflow Designer (To be determined, probably Q3 2025)
