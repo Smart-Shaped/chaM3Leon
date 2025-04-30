@@ -109,6 +109,7 @@ The module includes standard Spring Boot error handling:
 - Exception handling for database connectivity issues
 
 ## Project Structure
+```
 serving_chaM3Leon/
 ├── src/
 │   ├── main/
@@ -124,6 +125,7 @@ serving_chaM3Leon/
 │       └── java/
 │           └── com/smartshaped/chameleon/serving/
 └── pom.xml
+```
 
 ## Contributing
 When contributing to this module, please ensure:
