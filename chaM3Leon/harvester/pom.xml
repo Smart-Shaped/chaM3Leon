@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.smartshaped</groupId>
         <artifactId>chameleon</artifactId>
-        <version>0.0.1</version>
+        <version>1.0.0</version>
     </parent>
 
     <groupId>com.smartshaped.chameleon</groupId>
