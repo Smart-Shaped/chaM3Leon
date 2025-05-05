@@ -1,7 +1,3 @@
-
-
-
-          
 # Harvester Layer - chaM3Leon Project
 
 ## Overview
