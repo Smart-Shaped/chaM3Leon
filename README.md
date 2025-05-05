@@ -127,8 +127,6 @@ Then go to our [Docker repository](https://github.com/Smart-Shaped/docker_chaM3L
 
 ## Roadmap
 
-- Serving Layer (MAR 2025)
+- API Gateway (To be determined)
 
-- API Gateway (Q2 2025)
-
-- Workflow Designer (To be determined, probably Q3 2025)
+- Workflow Designer (To be determined, probably Q3/Q4 2025)
