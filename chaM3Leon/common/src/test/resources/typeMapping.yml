@@ -1,0 +1,8 @@
+typeMapping:
+  int: "int"
+  Integer: "int"
+  String: "text"
+  long: "bigint"
+  Long: "bigint"
+  boolean: "boolean"
+  Boolean: "boolean"

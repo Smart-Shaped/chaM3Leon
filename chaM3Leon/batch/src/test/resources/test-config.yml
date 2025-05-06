@@ -1,0 +1,29 @@
+batch:
+  spark:
+    app-name: "batch"
+    master: "local[*]"
+    deploy-mode: "client"
+    interval-sec: 600
+    num-executors: 2
+    executor-cores: 2
+    executor-memory: "2g"
+    driver-memory: "1g"
+  updater:
+    name: "BatchUpdaterTestClass"
+    class: "com.smartshaped.chameleon.batch.BatchUpdaterTestClass"
+  cassandra:
+    model:
+      class: "ModelClassTest"
+  kafka:
+    broker: "kafka1:9092"
+    server: "kafkaservers"
+    intervalMs: 30000
+    topics:
+      topic1:
+        name: "topic1"
+        class: "com.smartshaped.chameleon.batch.PreprocessorTestClass"
+        path: "/topic1/data.parquet"
+        checkpoint: "/checkpoint/topic1"
+      topic2:
+        name: "topicTif"
+        class: "com.smartshaped.chameleon.batch.PreprocessorTestClass"
