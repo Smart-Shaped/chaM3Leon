@@ -359,7 +359,7 @@ public class MLConfigurationUtils extends ConfigurationUtils {
    * @throws ConfigurationException if there is an error retrieving any argument value.
    */
   public Map<String, String> getBlackboxPythonExtraArguments() throws ConfigurationException {
-    Map<String, String> params = new HashMap<>();
+    Map<String, String> params = new LinkedHashMap<>();
 
     Iterator<String> iterator = config.getKeys(ML_BLACK_BOX_PYTHON_EXTRA_ARGUMENTS);
     if (!iterator.hasNext()) {
