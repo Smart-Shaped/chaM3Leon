@@ -1,0 +1,3 @@
+env: test
+
+include: ${env}-config.yml

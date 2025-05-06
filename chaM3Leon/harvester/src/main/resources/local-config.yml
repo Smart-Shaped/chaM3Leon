@@ -1,0 +1,95 @@
+harvester:
+  RequestHandler: "default"
+  downloader:
+    CopernicusTifDownloader:
+      params:
+        variables: "Snow-CoverFraction-layer,Shrub-CoverFraction-layer"
+      path:
+        hdfs-path: "/user/spark/Downloads/CopernicusMaps"
+      url:
+        base-url: "https://s3-eu-west-1.amazonaws.com/vito.landcover.global/v3.0.1/"
+        url-suffix: "_PROBAV_LC100_global_v3.0.1_%s_%s_EPSG-4326.tif"
+    NasaParallelDownloader:
+      params:
+        start: "20100101"
+        end: "20100201"
+        community: "ag"
+        parameters: "PSC,PRECTOTCORR,T2M"
+        header: "true"
+        time-standard: "lst"
+        site-elevation: "0"
+      url:
+        schema: "https"
+        authority: "power.larc.nasa.gov"
+        path: "/api/temporal/hourly/point"
+  preprocessor:
+    CopernicusTifPreprocessor:
+      params:
+        downloader: "CopernicusTifDownloader"
+    TifRescalerPreprocessor:
+      params:
+        splittingFactorX: "64"
+        splittingFactorY: "64"
+        rescalingFactorX: "0.01"
+        rescalingFactorY: "0.01"
+  harvesters:
+    harvester1:
+      inputPath: ""
+      class: "com.smartshaped.chameleon.harvesterdemo.harvesters.CopernicusTifHarvester"
+      downloader:
+        class: "com.smartshaped.chameleon.harvesterdemo.downloader.CopernicusTifDownloader"
+      preprocessor: "com.smartshaped.chameleon.harvesterdemo.preprocessor.CopernicusTifPreprocessor"
+      saver:
+        class: "HarvesterSaver"
+        path: "/user/spark/Processed/TifCopernicus"
+        checkpoint: ""
+    harvester2:
+      inputPath: "/user/spark/Processed/TifCopernicus"
+      class: "com.smartshaped.chameleon.harvesterdemo.harvesters.NasaJsonHarvester"
+      downloader:
+        class: "com.smartshaped.chameleon.harvesterdemo.downloader.NasaParallelDownloader"
+      preprocessor: "com.smartshaped.chameleon.harvesterdemo.preprocessor.JsonCoordinateValuesUnion"
+      saver:
+        class: "HarvesterSaver"
+        path: "/user/spark/Processed/JsonNasa"
+        checkpoint: ""
+  spark:
+    app:
+      name: "harvester-application"
+    yarn:
+      am:
+        cores: 2
+        memory: "2G"
+    driver:
+      memory: "1G"
+      cores: 1
+    executor:
+      memory: "10G"
+      instances: 1
+      cores: 2
+    serializer: "org.apache.spark.serializer.KryoSerializer"
+    sql:
+      parquet:
+        compression:
+          codec: "zstd"
+    hadoop:
+      parquet:
+        page:
+          size:
+            row:
+              check:
+                min: 2
+                max: 10
+      dfs:
+        replication: 1
+    cassandra:
+      connection:
+        host: "cassandra1"
+        port: "9042"
+  cassandra:
+    model:
+      class: ""
+    datacenter: "datacenter1"
+    keyspace:
+      name: "harvester_keyspace"
+      replication_factor: 1
