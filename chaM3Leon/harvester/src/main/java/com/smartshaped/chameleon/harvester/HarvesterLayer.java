@@ -163,7 +163,9 @@ public class HarvesterLayer {
   private void closeConnections() {
     this.handler.closeConnection();
     this.sparkSession.close();
-    Runtime.getRuntime().removeShutdownHook(this.shutdownHook);
+    if (this.shutdownHook != null){
+      Runtime.getRuntime().removeShutdownHook(this.shutdownHook);
+    }
   }
 
   /**
