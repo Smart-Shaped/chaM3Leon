@@ -1,0 +1,65 @@
+speed:
+  spark:
+    app:
+      name: "ml-application"
+    master: "local[*]"
+    yarn:
+      am:
+        cores: 1
+        memory: "512m"
+        memoryOverhead: "384m"
+    driver:
+      memory: "512m"
+      memoryOverhead: "384m"
+      cores: 1
+      maxResultSize: "1g"
+    executor:
+      memoryOverhead: "384m"
+      memory: ""
+      instances: 2
+      cores: 1
+    serializer: "org.apache.spark.serializer.KryoSerializer"
+    memory:
+      fraction: 0.7
+      storageFraction: 0.5
+      offHeap:
+        enabled: true
+        size: "1g"
+    sql:
+      parquet:
+        compression:
+          codec: "zstd"
+      shuffle:
+        partitions: 200
+    hadoop:
+      parquet:
+        page:
+          size:
+            row:
+              check:
+                min: 2
+                max: 10
+      dfs:
+        replication: 1
+  cassandra:
+    model:
+      class: "com.smartshaped.chameleon.speed.utils.TableModelExample"
+    node: "127.0.0.1"
+    port: "9042"
+    datacenter: "datacenter1"
+    keyspace:
+      name: "test"
+      replication_factor: 1
+  kafka:
+    broker: "kafka1:9092"
+    server: "kafkaservers"
+    intervalMs: "30000"
+    topics:
+      topic1:
+        name: "topic1"
+        class: null
+      topic2:
+        name: "topicTif"
+        class: "TifProcessor"
+  updater:
+    class: "com.smartshaped.chameleon.speed.SpeedUpdaterTestClass"

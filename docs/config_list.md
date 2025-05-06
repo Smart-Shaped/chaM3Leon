@@ -28,7 +28,7 @@ The following configurations are shared between Batch and Speed layers:
 
 ```yml
 {layer}.kafka.server                                # Specifies the Kafka server in hostname:port format
-{layer}.kafka.intervalMs                            # Defines the interval in milliseconds between consecutive Kafka reads
+{layer}.kafka.intervalMs                            # Defines the interval in milliseconds between consecutive Kafka reads and the execution interval of the choosen Layer
 {layer}.kafka.topics.{topic_identifier}.name        # Specifies the Kafka topic name
 {layer}.kafka.topics.{topic_identifier}.class       # Specifies the fully qualified class name of the preprocessor for Kafka topic data, including package path
 {layer}.kafka.topics.{topic_identifier}.path        # Defines the destination path for storing data from the Kafka topic

@@ -23,7 +23,7 @@ Each application's `pom.xml` should follow these conventions:
 
 ## Batch Application
 
-- **Updater Class**: `{base_package}.{project_id}.batch.{project_id}BatchUpdater`
+- **Updater Class**: `{base_package}.{project_id}.batch.{project_id}com.smartshaped.chameleon.batch.BatchUpdater`
 - **Preprocessor Class**: `{base_package}.{project_id}.batch.{project_id}BatchPreprocessor`
 - **Cassandra Model Class**: `{base_package}.{project_id}.batch.model.{table_name}`
 
