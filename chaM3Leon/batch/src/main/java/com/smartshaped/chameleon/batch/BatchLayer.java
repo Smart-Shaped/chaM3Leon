@@ -80,13 +80,14 @@ public abstract class BatchLayer {
    * @throws PreprocessorException If an error occurs during data preprocessing.
    * @throws HdfsSaverException If an error occurs while saving data to HDFS.
    * @throws BatchLayerException If an error occurs in the com.smartshaped.chameleon.batch.BatchLayer process.
+   * @throws ConfigurationException If an error occurs while loading the configuration.
    */
   public void start()
       throws KafkaConsumerException,
           BatchUpdaterException,
           PreprocessorException,
           HdfsSaverException,
-          BatchLayerException {
+          BatchLayerException, ConfigurationException {
     logger.info("Starting com.smartshaped.chameleon.batch.BatchLayer...");
 
     Dataset<Row> df = KafkaConsumer.kafkaRead(kafkaConfig);

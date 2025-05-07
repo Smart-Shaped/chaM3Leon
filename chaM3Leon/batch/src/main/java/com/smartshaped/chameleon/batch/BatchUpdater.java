@@ -63,10 +63,12 @@ public abstract class BatchUpdater {
    * @param df the streaming Dataset<Row>
    * @param intervalMs the interval in milliseconds
    * @throws BatchUpdaterException if an error occurs while executing the update
+   * @throws ConfigurationException if an error occurs while loading the configuration
    */
-  public void startUpdate(Dataset<Row> df, Long intervalMs) throws BatchUpdaterException {
+  public void startUpdate(Dataset<Row> df, Long intervalMs) throws BatchUpdaterException, ConfigurationException {
 
     SparkSession sparkSession = SparkSession.getActiveSession().get();
+    String checkpoint = configurationUtils.getCassandraCheckpoint();
 
     try {
       df.writeStream()
@@ -77,6 +79,7 @@ public abstract class BatchUpdater {
                 saveBatch(updatedDF);
               })
           .trigger(Trigger.ProcessingTime(intervalMs))
+          .option("checkpointLocation", checkpoint)
           .start();
     } catch (TimeoutException e) {
       throw new BatchUpdaterException("Error executing update", e);

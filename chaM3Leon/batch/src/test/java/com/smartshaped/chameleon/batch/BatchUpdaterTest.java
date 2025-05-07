@@ -25,10 +25,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.smartshaped.chameleon.batch.exception.BatchUpdaterException;
 import com.smartshaped.chameleon.batch.utils.BatchConfigurationUtils;
-import com.smartshaped.chameleon.common.utils.exception.CassandraException;
-import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 import com.smartshaped.chameleon.common.utils.CassandraUtils;
 import com.smartshaped.chameleon.common.utils.TableModel;
+import com.smartshaped.chameleon.common.utils.exception.CassandraException;
+import com.smartshaped.chameleon.common.utils.exception.ConfigurationException;
 
 @ExtendWith(MockitoExtension.class)
 class BatchUpdaterTest {
@@ -42,17 +42,21 @@ class BatchUpdaterTest {
   @Mock DataStreamWriter<Row> mockDataStreamWriter;
   @Mock private StreamingQueryManager streamingQueryManager;
   @Mock private scala.Option<SparkSession> option;
+  private String checkpoint = "checkpoint";
 
   @Test
   void testStartUpdateSuccess() throws ConfigurationException, CassandraException {
 
     when(configurationUtils.getModelClassName()).thenReturn(modelName);
     when(configurationUtils.createTableModel(modelName)).thenReturn(tableModel);
+    when(configurationUtils.getCassandraCheckpoint()).thenReturn(checkpoint);
     doNothing().when(cassandraUtils).validateTableModel(tableModel);
     when(dataFrame.writeStream()).thenReturn(mockDataStreamWriter);
     when(mockDataStreamWriter.foreachBatch(any(VoidFunction2.class)))
         .thenReturn(mockDataStreamWriter);
     when(mockDataStreamWriter.trigger(any())).thenReturn(mockDataStreamWriter);
+    when(mockDataStreamWriter.option("checkpointLocation", checkpoint))
+        .thenReturn(mockDataStreamWriter);
 
     try (MockedStatic<BatchConfigurationUtils> mockedStatic =
             mockStatic(BatchConfigurationUtils.class);
@@ -79,11 +83,14 @@ class BatchUpdaterTest {
 
     when(configurationUtils.getModelClassName()).thenReturn(modelName);
     when(configurationUtils.createTableModel(modelName)).thenReturn(tableModel);
+    when(configurationUtils.getCassandraCheckpoint()).thenReturn(checkpoint);
     doNothing().when(cassandraUtils).validateTableModel(tableModel);
     when(dataFrame.writeStream()).thenReturn(mockDataStreamWriter);
     when(mockDataStreamWriter.foreachBatch(any(VoidFunction2.class)))
         .thenReturn(mockDataStreamWriter);
     when(mockDataStreamWriter.trigger(any())).thenReturn(mockDataStreamWriter);
+    when(mockDataStreamWriter.option("checkpointLocation", checkpoint))
+        .thenReturn(mockDataStreamWriter);
     when(sparkSession.streams()).thenReturn(streamingQueryManager);
     doThrow(StreamingQueryException.class).when(streamingQueryManager).awaitAnyTermination();
 
@@ -111,11 +118,14 @@ class BatchUpdaterTest {
 
     when(configurationUtils.getModelClassName()).thenReturn(modelName);
     when(configurationUtils.createTableModel(modelName)).thenReturn(tableModel);
+    when(configurationUtils.getCassandraCheckpoint()).thenReturn(checkpoint);
     doNothing().when(cassandraUtils).validateTableModel(tableModel);
     when(dataFrame.writeStream()).thenReturn(mockDataStreamWriter);
     when(mockDataStreamWriter.foreachBatch(any(VoidFunction2.class)))
         .thenReturn(mockDataStreamWriter);
     when(mockDataStreamWriter.trigger(any())).thenReturn(mockDataStreamWriter);
+    when(mockDataStreamWriter.option("checkpointLocation", checkpoint))
+        .thenReturn(mockDataStreamWriter);
     when(mockDataStreamWriter.start()).thenThrow(TimeoutException.class);
 
     try (MockedStatic<BatchConfigurationUtils> mockedStatic =
