@@ -125,6 +125,14 @@ Then go to our [Docker repository](https://github.com/Smart-Shaped/docker_chaM3L
 
 ---
 
+## Additional Resources
+
+- [Presentation of ChaM3Leon Framework](https://www.youtube.com/watch?v=wtVyYUDlRQc)
+
+- [ChaM3Leon demo about Batch, Speed and ML Layer](https://www.youtube.com/watch?v=UjzYc9C1krU)
+
+- [ChaM3Leon demo about Harvester and ML Layer](https://www.youtube.com/watch?v=pwE223S0-oU)
+
 ## Roadmap
 
 - API Gateway (To be determined)
