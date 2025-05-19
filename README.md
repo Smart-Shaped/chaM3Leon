@@ -125,7 +125,9 @@ Then go to our [Docker repository](https://github.com/Smart-Shaped/docker_chaM3L
 
 ---
 
-## Additional Resources
+## Additional Video Resources
+
+###	Youtube:
 
 - [Presentation of ChaM3Leon Framework](https://www.youtube.com/watch?v=wtVyYUDlRQc)
 
