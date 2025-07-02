@@ -1,4 +1,4 @@
-# chaM3Leon: A Modular Framework for Machine Learning Applications
+# chaM3Leon: A Modular Framework for Big Data and ML Applications
 
 A modular and scalable framework based on Java and Apache Spark, designed to support machine learning applications. ChaM3Leon emphasizes transparency, interoperability, and usability. It implements a custom Lambda architecture for real-time and batch data processing, providing a robust platform for Big Data and MLOps.
 
