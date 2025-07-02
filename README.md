@@ -1,10 +1,18 @@
-# chaM3Leon
+# chaM3Leon: A Modular Framework for Big Data and ML Applications
 
-A modular and scalable framework designed to support machine learning applications - emphasising transparency, interoperability, and usability. It implements a custom Lambda architecture, and additional components designed to tackle the limitation of the Speed-Batch coupling for data ingestion and processing.
+A modular and scalable framework based on Java and Apache Spark, designed to support machine learning applications. ChaM3Leon emphasizes transparency, interoperability, and usability. It implements a custom Lambda architecture for real-time and batch data processing, providing a robust platform for Big Data and MLOps.
 
 The chaM3Leon architecture is illustrated in the following Component Diagram, highlighting the connections between layers through provided and required interfaces.
 
 ![chaM3Leon architecture](docs/chaM3LeonCD.png)
+
+## Features
+
+*   **Modular Architecture**: Easily extend and customize layers for your specific needs.
+*   **Scalable**: Built on Apache Spark to handle large-scale data processing.
+*   **Lambda Architecture**: Combines batch and speed layers for efficient data handling.
+*   **Extensible**: Add new layers and components to your application with ease.
+*   **Multiple Layers**: Includes Batch, Speed, ML, and Harvester layers for a full data pipeline.
 
 As of now, we have released three layers (Batch Layer, Speed Layer, ML Layer and Harvester Layer). You can refer to our [roadmap](#roadmap) to see the planned release dates for other components.
 
@@ -28,10 +36,12 @@ Spark Layers are based on Apache Spark with Java 11 and are designed to run on a
 To implement your own version of any Spark Layer you have to:
 
 - Build the project running at the level of the chaM3Leon pom.xml the following command:
+
 ```bash
 mvn clean install
 ```
-- Generate a Maven project and add the chaM3Leon layer you want to implement as dependency on your maven pom.xml as below: 
+
+- Generate a Maven project and add the chaM3Leon layer you want to implement as dependency on your maven pom.xml as below:
 
 ```bash
 <dependency>
@@ -41,11 +51,11 @@ mvn clean install
 </dependency>
 ```
 
-- Where `{layer}` can be:
-	- `batch`
-	- `speed`
-	- `ml`
-	- `harvester`
+- Where {layer} can be:
+    - batch
+    - speed
+    - ml
+    - harvester
 
 - Add the maven-shade-plugin to generate a shaded jar in order to submit your layer implementation as a Spark application (keep in mind the framework is based on Java 11)
 
@@ -124,6 +134,14 @@ mvn clean install
 Then go to our [Docker repository](https://github.com/Smart-Shaped/docker_chaM3Leon) and follow the [Docker documentation](https://github.com/Smart-Shaped/docker_chaM3Leon/blob/public/README.md)
 
 ---
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a pull request.
+
+## License
+
+This project is licensed under the [Apache-2.0 license](LICENSE).
 
 ## Additional Video Resources
 
