@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.smartshaped</groupId>
 	<artifactId>chameleon</artifactId>
-	<version>1.0.0</version>
+	<version>2.0.0</version>
 	<packaging>pom</packaging>
 	<name>chameleon</name>
 	<description>chaM3Leon Framework</description>
@@ -12,7 +12,6 @@
 		<module>batch</module>
 		<module>common</module>
 		<module>harvester</module>
-		<module>ml</module>
 		<module>speed</module>
 	</modules>
 
