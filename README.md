@@ -1,10 +1,10 @@
 # chaM3Leon: A Modular Framework for Big Data and ML Applications
 
-A modular and scalable framework based on Java and Apache Spark, designed to support machine learning applications. ChaM3Leon emphasizes transparency, interoperability, and usability. It implements a custom Lambda architecture for real-time and batch data processing, providing a robust platform for Big Data and MLOps.
+A modular and scalable framework based on Java, Python and Apache Spark, designed to support machine learning applications. ChaM3Leon emphasizes transparency, interoperability, and usability. It implements a custom Lambda architecture for real-time and batch data processing, providing a robust platform for Big Data and MLOps.
 
 The chaM3Leon architecture is illustrated in the following Component Diagram, highlighting the connections between layers through provided and required interfaces.
 
-![chaM3Leon architecture](docs/chaM3LeonCD.png)
+![chaM3Leon architecture](docs/chaM3LeonCDv2.png)
 
 ## Features
 
@@ -14,20 +14,22 @@ The chaM3Leon architecture is illustrated in the following Component Diagram, hi
 *   **Extensible**: Add new layers and components to your application with ease.
 *   **Multiple Layers**: Includes Batch, Speed, ML, and Harvester layers for a full data pipeline.
 
-As of now, we have released three layers (Batch Layer, Speed Layer, ML Layer and Harvester Layer). You can refer to our [roadmap](#roadmap) to see the planned release dates for other components.
+As of now, we have released four layers (Batch Layer, Speed Layer, Harvester Layer and ML Layer). You can refer to our [roadmap](#roadmap) to see the planned release dates for other components.
 
 ## Implementation
 
-The chaM3Leon framework is based on Java and Maven. It is designed to be modular and scalable, allowing you to easily add new layers and components to your application.
+The chaM3Leon core framework is based on Java and Maven. It is designed to be modular and scalable, allowing different components and layers to be easily integrated.
 
-Here layers can be divided into two types:
-- Spark Layers:
-	- Batch Layer
-	- Speed Layer
-	- ML Layer
-	- Harvester Layer
-- SpringBoot Layer:
-	- Serving Layer
+The layers can be divided based on their implementation technology:
+- Java Layers (Main Framework):
+	- Spark-based:
+		- Batch Layer
+		- Speed Layer
+		- Harvester Layer
+	- SpringBoot-based:
+		- Serving Layer
+- Python Layer (as Git Submodule):
+	- ML Layer: This layer is now implemented as a separate Python library, managed as a Git submodule. It leverages modern MLOps tools including Metaflow, MLflow, and Apache Spark for building and managing machine learning pipelines.
 
 ### Spark Layers
 
@@ -47,14 +49,13 @@ mvn clean install
 <dependency>
 	<groupId>com.smartshaped.chameleon</groupId>
 	<artifactId>{layer}</artifactId>
-	<version>1.0.0</version>
+	<version>2.0.0</version>
 </dependency>
 ```
 
 - Where {layer} can be:
     - batch
     - speed
-    - ml
     - harvester
 
 - Add the maven-shade-plugin to generate a shaded jar in order to submit your layer implementation as a Spark application (keep in mind the framework is based on Java 11)
@@ -110,7 +111,6 @@ After this, you can choose to extend any of the layers following their own docum
 
 - [Batch Layer](/chaM3Leon/batch/README.md)
 - [Speed Layer](/chaM3Leon/speed/README.md)
-- [ML Layer](/chaM3Leon/ml/README.md)
 - [Harvester Layer](/chaM3Leon/harvester/README.md)
 
 ---
@@ -120,6 +120,14 @@ After this, you can choose to extend any of the layers following their own docum
 The Serving Layer is based on SpringBoot 3.4.2 with Java 21.
 
 To implement your own version of the Serving Layer you can follow the [Serving Layer documentation](/serving_chaM3Leon/README.md).
+
+---
+
+### Python Layer
+
+The ML Layer is implemented as a Python library, managed as a Git submodule. It leverages Metaflow, MLflow, and Apache Spark.
+
+To implement or extend your machine learning pipelines, you can follow the [PyChaM3Leon documentation](https://github.com/Smart-Shaped/PyChaM3Leon/blob/public/README.md).
 
 ---
 
