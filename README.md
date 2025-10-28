@@ -186,11 +186,10 @@ This project is licensed under the [Apache-2.0 license](LICENSE).
 
 ###	Youtube:
 
-- [Presentation of ChaM3Leon Framework](https://www.youtube.com/watch?v=wtVyYUDlRQc)
+- [Presentation of ChaM3Leon Framework](https://www.youtube.com/watch?v=wtVyYUDlRQc) (Work in progress)
 
-- [ChaM3Leon demo about Batch, Speed and ML Runner](https://www.youtube.com/watch?v=UjzYc9C1krU)
+- [ChaM3Leon demo about Batch and Speed](https://www.youtube.com/watch?v=UjzYc9C1krU) (Work in progress)
 
-- [ChaM3Leon demo about Harvester and ML Runner](https://www.youtube.com/watch?v=pwE223S0-oU)
 
 ## Roadmap
 
