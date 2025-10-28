@@ -1,10 +1,37 @@
 # chaM3Leon: A Modular Framework for Big Data and ML Applications
 
-A modular and scalable framework based on Java, Python and Apache Spark, designed to support machine learning applications. ChaM3Leon emphasizes transparency, interoperability, and usability. It implements a custom Lambda architecture for real-time and batch data processing, providing a robust platform for Big Data and MLOps.
+> **New to chaM3Leon?** Start with our [Executive Summary](SUMMARY.md) for a quick overview, or dive into the [Value Proposition](VALUE_PROPOSITION.md) to understand why chaM3Leon is the right choice for your Big Data projects.
 
-The chaM3Leon architecture is illustrated in the following Component Diagram, highlighting the connections between layers through provided and required interfaces.
+A modular and scalable framework based on Java, Python and Apache Spark, designed to support machine learning applications. ChaM3Leon emphasizes transparency, interoperability, and usability. 
 
-![chaM3Leon architecture](docs/chaM3LeonCDv2.png)
+It implements a custom Lambda Architecture for parallel real-time (Speed Layer) and batch (Batch Layer) data processing. This design ensures both data completeness (via HDFS) and low-latency analysis (via Cassandra), providing a resilient platform for Big Data and MLOps.
+
+ChaM3Leon emphasizes transparency, interoperability, and usability by leveraging:
+- Apache Kafka for high-throughput, decoupled data ingestion.
+- Apache Spark across all processing layers (Batch, Speed, Harvester) for scalable computation.
+- Cassandra for storing and unifying historical and real-time analytical results.
+- MLflow within the ML Runner component for seamless ML model serving and lifecycle management.
+- A Spring Boot-based Serving Layer for exposing clean, unified analytical APIs.
+
+The ChaM3Leon architecture is illustrated in the following image, highlighting the connections between layers:
+
+![chaM3Leon architecture](docs/CM3Lv2.png)
+
+---
+
+## Complete Documentation
+
+For comprehensive guides, tutorials, and detailed explanations, visit our **[Documentation Hub](docs/README.md)** which includes:
+
+- **[Executive Summary](SUMMARY.md)** - Quick overview for decision makers
+- **[Getting Started Guide](docs/GETTING_STARTED.md)** - Step-by-step tutorial for your first project
+- **[Architecture Overview](docs/ARCHITECTURE.md)** - Understanding chaM3Leon's design (non-technical)
+- **[Use Cases](docs/USE_CASES.md)** - Real-world application examples
+- **[Value Proposition](VALUE_PROPOSITION.md)** - Why choose chaM3Leon
+- **[FAQ](docs/FAQ.md)** - Frequently asked questions and troubleshooting
+- **[Configuration Guide](docs/CONFIG_LIST.md)** - Complete configuration reference
+
+---
 
 ## Features
 
@@ -12,13 +39,15 @@ The chaM3Leon architecture is illustrated in the following Component Diagram, hi
 *   **Scalable**: Built on Apache Spark to handle large-scale data processing.
 *   **Lambda Architecture**: Combines batch and speed layers for efficient data handling.
 *   **Extensible**: Add new layers and components to your application with ease.
-*   **Multiple Layers**: Includes Batch, Speed, ML, and Harvester layers for a full data pipeline.
+*   **Multiple Layers**: Includes Batch, Speed, ML Runner, and Harvester layers for a full data pipeline.
 
-As of now, we have released four layers (Batch Layer, Speed Layer, Harvester Layer and ML Layer). You can refer to our [roadmap](#roadmap) to see the planned release dates for other components.
+> **Want to know more about the value proposition?** Check out our [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) for a comprehensive overview of why chaM3Leon is the right choice for your Big Data and ML projects.
+
+As of now, we have released five layers (Batch Layer, Speed Layer, Harvester Layer, Serving Layer and ML Runner). You can refer to our [roadmap](#roadmap) to see the planned release dates for other components.
 
 ## Implementation
 
-The chaM3Leon core framework is based on Java and Maven. It is designed to be modular and scalable, allowing different components and layers to be easily integrated.
+The chaM3Leon core framework is based on Java, Maven and Python. It is designed to be modular and scalable, allowing different components and layers to be easily integrated.
 
 The layers can be divided based on their implementation technology:
 - Java Layers (Main Framework):
@@ -29,7 +58,9 @@ The layers can be divided based on their implementation technology:
 	- SpringBoot-based:
 		- Serving Layer
 - Python Layer (as Git Submodule):
-	- ML Layer: This layer is now implemented as a separate Python library, managed as a Git submodule. It leverages modern MLOps tools including Metaflow, MLflow, and Apache Spark for building and managing machine learning pipelines.
+	- ML Runner
+	
+> **ML Runner Documentation**: For detailed information about the ML Runner (Python layer), visit the [PyChaM3Leon repository](https://github.com/Smart-Shaped/PyChaM3Leon).
 
 ### Spark Layers
 
@@ -125,7 +156,7 @@ To implement your own version of the Serving Layer you can follow the [Serving L
 
 ### Python Layer
 
-The ML Layer is implemented as a Python library, managed as a Git submodule. It leverages Metaflow, MLflow, and Apache Spark.
+The ML Runner is implemented as a Python library, managed as a Git submodule. It leverages modern MLOps tools including Metaflow, MLflow, and Apache Spark for building and managing machine learning pipelines.
 
 To implement or extend your machine learning pipelines, you can follow the [PyChaM3Leon documentation](https://github.com/Smart-Shaped/PyChaM3Leon/blob/public/README.md).
 
@@ -133,10 +164,10 @@ To implement or extend your machine learning pipelines, you can follow the [PyCh
 
 ## Execution Instructions (Spark Layers)
 
-To generate the `.jar` of your implemented layer (Batch, Speed, ML or Harvester), run the following command from your project directory:
+To generate the `.jar` of your implemented layer (Batch, Speed, or Harvester), run the following command from your project directory:
 
 ```bash
-mvn clean install
+mvn clean package
 ```
 
 Then go to our [Docker repository](https://github.com/Smart-Shaped/docker_chaM3Leon) and follow the [Docker documentation](https://github.com/Smart-Shaped/docker_chaM3Leon/blob/public/README.md)
@@ -157,12 +188,14 @@ This project is licensed under the [Apache-2.0 license](LICENSE).
 
 - [Presentation of ChaM3Leon Framework](https://www.youtube.com/watch?v=wtVyYUDlRQc)
 
-- [ChaM3Leon demo about Batch, Speed and ML Layer](https://www.youtube.com/watch?v=UjzYc9C1krU)
+- [ChaM3Leon demo about Batch, Speed and ML Runner](https://www.youtube.com/watch?v=UjzYc9C1krU)
 
-- [ChaM3Leon demo about Harvester and ML Layer](https://www.youtube.com/watch?v=pwE223S0-oU)
+- [ChaM3Leon demo about Harvester and ML Runner](https://www.youtube.com/watch?v=pwE223S0-oU)
 
 ## Roadmap
 
-- API Gateway (To be determined)
+- **Harvester in Python** (Q2 2026): Python-based implementation for more flexible data collection
 
-- Workflow Designer (To be determined, probably Q3/Q4 2025)
+- **Serving in Django** (Q3 2026): Modern web framework for API serving and web interfaces
+
+- **Workflow Designer** (Q4 2026): Visual tool for designing and managing data pipelines without code
