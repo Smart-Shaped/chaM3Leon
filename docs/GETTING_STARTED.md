@@ -98,54 +98,6 @@ This starts:
 
 Let's create a simple project that uses the **Batch Layer** to process data.
 
-### Compilazione del Framework
-
-```bash
-# Naviga nella cartella chaM3Leon
-cd chaM3Leon
-
-# Compila il framework
-mvn clean install
-```
-
-This command:
-
-Downloads all necessary dependencies
-
-Compiles the source code
-
-Runs the tests
-
-Creates usable JAR files
-
-**Note:** The first compilation may take a few minutes because Maven downloads all dependencies.
-
-## Phase 2: Environment Setup
-
-### Recommended Option: Using Docker
-
-The easiest way to start is using Docker, which automatically configures all necessary services.
-
-```bash
-# Clone the Docker repository
-git clone https://github.com/Smart-Shaped/docker_chaM3Leon.git
-cd docker_chaM3Leon
-
-# Start all services
-docker-compose up -d
-```
-
-This starts:
-- **Apache Kafka**: For data streaming
-- **Apache Cassandra**: For persistence
-- **HDFS**: For distributed storage
-- **Hadoop Yarn**: For distributed execution
-- **Spark Cluster**:For processing
-
-## Phase 3: Your First Project
-
-Let's create a simple project that uses the **Batch Layer** to process data.
-
 ### Project Structure
 
 ```bash
@@ -156,7 +108,7 @@ my-chameleon-app-batch/
 │       ├── java/
 │       │   └── com/
 │       │       └── mycompany/
-│       │           └── my-app/
+│       │           └── demo/
 │       │               └── batch/
 │       │                   ├── DemoApp.java
 │       │                   ├── DemoBatchLayer.java
@@ -248,10 +200,10 @@ my-chameleon-app-batch/
 
 ### 2. Create the Data Model
 
-File: `src/main/java/com/mycompany/demo/model/MyDataModel.java`
+File: `src/main/java/com/mycompany/demo/batch/model/MyDataModel.java`
 
 ```java
-package com.mycompany.demo.model;
+package com.mycompany.demo.batch.model;
 
 import com.smartshaped.chameleon.common.utils.TableModel;
 import lombok.Data;
@@ -272,10 +224,10 @@ public class MyDataModel extends TableModel {
 
 ### 3. Create the Preprocessor
 
-File: `src/main/java/com/mycompany/demo/DemoPreprocessor.java`
+File: `src/main/java/com/mycompany/demo/batch/DemoPreprocessor.java`
 
 ```java
-package com.mycompany.demo;
+package com.mycompany.demo.batch;
 
 import com.smartshaped.chameleon.common.preprocessing.Preprocessor;
 import org.apache.spark.sql.Dataset;
@@ -293,10 +245,10 @@ public class DemoPreprocessor extends Preprocessor {
 
 ### 4. Create the Batch Updater (Optional)
 
-File: `src/main/java/com/mycompany/demo/DemoBatchUpdater.java`
+File: `src/main/java/com/mycompany/demo/batch/DemoBatchUpdater.java`
 
 ```java
-package com.mycompany.demo;
+package com.mycompany.demo.batch;
 
 import com.smartshaped.chameleon.batch.BatchUpdater;
 import org.apache.spark.sql.Dataset;
@@ -319,10 +271,10 @@ public class DemoBatchUpdater extends BatchUpdater {
 
 ### 5. Create the Batch Layer
 
-File: `src/main/java/com/mycompany/demo/DemoBatchLayer.java`
+File: `src/main/java/com/mycompany/demo/batch/DemoBatchLayer.java`
 
 ```java
-package com.mycompany.demo;
+package com.mycompany.demo.batch;
 
 import com.smartshaped.chameleon.batch.BatchLayer;
 
@@ -336,10 +288,10 @@ public class DemoBatchLayer extends BatchLayer {
 
 ### 6. Create the Main Class
 
-File: `src/main/java/com/mycompany/demo/DemoApp.java`
+File: `src/main/java/com/mycompany/demo/batch/DemoApp.java`
 
 ```java
-package com.mycompany.demo;
+package com.mycompany.demo.batch;
 
 public class DemoApp {
     
@@ -367,12 +319,12 @@ batch:
     topics:
       demo-topic:
         name: "demo-topic"
-        class: "com.mycompany.demo.DemoPreprocessor"
+        class: "com.mycompany.demo.batch.DemoPreprocessor"
         path: "/data/demo"
         checkpoint: "/checkpoints/demo"
   
   cassandra:
-    model.class: "com.mycompany.demo.model.MyDataModel"
+    model.class: "com.mycompany.demo.batch.model.MyDataModel"
     datacenter: "datacenter1"
     keyspace:
       name: "demo_keyspace"
@@ -380,7 +332,7 @@ batch:
     checkpoint: "/checkpoints/cassandra"
   
   updater:
-    class: "com.mycompany.demo.DemoBatchUpdater"
+    class: "com.mycompany.demo.batch.DemoBatchUpdater"
 ```
 
 File: `src/main/resources/typeMapping.yml`
@@ -407,7 +359,7 @@ This creates a JAR file in `target/demo-batch-1.0.0.jar`
 
 ```bash
 spark-submit \
-  --class com.mycompany.demo.DemoApp \
+  --class com.mycompany.demo.batch.DemoApp \
   --master yarn --deploy-mode cluster \
   ./extra_jars/demo-batch-1.0.0.jar
 ```
@@ -416,7 +368,7 @@ spark-submit \
 
 ```bash
 spark-submit \
-  --class com.mycompany.demo.DemoApp \ 
+  --class com.mycompany.demo.batch.DemoApp \ 
   --master yarn --deploy-mode client \
   ./extra_jars/demo-batch-1.0.0.jar
 ```
@@ -425,7 +377,7 @@ spark-submit \
 
 ```bash
 spark-submit \
-  --class com.mycompany.demo.DemoApp \
+  --class com.mycompany.demo.batch.DemoApp \
   --master local[*] \
   target/demo-batch-1.0.0.jar
 ```
@@ -434,7 +386,7 @@ spark-submit \
 
 ```bash
 spark-submit \
-  --class com.mycompany.demo.DemoApp \
+  --class com.mycompany.demo.batch.DemoApp \
   --master spark://your-spark-master:7077 \
   --deploy-mode cluster \
   target/demo-batch-1.0.0.jar
@@ -549,7 +501,7 @@ Congratulations! You've created your first chaM3Leon application.
 If you have questions or problems:
 1. Check this documentation
 2. Consult the video tutorials
-3. Open an issue on GitHub
+3. Open an [issue](https://github.com/Smart-Shaped/chaM3Leon/issues) on GitHub
 4. Contact the community
 
 ---
