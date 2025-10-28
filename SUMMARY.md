@@ -149,7 +149,6 @@ Available resources:
 - **Website:** [GitHub](https://github.com/Smart-Shaped/chaM3Leon)
 - **Documentation:** [docs/README.md](docs/README.md)
 - **Issues:** [GitHub Issues](https://github.com/Smart-Shaped/chaM3Leon/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/Smart-Shaped/chaM3Leon/discussions)
 
 ---
 

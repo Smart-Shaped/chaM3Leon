@@ -9,7 +9,7 @@ Welcome to the complete documentation of the chaM3Leon framework. This page will
 | Document | Description | Audience |
 |-----------|-------------|----------|
 | [SUMMARY.md](../SUMMARY.md) | Executive summary for decision makers | C-Level, Managers |
-| [VALUE_PROPOSITION.md](../VALUE_PROPOSITION.md) | Discover the value and advantages of chaM3León | Everyone |
+| [VALUE_PROPOSITION.md](../VALUE_PROPOSITION.md) | Discover the value and advantages of chaM3Leon | Everyone |
 | [GETTING_STARTED.md](GETTING_STARTED.md) | Step-by-step guide for your first project | Developers |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Understand the framework architecture | Architects, Team Leads |
 | [USE_CASES.md](USE_CASES.md) | Practical examples of real applications | Business, Developers |
@@ -19,8 +19,8 @@ Welcome to the complete documentation of the chaM3Leon framework. This page will
 
 | Document | Description |
 |-----------|-------------|
-| [config_list.md](config_list.md) | Complete configuration guide |
-| [apps_naming.md](apps_naming.md) | Application naming conventions |
+| [CONFIG_LIST.md](CONFIG_LIST.md) | Complete configuration guide |
+| [APPS_NAMING.md](APPS_NAMING.md) | Application naming conventions |
 
 ### Layer-Specific Documentation
 
@@ -76,8 +76,8 @@ chaM3Leon Framework
 │   └── ML Runner → Machine Learning
 │
 └── References
-    ├── config_list.md (Configurations)
-    └── apps_naming.md (Conventions)
+    ├── CONFIG_LIST.md (Configurations)
+    └── APPS_NAMING.md (Conventions)
 ```
 ## Support
 
@@ -85,11 +85,9 @@ chaM3Leon Framework
 1. **Check the documentation** - The answer is probably here
 2. **Watch the videos** - Step-by-step tutorials
 3. **GitHub Issues** - For bugs and feature requests
-4. **Discussions** - For general questions
 
 ### Useful links:
 - [GitHub Issues](https://github.com/Smart-Shaped/chaM3Leon/issues)
-- [GitHub Discussions](https://github.com/Smart-Shaped/chaM3Leon/discussions)
 
 ---
 

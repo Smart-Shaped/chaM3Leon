@@ -50,7 +50,7 @@ The module uses YAML configuration files:
 - Cassandra connection details
 - Batch updater class specifications
 
-To see how to set up the configuration, refer to the [Configuration Guide](../../docs/config_list.md).
+To see how to set up the configuration, refer to the [Configuration Guide](../../docs/CONFIG_LIST.md).
 
 ## Dependencies
 - Apache Spark

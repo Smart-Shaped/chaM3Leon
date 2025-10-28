@@ -52,7 +52,7 @@ The module uses YAML configuration files:
 - Preprocessor configurations
 - Input/output paths
   
-To see how to set up the configuration, refer to the [Configuration Guide](../../docs/config_list.md).
+To see how to set up the configuration, refer to the [Configuration Guide](../../docs/CONFIG_LIST.md).
 
 ## Dependencies
 - Apache Spark: for distributed data processing

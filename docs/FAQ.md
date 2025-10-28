@@ -47,7 +47,7 @@ The project is maintained by Smart-Shaped and the open source community.
 - Apache Spark 3.5+
 
 **For ML Runner (Python):**
-- Python 3.8+
+- Python 3.9+ (specifically, `>=3.9, <3.13`)
 - pip
 
 ### Do I need to install all components?
@@ -62,7 +62,7 @@ Yes! In fact, it's the recommended way. We have a dedicated repository: [docker_
 - **First working project**: 1 day
 
 ### Does it work on Windows?
-Yes, but we recommend Linux or macOS for production. On Windows use WSL2 or Docker.
+Yes, but we recommend Linux or macOS for production. On Windows is reccomended to use Docker.
 
 ### Can I use it on cloud?
 Yes, it works on AWS, Azure, Google Cloud and any provider that supports JVM and Docker.
@@ -119,15 +119,17 @@ Not necessarily. The framework abstracts many Spark complexities. However, basic
 - **Cassandra**: Use `cqlsh` to verify data
 
 ### Can I test without a Spark cluster?
-Yes! You can use `local[*]` mode to test on a single machine.
+Yes! You can use `local[*]` mode to test on a single machine. However, it's always better to use our [Docker environment](https://github.com/Smart-Shaped/docker_chaM3Leon) in order to get all the necessary technologies.
 
 ### How do I manage configurations?
-Through YAML files:
-- `framework-config.yml`: Environment configurations
-- `local-config.yml`: Local overrides
-- `typeMapping.yml`: Data type mappings
 
-See [config_list.md](docs/config_list.md) for details.
+Configuration is handled through YAML files:
+
+- **`framework-config.yml`** — Defines available environment profiles (e.g. `dev`, `test`, `prod`, `local`) and determines which configuration should be loaded at runtime.
+- **`{env}-config.yml`** — Contains environment-specific settings that override the defaults based on the active environment.
+- **`typeMapping.yml`** — Specifies data type mappings used by the framework.
+
+See [CONFIG_LIST.md](docs/CONFIG_LIST.md) for details.
 
 ### Where do I put my custom code?
 You create classes that extend those from the framework:
@@ -153,16 +155,18 @@ spark-submit --class com.myapp.Main \
   target/myapp.jar
 ```
 
-Or use Docker for containerization.
+Or use [Docker](https://github.com/Smart-Shaped/docker_chaM3Leon) for containerization.
 
 ### Does it support Kubernetes?
 Yes, you can deploy on Kubernetes using Spark Operator or generic containers.
 
 ### How do I monitor applications?
-- **Spark UI**: Spark job metrics
-- **Cassandra**: Monitoring with tools like DataStax OpsCenter
-- **Kafka**: Tools like Kafka Manager, Confluent Control Center
-- **Custom**: Log aggregation (ELK stack, Splunk)
+
+You can monitor applications using:
+
+- **Spark UI** — View real-time Spark job metrics and execution details.
+- **Prometheus / Loki / Grafana Stack** — A full observability stack is provided in our [Docker repository](https://github.com/Smart-Shaped/docker_chaM3Leon) to monitor all applications.
+
 
 ### How do I handle errors?
 The framework includes:
@@ -195,7 +199,7 @@ Depends on the infrastructure you allocate.
 - **Cassandra**: Partition key design, replication factor
 - **Code**: Avoid unnecessary shuffles, use broadcast variables
 
-Check the documentation for each layer.
+Check the documentation for [each layer](../DOCUMENTATION_INDEX.md#layer-documentation).
 
 ### What is typical latency?
 - **Speed Layer**: 100ms - 1s
@@ -229,12 +233,6 @@ Check the documentation for each layer.
 ### Does it support database streaming?
 Yes, you can use Kafka Connect for streaming from DBs like MySQL, PostgreSQL, MongoDB.
 
-### Can I integrate with AWS/Azure?
-Yes:
-- **AWS**: S3, Kinesis, EMR, Redshift
-- **Azure**: Blob Storage, Event Hubs, HDInsight
-- **GCP**: Cloud Storage, Pub/Sub, Dataproc
-
 ### How do I expose processed data?
 Through the **Serving Layer** which provides REST APIs. You can also:
 - Write to external DBs
@@ -261,9 +259,8 @@ Yes, Apache 2.0 license allows it.
 
 ### Is there professional support?
 Currently support is community-based through:
-- GitHub Issues
-- GitHub Discussions
-- Documentation
+- [GitHub Issues](https://github.com/Smart-Shaped/chaM3Leon/issues)
+- [Documentation](./README.md)
 
 For professional services, contact Smart-Shaped.
 
@@ -272,8 +269,6 @@ For professional services, contact Smart-Shaped.
 2. Create a branch for your feature
 3. Commit changes
 4. Open a Pull Request
-
-Check CONTRIBUTING.md (if available).
 
 ### Can I request new features?
 Yes! Open a GitHub Issue with:
@@ -295,13 +290,13 @@ Include:
 ## Machine Learning (ML Runner)
 
 ### Which ML frameworks does it support?
-The ML Runner (Python) supports:
-- scikit-learn
-- TensorFlow
-- PyTorch
-- XGBoost
-- LightGBM
-- Any Python ML library
+
+The ML Runner (Python) fully supports the following frameworks with built-in custom components:
+- **scikit-learn**
+- **TensorFlow**
+- **PyTorch**
+
+It can also run models from **any other Python ML library**, leaving full flexibility and responsibility to the user for custom integration.
 
 ### How does it manage ML models?
 Uses **MLflow** for:
@@ -311,12 +306,10 @@ Uses **MLflow** for:
 - Model serving
 
 ### Does it support deep learning?
-Yes, through TensorFlow, PyTorch, Keras.
+Yes, through TensorFlow, PyTorch.
 
 ### How do I do distributed training?
 - **Spark MLlib**: Built-in
-- **Horovod**: For distributed deep learning
-- **Ray**: For scaling Python ML
 
 ### Can I use pre-trained models?
 Yes! You can load models from:
@@ -375,7 +368,7 @@ Check:
 ### Spark Out of Memory
 Increase memory:
 ```bash
---driver-memory 4g --executor-memory 4g
+--driver-memory 2g --executor-memory 4g
 ```
 
 ### Checkpoint errors
@@ -438,9 +431,7 @@ You can use them together: Airflow orchestrates chaM3Leon jobs.
 Yes, on the [YouTube playlist](README.md#additional-video-resources)
 
 ### Is there a community?
-- GitHub Discussions
 - GitHub Issues
-- (Potential Slack/Discord - to be verified)
 
 ### Where can I learn more about Spark?
 - [Spark Official Docs](https://spark.apache.org/docs/latest/)
@@ -450,33 +441,6 @@ Yes, on the [YouTube playlist](README.md#additional-video-resources)
 ### Where can I learn more about Kafka?
 - [Kafka Official Docs](https://kafka.apache.org/documentation/)
 - [Kafka: The Definitive Guide](https://www.confluent.io/resources/kafka-the-definitive-guide/)
-
----
-
-## Business Questions
-
-### How much does it cost to implement chaM3León?
-- **Software**: Free (open source)
-- **Infrastructure**: €15-45k setup, €24-120k/year operational
-- **Team**: 2-3 people (data engineer, data scientist, devops)
-- See [SUMMARY.md](SUMMARY.md) for details
-
-### What is the ROI?
-Typically:
-- Break-even: 6-9 months
-- 3-year ROI: 300-500%
-- Depends on use case
-
-### How long does it take to go to production?
-- **PoC**: 1 month
-- **MVP**: 2-3 months
-- **Production-ready**: 3-6 months
-
-### Do I need a dedicated team?
-Initially no, but for scaling yes:
-- **Start**: 1-2 people part-time
-- **Production**: 2-3 full-time
-- **Scale**: Dedicated team (5-10 people)
 
 ---
 

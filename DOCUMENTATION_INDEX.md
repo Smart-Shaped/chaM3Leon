@@ -10,7 +10,7 @@
 |-----------|--------------|--------------|
 | **Manager/Business** | [SUMMARY.md](SUMMARY.md) | [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) → [USE_CASES.md](docs/USE_CASES.md) |
 | **Developer** | [GETTING_STARTED.md](docs/GETTING_STARTED.md) | [ARCHITECTURE.md](docs/ARCHITECTURE.md) → [FAQ.md](docs/FAQ.md) |
-| **Architect** | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | [USE_CASES.md](docs/USE_CASES.md) → Layer READMEs |
+| **Architect** | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | [USE_CASES.md](docs/USE_CASES.md) → [Layer READMEs](#layer-documentation) |
 | **Data Scientist** | [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) | [ML Runner Docs](https://github.com/Smart-Shaped/PyChaM3Leon) |
 | **Curious** | [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) | [SUMMARY.md](SUMMARY.md) |
 
@@ -22,8 +22,8 @@
 
 | Document | What Contains | Reading Time | Level |
 |-----------|---------------|---------------|---------|
-| [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) | What is chaM3Leon, advantages, comparisons | 10 min | Easy |
-| [SUMMARY.md](SUMMARY.md) | Executive summary, ROI, key numbers | 15 min | Easy |
+| [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) | What is chaM3Leon, advantages | 10 min | Easy |
+| [SUMMARY.md](SUMMARY.md) | Executive summary | 15 min | Easy |
 | [README.md](README.md) | Technical project overview | 8 min | Medium |
 
 ### Guides and Tutorials
@@ -39,8 +39,8 @@
 | Document | What Contains | Type | Level |
 |-----------|---------------|------|---------|
 | [FAQ.md](docs/FAQ.md) | 100+ questions and answers | Reference | Easy |
-| [config_list.md](docs/config_list.md) | All available configurations | Reference | Technical |
-| [apps_naming.md](docs/apps_naming.md) | Naming conventions | Reference | Medium |
+| [CONFIG_LIST.md](docs/CONFIG_LIST.md) | All available configurations | Reference | Technical |
+| [APPS_NAMING.md](docs/APPS_NAMING.md) | Naming conventions | Reference | Medium |
 
 ### Layer Documentation
 
@@ -57,13 +57,12 @@
 | Document | What Contains |
 |-----------|---------------|
 | [docs/README.md](docs/README.md) | Documentation index, learning paths |
-| [DOCUMENTATION_SUMMARY.md](DOCUMENTATION_SUMMARY.md) | Documentation summary created |
 
 ---
 
 ## By Objective
 
-### I want to understand IF to use chaM3León
+### I want to understand IF to use chaM3Leon
 1. [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) - The value
 2. [SUMMARY.md](SUMMARY.md) - ROI and costs
 3. [USE_CASES.md](docs/USE_CASES.md) - Possible applications
@@ -76,8 +75,8 @@
 
 ### I want to START using it
 1. [GETTING_STARTED.md](docs/GETTING_STARTED.md) - Complete tutorial
-2. [config_list.md](docs/config_list.md) - Configurations
-3. [apps_naming.md](docs/apps_naming.md) - Conventions
+2. [CONFIG_LIST.md](docs/CONFIG_LIST.md) - Configurations
+3. [APPS_NAMING.md](docs/APPS_NAMING.md) - Conventions
 4. [FAQ.md](docs/FAQ.md) - Troubleshooting
 
 ### I want to see EXAMPLES
@@ -107,8 +106,8 @@
 
 ### Reference
 - [FAQ.md](docs/FAQ.md) - Frequently asked questions
-- [config_list.md](docs/config_list.md) - Configurations
-- [apps_naming.md](docs/apps_naming.md) - Naming conventions
+- [CONFIG_LIST.md](docs/CONFIG_LIST.md) - Configurations
+- [APPS_NAMING.md](docs/APPS_NAMING.md) - Naming conventions
 
 ### Examples and Use Cases
 - [USE_CASES.md](docs/USE_CASES.md) - 8 real scenarios
@@ -167,12 +166,11 @@ Find your sector in [USE_CASES.md](docs/USE_CASES.md):
 ## File System Structure
 
 ```
-chaM3León/
+chaM3Leon/
 ├── README.md - Main overview
 ├── VALUE_PROPOSITION.md - Framework value
 ├── SUMMARY.md - Executive summary
 ├── DOCUMENTATION_INDEX.md - This file
-├── DOCUMENTATION_SUMMARY.md - Docs summary
 │
 ├── docs/ - Main documentation
 │   ├── README.md - Documentation index
@@ -180,17 +178,17 @@ chaM3León/
 │   ├── ARCHITECTURE.md - Architecture
 │   ├── USE_CASES.md - Practical examples
 │   ├── FAQ.md - Frequent questions
-│   ├── config_list.md - Configurations
-│   ├── apps_naming.md - Naming conventions
+│   ├── CONFIG_LIST.md - Configurations
+│   ├── APPS_NAMING.md - Naming conventions
 │   └── *.png - Diagrams
 │
-├── chaM3León/ - Java Layers
+├── chaM3Leon/ - Java Layers
 │   ├── batch/README.md - Batch Layer
 │   ├── speed/README.md - Speed Layer
 │   ├── harvester/README.md - Harvester Layer
 │   └── common/README.md - Common utilities
 │
-└── serving_chaM3León/ - Serving Layer
+└── serving_chaM3Leon/ - Serving Layer
     └── README.md - Spring Boot API
 ```
 
@@ -205,7 +203,7 @@ START → VALUE_PROPOSITION → SUMMARY → GETTING_STARTED
 
 ### Want to implement immediately?
 ```
-START → GETTING_STARTED → Layer README → config_list → GO!
+START → GETTING_STARTED → Layer README → CONFIG_LIST → GO!
 ```
 
 ### Evaluating the framework?
@@ -231,7 +229,7 @@ START → ARCHITECTURE → Layer READMEs → External docs → Expert!
 
 **Installation?** → [GETTING_STARTED.md](docs/GETTING_STARTED.md#fase-1-installazione-di-cham3leon)
 
-**Configuration?** → [config_list.md](docs/config_list.md)
+**Configuration?** → [CONFIG_LIST.md](docs/CONFIG_LIST.md)
 
 **Spark?** → [ARCHITECTURE.md](docs/ARCHITECTURE.md#apache-spark---il-motore)
 
@@ -318,7 +316,7 @@ All documents are:
 2. [ARCHITECTURE.md](docs/ARCHITECTURE.md) - 30 min
 3. [USE_CASES.md](docs/USE_CASES.md) - 1 hour
 4. All Layer READMEs - 1 hour
-5. [config_list.md](docs/config_list.md) - 30 min
+5. [CONFIG_LIST.md](docs/CONFIG_LIST.md) - 30 min
 6. External docs (Spark, Kafka) - 1 hour
 
 **Outcome:** Complete architectural design

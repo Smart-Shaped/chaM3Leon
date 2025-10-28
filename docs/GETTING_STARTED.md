@@ -26,7 +26,7 @@ Before starting, make sure you have installed:
 
 ### For Python Layer (ML Runner)
 
-- **Python 3.12**
+- **Python 3.9+ (specifically, `>=3.9, <3.13`)**
   - Verify: `python --version`
   - Download: [Python.org](https://www.python.org/downloads/)
 
@@ -50,7 +50,7 @@ git submodule update
 
 ### Option B: ZIP Download
 
-1. Go to [GitHub - chaM3León](https://github.com/Smart-Shaped/chaM3Leon)
+1. Go to [GitHub - chaM3Leon](https://github.com/Smart-Shaped/chaM3Leon)
 2. Click on "Code" → "Download ZIP"
 3. Extract the ZIP file to a folder of your choice
 
@@ -97,13 +97,6 @@ This starts:
 ## Phase 3: Your First Project
 
 Let's create a simple project that uses the **Batch Layer** to process data.
-```
-
-### Opzione B: Download ZIP
-
-1. Vai su [GitHub - chaM3Leon](https://github.com/Smart-Shaped/chaM3Leon)
-2. Clicca su "Code" → "Download ZIP"
-3. Estrai il file ZIP in una cartella di tua scelta
 
 ### Compilazione del Framework
 
@@ -115,35 +108,39 @@ cd chaM3Leon
 mvn clean install
 ```
 
-Questo comando:
-- Scarica tutte le dipendenze necessarie
-- Compila il codice sorgente
-- Esegue i test
-- Crea i file JAR utilizzabili
+This command:
 
-**Nota:** La prima compilazione può richiedere alcuni minuti perché Maven scarica tutte le dipendenze.
+Downloads all necessary dependencies
 
-## Fase 2: Setup dell'Ambiente
+Compiles the source code
 
-### Opzione Raccomandata: Usando Docker
+Runs the tests
 
-Il modo più semplice per iniziare è usare Docker, che configura automaticamente tutti i servizi necessari.
+Creates usable JAR files
+
+**Note:** The first compilation may take a few minutes because Maven downloads all dependencies.
+
+## Phase 2: Environment Setup
+
+### Recommended Option: Using Docker
+
+The easiest way to start is using Docker, which automatically configures all necessary services.
 
 ```bash
-# Clona il repository Docker
+# Clone the Docker repository
 git clone https://github.com/Smart-Shaped/docker_chaM3Leon.git
 cd docker_chaM3Leon
 
-# Avvia tutti i servizi
+# Start all services
 docker-compose up -d
 ```
 
-Questo avvia:
-- **Apache Kafka**: Per lo streaming dei dati
-- **Apache Cassandra**: Per la persistenza
-- **HDFS**: Per lo storage distribuito
-- **Hadoop Yarn**: Per l'esecuzione distribuita
-- **Spark Cluster**: Per l'elaborazione
+This starts:
+- **Apache Kafka**: For data streaming
+- **Apache Cassandra**: For persistence
+- **HDFS**: For distributed storage
+- **Hadoop Yarn**: For distributed execution
+- **Spark Cluster**:For processing
 
 ## Phase 3: Your First Project
 
@@ -173,7 +170,7 @@ my-chameleon-app-batch/
 │           └── typeMapping.yml
 ```
 
-### 1. Crea il file `pom.xml`
+### 1. Create the `pom.xml` file
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -288,13 +285,13 @@ public class DemoPreprocessor extends Preprocessor {
     
     @Override
     public Dataset<Row> preprocess(Dataset<Row> inputData) {
-        // Esempio: filtra solo i record con value > 0
+        // Example: filter only records with value > 0
         return inputData.filter("value > 0");
     }
 }
 ```
 
-### 4. Crea il Batch Updater (Opzionale)
+### 4. Create the Batch Updater (Optional)
 
 File: `src/main/java/com/mycompany/demo/DemoBatchUpdater.java`
 
@@ -355,7 +352,7 @@ public class DemoApp {
 
 ### 7. Configure the Framework
 
-File: `src/main/resources/framework-config.yml`
+File: `src/main/resources/local-config.yml`
 
 ```yaml
 batch:
@@ -405,6 +402,24 @@ mvn clean package
 This creates a JAR file in `target/demo-batch-1.0.0.jar`
 
 ### 9. Run the Application
+
+#### With YARN Cluster Mode (with our [Docker setup](https://github.com/Smart-Shaped/docker_chaM3Leon))
+
+```bash
+spark-submit \
+  --class com.mycompany.demo.DemoApp \
+  --master yarn --deploy-mode cluster \
+  ./extra_jars/demo-batch-1.0.0.jar
+```
+
+#### With YARN Client Mode (with our [Docker setup](https://github.com/Smart-Shaped/docker_chaM3Leon))
+
+```bash
+spark-submit \
+  --class com.mycompany.demo.DemoApp \ 
+  --master yarn --deploy-mode client \
+  ./extra_jars/demo-batch-1.0.0.jar
+```
 
 #### With Local Spark
 
@@ -464,32 +479,11 @@ USE demo_keyspace;
 SELECT * FROM mydatamodel;
 ```
 
-## Next Steps
-
-Congratulations! You've created your first chaM3Leon application.
-
-### What to Do Next
-
-1. **Explore Other Layers**
-   - Try the [Speed Layer](../chaM3Leon/speed/README.md) for real-time processing
-   - Experiment with the [Harvester Layer](../chaM3Leon/harvester/README.md) to collect data from APIs
-   - Use the [ML Runner](https://github.com/Smart-Shaped/PyChaM3Leon) for machine learning
-
-2. **Deep Dive into Configurations**
-   - Read the [Configuration Guide](config_list.md)
-   - Learn naming best practices: [Apps Naming](apps_naming.md)
-
-3. **Study Real Use Cases**
-   - Check [USE_CASES.md](USE_CASES.md) for practical examples
-
-4. **Explore the Architecture**
-   - Better understand how it works: [ARCHITECTURE.md](ARCHITECTURE.md)
-
 ## Common Troubleshooting
 
 ### Problem: "Cannot find symbol" during compilation
 
-**Solution:** Make sure you've run `mvn clean install` in the main chaM3León folder before compiling your project.
+**Solution:** Make sure you've run `mvn clean install` in the main chaM3Leon folder before compiling your project.
 
 ### Problem: Kafka won't connect
 
@@ -508,76 +502,28 @@ Congratulations! You've created your first chaM3Leon application.
 ### Problem: Out of Memory during Spark execution
 
 **Solution:**
-Increase the available memory for Spark:
-```
+Increase the available memory for Spark by adjusting the driver and executor memory parameters.
 
-### Verifica i Dati in Cassandra
+## Next Steps
 
-```bash
-# Connettiti a Cassandra
-cqlsh localhost
+Congratulations! You've created your first chaM3Leon application.
 
-# Usa il keyspace
-USE demo_keyspace;
+### What to Do Next
 
-# Visualizza i dati
-SELECT * FROM mydatamodel;
-```
+1.  **Explore Other Layers**
+    -   Try the [Speed Layer](../chaM3Leon/speed/README.md) for real-time processing
+    -   Experiment with the [Harvester Layer](../chaM3Leon/harvester/README.md) to collect data from APIs
+    -   Use the [ML Runner](https://github.com/Smart-Shaped/PyChaM3Leon) for machine learning
 
-## Prossimi Passi
+2.  **Deep Dive into Configurations**
+    -   Read the [Configuration Guide](CONFIG_LIST.md)
+    -   Learn the best practices for naming: [Apps Naming](APPS_NAMING.md)
 
-Congratulazioni! Hai creato la tua prima applicazione chaM3Leon. 🎉
+3.  **Study Real Use Cases**
+    -   Consult [USE_CASES.md](USE_CASES.md) for practical examples
 
-### Cosa Fare Dopo
-
-1. **Esplora gli Altri Layer**
-   - Prova il [Speed Layer](../chaM3Leon/speed/README.md) per l'elaborazione in tempo reale
-   - Sperimenta con l'[Harvester Layer](../chaM3Leon/harvester/README.md) per raccogliere dati da API
-   - Usa il [ML Runner](https://github.com/Smart-Shaped/PyChaM3Leon) per machine learning
-
-2. **Approfondisci le Configurazioni**
-   - Leggi la [Guida alle Configurazioni](config_list.md)
-   - Impara le best practices per i nomi: [Apps Naming](apps_naming.md)
-
-3. **Studia Casi d'Uso Reali**
-   - Consulta [USE_CASES.md](USE_CASES.md) per esempi pratici
-
-4. **Esplora l'Architettura**
-   - Comprendi meglio come funziona: [ARCHITECTURE.md](ARCHITECTURE.md)
-
-## Risoluzione Problemi Comuni
-
-### Problema: "Cannot find symbol" durante la compilazione
-
-**Soluzione:** Assicurati di aver eseguito `mvn clean install` nella cartella principale di chaM3Leon prima di compilare il tuo progetto.
-
-### Problema: Kafka non si connette
-
-**Soluzione:** 
-- Verifica che Kafka sia in esecuzione: `jps` (dovresti vedere `Kafka`)
-- Controlla che l'indirizzo nel file di configurazione sia corretto
-- Se usi Docker, assicurati che i container siano attivi: `docker ps`
-
-### Problema: Cassandra connection refused
-
-**Soluzione:**
-- Verifica che Cassandra sia in esecuzione
-- Controlla le porte (default: 9042)
-- Verifica il datacenter nella configurazione
-
-### Problema: Out of Memory durante l'esecuzione Spark
-
-**Soluzione:**
-Aumenta la memoria disponibile per Spark:
-
-```bash
-spark-submit \
-  --class com.mycompany.demo.DemoApp \
-  --master local[*] \
-  --driver-memory 2g \
-  --executor-memory 2g \
-  target/demo-batch-1.0.0.jar
-```
+4.  **Explore the Architecture**
+    -   Better understand how it works: [ARCHITECTURE.md](ARCHITECTURE.md)
 
 ## Useful Resources
 
