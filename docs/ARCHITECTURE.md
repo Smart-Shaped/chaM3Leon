@@ -1,277 +1,277 @@
-# Architettura chaM3Leon: Una Guida Semplificata
+# chaM3Leon Architecture: A Simplified Guide
 
-## Introduzione
+## Introduction
 
-L'architettura di chaM3Leon è progettata come un **sistema modulare** che gestisce l'intero ciclo di vita dei dati, dalla raccolta all'analisi, fino alla distribuzione. Questo documento spiega come i vari componenti lavorano insieme in modo semplice e comprensibile.
+The chaM3Leon architecture is designed as a **modular system** that manages the entire data lifecycle, from collection to analysis, to distribution. This document explains how the various components work together in a simple and understandable way.
 
-## Visione d'Insieme
+## Overview
 
-Immagina chaM3Leon come una **fabbrica di dati** composta da diverse stazioni di lavoro, ognuna specializzata in un compito specifico:
+Imagine chaM3Leon as a **data factory** composed of different workstations, each specialized in a specific task:
 
 ```
-Dati in Entrata → Raccolta → Elaborazione → Analisi → Distribuzione → Applicazioni
+Incoming Data → Collection → Processing → Analysis → Distribution → Applications
 ```
 
-### Il Flusso dei Dati
+### Data Flow
 
-1. **Raccolta**: I dati arrivano da varie fonti (API, sensori, database)
-2. **Elaborazione**: I dati vengono puliti, trasformati e organizzati
-3. **Analisi**: Vengono applicati modelli di machine learning e analisi
-4. **Distribuzione**: I risultati vengono resi disponibili tramite API
-5. **Utilizzo**: Le applicazioni consumano i dati elaborati
+1. **Collection**: Data arrives from various sources (APIs, sensors, databases)
+2. **Processing**: Data is cleaned, transformed and organized
+3. **Analysis**: Machine learning models and analysis are applied
+4. **Distribution**: Results are made available via APIs
+5. **Usage**: Applications consume the processed data
 
-## I Componenti Principali (Layer)
+## Main Components (Layers)
 
-### 🌾 Harvester Layer - Il Raccoglitore
+### Harvester Layer - The Collector
 
-**Cosa fa:** Raccoglie dati da fonti esterne come API, web services e database.
+**What it does:** Collects data from external sources like APIs, web services and databases.
 
-**Analogia:** Come un raccoglitore che va nei campi a raccogliere i frutti dalle diverse piante.
+**Analogy:** Like a harvester that goes to the fields to collect fruits from different plants.
 
-**Caratteristiche:**
-- Scarica dati da molteplici fonti
-- Supporta diversi formati (JSON, XML, file binari)
-- Gestisce richieste complesse con parametri personalizzabili
-- Sistema di gestione delle richieste con stati (in corso, completate, errori)
+**Features:**
+- Downloads data from multiple sources
+- Supports different formats (JSON, XML, binary files)
+- Handles complex requests with customizable parameters
+- Request management system with states (in progress, completed, errors)
 
-**Quando usarlo:**
-- Devi raccogliere dati da API esterne
-- Hai bisogno di scaricare grandi quantità di dati da internet
-- Vuoi automatizzare la raccolta di informazioni da diverse fonti
+**When to use it:**
+- You need to collect data from external APIs
+- You need to download large amounts of data from the internet
+- You want to automate information collection from different sources
 
 ---
 
-### ⚡ Speed Layer - Il Processore in Tempo Reale
+### Speed Layer - The Real-Time Processor
 
-**Cosa fa:** Elabora dati in tempo reale man mano che arrivano.
+**What it does:** Processes data in real-time as it arrives.
 
-**Analogia:** Come un cassiere in un supermercato che processa gli acquisti mentre i clienti arrivano alla cassa.
+**Analogy:** Like a cashier in a supermarket who processes purchases as customers arrive at the checkout.
 
-**Caratteristiche:**
-- Elaborazione immediata dei dati in streaming
-- Bassa latenza (risposte rapide)
-- Perfetto per situazioni che richiedono risposte immediate
-- Integrato con Apache Kafka per gestire flussi di dati continui
+**Features:**
+- Immediate streaming data processing
+- Low latency (fast responses)
+- Perfect for situations requiring immediate responses
+- Integrated with Apache Kafka to handle continuous data streams
 
-**Quando usarlo:**
-- Monitoraggio in tempo reale (dashboard live)
-- Rilevamento anomalie immediate
-- Contatori e statistiche che si aggiornano continuamente
-- Sistemi di allerta
-
----
-
-### 📦 Batch Layer - Il Processore Storico
-
-**Cosa fa:** Elabora grandi quantità di dati storici in gruppi (batch).
-
-**Analogia:** Come un archivista che organizza e analizza documenti storici a fine mese.
-
-**Caratteristiche:**
-- Elaborazione di grandi volumi di dati
-- Analisi approfondite e complesse
-- Maggiore accuratezza rispetto allo streaming
-- Ottimizzato per efficienza su grandi dataset
-
-**Quando usarlo:**
-- Analisi storiche e trend a lungo termine
-- Report periodici (giornalieri, settimanali, mensili)
-- Elaborazioni che richiedono l'intero dataset
-- Training di modelli di machine learning su dati storici
+**When to use it:**
+- Real-time monitoring (live dashboards)
+- Immediate anomaly detection
+- Counters and statistics that update continuously
+- Alert systems
 
 ---
 
-### 🤖 ML Runner - Il Cervello Analitico
+### Batch Layer - The Historical Processor
 
-**Cosa fa:** Applica algoritmi di machine learning per fare previsioni e scoprire pattern nei dati.
+**What it does:** Processes large amounts of historical data in batches.
 
-**Analogia:** Come un esperto che studia i dati e trova correlazioni nascoste o fa previsioni.
+**Analogy:** Like an archivist who organizes and analyzes historical documents at month's end.
 
-**Caratteristiche:**
-- Integrazione con MLflow per gestione modelli
-- Supporto per Metaflow per pipeline ML
-- Addestramento e deployment di modelli
-- Gestione del ciclo di vita dei modelli ML
+**Features:**
+- Processing of large data volumes
+- Deep and complex analysis
+- Greater accuracy compared to streaming
+- Optimized for efficiency on large datasets
 
-**Quando usarlo:**
-- Previsioni (vendite, domanda, comportamenti)
-- Classificazione (spam, sentiment analysis)
-- Raccomandazioni
-- Rilevamento anomalie complesse
-
----
-
-### 🌐 Serving Layer - Il Distributore
-
-**Cosa fa:** Rende i dati elaborati disponibili attraverso API REST.
-
-**Analogia:** Come un cameriere che porta i piatti (dati) ai tavoli (applicazioni client).
-
-**Caratteristiche:**
-- API REST moderne e standard
-- Accesso veloce ai dati tramite Cassandra
-- Endpoint configurabili
-- Integrazione con Spring Boot
-
-**Quando usarlo:**
-- Devi esporre dati a applicazioni web o mobile
-- Vuoi creare dashboard interattive
-- Necessiti di accesso programmato ai risultati delle elaborazioni
+**When to use it:**
+- Historical analysis and long-term trends
+- Periodic reports (daily, weekly, monthly)
+- Processing that requires the entire dataset
+- Training machine learning models on historical data
 
 ---
 
-## Lambda Architecture: Il Cuore di chaM3Leon
+### ML Runner - The Analytical Brain
 
-chaM3Leon implementa una **Lambda Architecture**, che combina due approcci:
+**What it does:** Applies machine learning algorithms to make predictions and discover patterns in data.
 
-### Il Percorso Veloce (Speed Layer)
+**Analogy:** Like an expert who studies data and finds hidden correlations or makes predictions.
+
+**Features:**
+- Integration with MLflow for model management
+- Support for Metaflow for ML pipelines
+- Model training and deployment
+- ML model lifecycle management
+
+**When to use it:**
+- Predictions (sales, demand, behaviors)
+- Classification (spam, sentiment analysis)
+- Recommendations
+- Complex anomaly detection
+
+---
+
+### Serving Layer - The Distributor
+
+**What it does:** Makes processed data available through REST APIs.
+
+**Analogy:** Like a waiter who brings dishes (data) to tables (client applications).
+
+**Features:**
+- Modern and standard REST APIs
+- Fast data access via Cassandra
+- Configurable endpoints
+- Spring Boot integration
+
+**When to use it:**
+- You need to expose data to web or mobile applications
+- You want to create interactive dashboards
+- You need programmatic access to processing results
+
+---
+
+## Lambda Architecture: The Heart of chaM3Leon
+
+chaM3Leon implements a **Lambda Architecture**, which combines two approaches:
+
+### The Fast Path (Speed Layer)
 ```
-Dati in Arrivo → Speed Layer → Vista in Tempo Reale
+Incoming Data → Speed Layer → Real-Time View
 ```
-- **Velocità**: Millisecondi
-- **Accuratezza**: Buona
-- **Uso**: Dati recenti
+- **Speed**: Milliseconds
+- **Accuracy**: Good
+- **Usage**: Recent data
 
-### Il Percorso Completo (Batch Layer)
+### The Complete Path (Batch Layer)
 ```
-Dati Storici → Batch Layer → Vista Batch
+Historical Data → Batch Layer → Batch View
 ```
-- **Velocità**: Minuti/Ore
-- **Accuratezza**: Ottima
-- **Uso**: Tutti i dati
+- **Speed**: Minutes/Hours
+- **Accuracy**: Excellent
+- **Usage**: All data
 
-### Vista Unificata
+### Unified View
 ```
-Vista in Tempo Reale + Vista Batch = Vista Completa
+Real-Time View + Batch View = Complete View
 ```
 
-**Vantaggio:** Ottieni sia la velocità che l'accuratezza!
+**Advantage:** You get both speed and accuracy!
 
-## Come Comunicano i Componenti
+## How Components Communicate
 
-### Apache Kafka - Il Messaggero
-Trasporta i dati tra i diversi layer in tempo reale.
-- **Analogia:** Un sistema di posta pneumatica in un edificio
+### Apache Kafka - The Messenger
+Transports data between different layers in real-time.
+- **Analogy:** A pneumatic mail system in a building
 
-### Apache Cassandra - Il Magazzino
-Memorizza i dati elaborati per accesso rapido.
-- **Analogia:** Un magazzino organizzato con scaffali etichettati
+### Apache Cassandra - The Warehouse
+Stores processed data for fast access.
+- **Analogy:** An organized warehouse with labeled shelves
 
-### HDFS - L'Archivio
-Conserva grandi quantità di dati grezzi e storici.
-- **Analogia:** Un deposito a lungo termine per documenti
+### HDFS - The Archive
+Stores large amounts of raw and historical data.
+- **Analogy:** A long-term storage facility for documents
 
-### Apache Spark - Il Motore
-Elabora i dati in modo distribuito e parallelo.
-- **Analogia:** Una squadra di operai che lavorano insieme su un progetto grande
+### Apache Spark - The Engine
+Processes data in a distributed and parallel manner.
+- **Analogy:** A team of workers collaborating on a large project
 
-## Pattern di Utilizzo Tipici
+## Typical Usage Patterns
 
-### Pattern 1: Pipeline Completa
+### Pattern 1: Complete Pipeline
 ```
-API Esterna → Harvester → Kafka → Speed Layer → Cassandra → Serving Layer → App Web
+External API → Harvester → Kafka → Speed Layer → Cassandra → Serving Layer → Web App
                                ↓
-                          Batch Layer → ML Runner → Modelli Predittivi
+                          Batch Layer → ML Runner → Predictive Models
 ```
 
-### Pattern 2: Analisi in Tempo Reale
+### Pattern 2: Real-Time Analysis
 ```
-Sensori IoT → Kafka → Speed Layer → Cassandra → Dashboard Live
-```
-
-### Pattern 3: ML Training e Inference
-```
-Dati Storici → Batch Layer → ML Runner → Modelli Addestrati
-Dati Nuovi → Speed Layer → ML Runner (Inference) → Predizioni
+IoT Sensors → Kafka → Speed Layer → Cassandra → Live Dashboard
 ```
 
-## Principi di Design
+### Pattern 3: ML Training and Inference
+```
+Historical Data → Batch Layer → ML Runner → Trained Models
+New Data → Speed Layer → ML Runner (Inference) → Predictions
+```
 
-### 🔧 Modularità
-Ogni layer è indipendente e può essere usato singolarmente o in combinazione.
+## Design Principles
 
-### 📈 Scalabilità
-Aggiungi più risorse quando il carico aumenta senza modificare il codice.
+### Modularity
+Each layer is independent and can be used individually or in combination.
 
-### 🔄 Flessibilità
-Personalizza ogni componente per le tue esigenze specifiche.
+### Scalability
+Add more resources when load increases without modifying code.
 
-### 🛡️ Affidabilità
-Sistema di checkpointing e recupero automatico da errori.
+### Flexibility
+Customize each component for your specific needs.
 
-### 🔍 Trasparenza
-Codice open source, configurazioni dichiarative, logging completo.
+### Reliability
+Checkpointing system and automatic recovery from errors.
+
+### Transparency
+Open source code, declarative configurations, complete logging.
 
 ## Deployment
 
-### Opzione 1: Singolo Nodo (Sviluppo/Test)
-Tutti i componenti su un'unica macchina per test e sviluppo.
+### Option 1: Single Node (Development/Test)
+All components on a single machine for testing and development.
 
-### Opzione 2: Cluster (Produzione)
-Componenti distribuiti su più macchine per alta disponibilità e performance.
+### Option 2: Cluster (Production)
+Components distributed across multiple machines for high availability and performance.
 
-### Opzione 3: Cloud
-Deployment su AWS, Azure, Google Cloud con auto-scaling.
+### Option 3: Cloud
+Deployment on AWS, Azure, Google Cloud with auto-scaling.
 
-### Opzione 4: Docker
-Containerizzazione per facilità di deployment e portabilità.
+### Option 4: Docker
+Containerization for ease of deployment and portability.
 
-## Esempio Pratico: Sistema di Monitoraggio E-Commerce
+## Practical Example: E-Commerce Monitoring System
 
-Vediamo come i layer lavorano insieme in un caso reale:
+Let's see how the layers work together in a real case:
 
-1. **Harvester**: Raccoglie dati da API di terze parti (prezzi concorrenti, recensioni)
+1. **Harvester**: Collects data from third-party APIs (competitor prices, reviews)
 
 2. **Speed Layer**: 
-   - Processa ordini in tempo reale
-   - Aggiorna contatori di vendite live
-   - Rileva frodi immediate
+   - Processes orders in real-time
+   - Updates live sales counters
+   - Detects immediate fraud
 
 3. **Batch Layer**:
-   - Analizza trend di vendita settimanali
-   - Calcola statistiche aggregate
-   - Prepara dati per training ML
+   - Analyzes weekly sales trends
+   - Calculates aggregate statistics
+   - Prepares data for ML training
 
 4. **ML Runner**:
-   - Addestra modelli di raccomandazione
-   - Prevede la domanda futura
-   - Classifica clienti per valore
+   - Trains recommendation models
+   - Predicts future demand
+   - Classifies customers by value
 
 5. **Serving Layer**:
-   - Fornisce raccomandazioni alla web app
-   - Espone metriche per dashboard
-   - API per app mobile
+   - Provides recommendations to the web app
+   - Exposes metrics for dashboards
+   - APIs for mobile app
 
-## Sicurezza e Governance
+## Security and Governance
 
-### Gestione Accessi
-- Autenticazione per le API
-- Controllo accessi basato su ruoli
-- Encryption dei dati sensibili
+### Access Management
+- API authentication
+- Role-based access control
+- Sensitive data encryption
 
-### Monitoraggio
-- Logging centralizzato
-- Metriche di performance
-- Alerting su anomalie
+### Monitoring
+- Centralized logging
+- Performance metrics
+- Anomaly alerting
 
 ### Data Quality
-- Validazione dati in ingresso
-- Pulizia e normalizzazione
-- Tracciabilità delle trasformazioni
+- Input data validation
+- Cleaning and normalization
+- Transformation traceability
 
-## Conclusione
+## Conclusion
 
-L'architettura di chaM3Leon è progettata per essere:
-- **Potente**: Gestisce Big Data e ML complessi
-- **Semplice**: Interfacce chiare e configurazioni intuitive
-- **Flessibile**: Adattabile a diversi casi d'uso
-- **Scalabile**: Cresce con le tue esigenze
+The chaM3Leon architecture is designed to be:
+- **Powerful**: Handles complex Big Data and ML
+- **Simple**: Clear interfaces and intuitive configurations
+- **Flexible**: Adaptable to different use cases
+- **Scalable**: Grows with your needs
 
-Ogni layer ha un ruolo specifico ma tutti lavorano insieme armoniosamente per trasformare i dati grezzi in valore di business.
+Each layer has a specific role but all work together harmoniously to transform raw data into business value.
 
 ---
 
-**Prossimi Passi:**
-- Consulta [GETTING_STARTED.md](GETTING_STARTED.md) per iniziare a usare chaM3Leon
-- Vedi [USE_CASES.md](USE_CASES.md) per esempi concreti di applicazione
-- Leggi [VALUE_PROPOSITION.md](../VALUE_PROPOSITION.md) per capire i vantaggi del framework
+**Next Steps:**
+- Check [GETTING_STARTED.md](GETTING_STARTED.md) to start using chaM3Leon
+- See [USE_CASES.md](USE_CASES.md) for concrete application examples
+- Read [VALUE_PROPOSITION.md](../VALUE_PROPOSITION.md) to understand the framework's advantages

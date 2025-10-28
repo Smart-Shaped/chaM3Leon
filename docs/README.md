@@ -1,96 +1,96 @@
-# Documentazione chaM3Leon
+# chaM3Leon Documentation
 
-Benvenuto nella documentazione completa del framework chaM3Leon. Questa pagina ti guiderà attraverso tutte le risorse disponibili.
+Welcome to the complete documentation of the chaM3Leon framework. This page will guide you through all available resources.
 
-## Panoramica della Documentazione
+## Documentation Overview
 
-### Per Iniziare
+### Getting Started
 
-| Documento | Descrizione | Pubblico |
+| Document | Description | Audience |
 |-----------|-------------|----------|
-| [SUMMARY.md](../SUMMARY.md) | Executive summary per decision makers | C-Level, Manager |
-| [VALUE_PROPOSITION.md](../VALUE_PROPOSITION.md) | Scopri il valore e i vantaggi di chaM3León | Tutti |
-| [GETTING_STARTED.md](GETTING_STARTED.md) | Guida passo-passo per il primo progetto | Sviluppatori |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | Comprendi l'architettura del framework | Architetti, Team Lead |
-| [USE_CASES.md](USE_CASES.md) | Esempi pratici di applicazioni reali | Business, Sviluppatori |
-| [FAQ.md](FAQ.md) | Domande frequenti e risposte | Tutti |
+| [SUMMARY.md](../SUMMARY.md) | Executive summary for decision makers | C-Level, Managers |
+| [VALUE_PROPOSITION.md](../VALUE_PROPOSITION.md) | Discover the value and advantages of chaM3León | Everyone |
+| [GETTING_STARTED.md](GETTING_STARTED.md) | Step-by-step guide for your first project | Developers |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Understand the framework architecture | Architects, Team Leads |
+| [USE_CASES.md](USE_CASES.md) | Practical examples of real applications | Business, Developers |
+| [FAQ.md](FAQ.md) | Frequently asked questions and answers | Everyone |
 
-### Documentazione Tecnica
+### Technical Documentation
 
-| Documento | Descrizione |
+| Document | Description |
 |-----------|-------------|
-| [config_list.md](config_list.md) | Guida completa alle configurazioni |
-| [apps_naming.md](apps_naming.md) | Convenzioni per i nomi delle applicazioni |
+| [config_list.md](config_list.md) | Complete configuration guide |
+| [apps_naming.md](apps_naming.md) | Application naming conventions |
 
-### Documentazione Layer Specifici
+### Layer-Specific Documentation
 
-| Layer | Documentazione | Linguaggio | Descrizione |
+| Layer | Documentation | Language | Description |
 |-------|----------------|------------|-------------|
-| **Batch** | [README](../chaM3Leon/batch/README.md) | Java | Elaborazione dati storici in batch |
-| **Speed** | [README](../chaM3Leon/speed/README.md) | Java | Processing real-time streaming |
-| **Harvester** | [README](../chaM3Leon/harvester/README.md) | Java | Raccolta dati da fonti esterne |
-| **Serving** | [README](../serving_chaM3Leon/README.md) | Java/Spring Boot | API REST per distribuzione dati |
-| **ML Runner** | [GitHub](https://github.com/Smart-Shaped/PyChaM3Leon) | Python | Machine Learning e MLOps |
+| **Batch** | [README](../chaM3Leon/batch/README.md) | Java | Historical data batch processing |
+| **Speed** | [README](../chaM3Leon/speed/README.md) | Java | Real-time streaming processing |
+| **Harvester** | [README](../chaM3Leon/harvester/README.md) | Java | Data collection from external sources |
+| **Serving** | [README](../serving_chaM3Leon/README.md) | Java/Spring Boot | REST API for data distribution |
+| **ML Runner** | [GitHub](https://github.com/Smart-Shaped/PyChaM3Leon) | Python | Machine Learning and MLOps |
 
 ---
 
-## Risorse Video
+## Video Resources
 
 ### YouTube Tutorials
-- [Presentazione del Framework](https://www.youtube.com/watch?v=wtVyYUDlRQc) - Overview generale
-- [Demo Batch e Speed Layer](https://www.youtube.com/watch?v=UjzYc9C1krU) - Esempio pratico
-- [Demo Harvester e ML Runner](https://www.youtube.com/watch?v=pwE223S0-oU) - ML integration
+- [Framework Presentation](https://www.youtube.com/watch?v=wtVyYUDlRQc) - General overview
+- [Batch and Speed Layer Demo](https://www.youtube.com/watch?v=UjzYc9C1krU) - Practical example
+- [Harvester and ML Runner Demo](https://www.youtube.com/watch?v=pwE223S0-oU) - ML integration
 
 ---
 
-## Repository Correlati
+## Related Repositories
 
-| Repository | Scopo | Link |
+| Repository | Purpose | Link |
 |------------|-------|------|
-| **chaM3Leon Main** | Framework principale | [GitHub](https://github.com/Smart-Shaped/chaM3Leon) |
+| **chaM3Leon Main** | Main framework | [GitHub](https://github.com/Smart-Shaped/chaM3Leon) |
 | **PyChaM3Leon** | ML Runner (Python) | [GitHub](https://github.com/Smart-Shaped/PyChaM3Leon) |
 | **docker_chaM3Leon** | Docker setup | [GitHub](https://github.com/Smart-Shaped/docker_chaM3Leon) |
 
 ---
 
-## Mappa Concettuale
+## Concept Map
 
 ```
 chaM3Leon Framework
 │
-├── Concetti Base
-│   ├── VALUE_PROPOSITION.md (Perché usarlo?)
-│   └── ARCHITECTURE.md (Come funziona?)
+├── Basic Concepts
+│   ├── VALUE_PROPOSITION.md (Why use it?)
+│   └── ARCHITECTURE.md (How does it work?)
 │
-├── Pratica
-│   ├── GETTING_STARTED.md (Come iniziare?)
-│   └── USE_CASES.md (Esempi reali)
+├── Practice
+│   ├── GETTING_STARTED.md (How to start?)
+│   └── USE_CASES.md (Real examples)
 │
-├── Layer (Java/Spark)
-│   ├── Batch Layer → Elaborazione storica
+├── Layers (Java/Spark)
+│   ├── Batch Layer → Historical processing
 │   ├── Speed Layer → Real-time processing
 │   ├── Harvester Layer → Data collection
 │   └── Serving Layer → API distribution
 │
-├── Layer (Python)
+├── Layers (Python)
 │   └── ML Runner → Machine Learning
 │
-└── Riferimenti
-    ├── config_list.md (Configurazioni)
-    └── apps_naming.md (Convenzioni)
+└── References
+    ├── config_list.md (Configurations)
+    └── apps_naming.md (Conventions)
 ```
-## Supporto
+## Support
 
-### Hai bisogno di aiuto?
-1. **Controlla la documentazione** - Probabilmente la risposta è qui
-2. **Guarda i video** - Tutorial passo-passo
-3. **GitHub Issues** - Per bug e feature request
-4. **Discussions** - Per domande generali
+### Need help?
+1. **Check the documentation** - The answer is probably here
+2. **Watch the videos** - Step-by-step tutorials
+3. **GitHub Issues** - For bugs and feature requests
+4. **Discussions** - For general questions
 
-### Link utili:
+### Useful links:
 - [GitHub Issues](https://github.com/Smart-Shaped/chaM3Leon/issues)
 - [GitHub Discussions](https://github.com/Smart-Shaped/chaM3Leon/discussions)
 
 ---
 
-*Torna al [README principale](../README.md)*
+*Back to [main README](../README.md)*

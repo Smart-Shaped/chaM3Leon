@@ -1,325 +1,325 @@
-# Domande Frequenti (FAQ)
+# Frequently Asked Questions (FAQ)
 
-## Indice
-- [Generale](#generale)
-- [Installazione e Setup](#installazione-e-setup)
-- [Architettura e Design](#architettura-e-design)
-- [Sviluppo](#sviluppo)
-- [Deployment e Operations](#deployment-e-operations)
-- [Performance e Scalabilità](#performance-e-scalabilità)
-- [Integrazione](#integrazione)
-- [Licensing e Supporto](#licensing-e-supporto)
-
----
-
-## Generale
-
-### Cos'è chaM3Leon?
-chaM3Leon è un framework open-source modulare per Big Data e Machine Learning che semplifica la gestione dell'intero ciclo di vita dei dati, dalla raccolta all'analisi, fino alla distribuzione.
-
-### Per chi è pensato chaM3Leon?
-- **Data Engineers**: Per costruire pipeline dati robuste
-- **Data Scientists**: Per implementare modelli ML in produzione
-- **Aziende**: Per progetti Big Data senza investimenti enormi
-- **Sviluppatori**: Per imparare best practices Big Data/ML
-
-### Quali problemi risolve?
-- Gestione di grandi volumi di dati
-- Elaborazione real-time e batch
-- Integrazione di machine learning
-- Scalabilità automatica
-- Riduzione time-to-market progetti data
-
-### È gratuito?
-Sì, chaM3Leon è rilasciato con licenza Apache 2.0, che permette uso commerciale gratuito.
-
-### Chi mantiene il progetto?
-Il progetto è mantenuto da Smart-Shaped e dalla community open source.
+## Table of Contents
+- [General](#general)
+- [Installation and Setup](#installation-and-setup)
+- [Architecture and Design](#architecture-and-design)
+- [Development](#development)
+- [Deployment and Operations](#deployment-and-operations)
+- [Performance and Scalability](#performance-and-scalability)
+- [Integration](#integration)
+- [Licensing and Support](#licensing-and-support)
 
 ---
 
-## Installazione e Setup
+## General
 
-### Quali sono i prerequisiti?
-**Per layer Java:**
-- Java 11 (layer Spark) o Java 21 (Serving Layer)
+### What is chaM3Leon?
+chaM3Leon is a modular open-source framework for Big Data and Machine Learning that simplifies managing the entire data lifecycle, from collection to analysis, to distribution.
+
+### Who is chaM3Leon designed for?
+- **Data Engineers**: To build robust data pipelines
+- **Data Scientists**: To implement ML models in production
+- **Companies**: For Big Data projects without huge investments
+- **Developers**: To learn Big Data/ML best practices
+
+### What problems does it solve?
+- Managing large data volumes
+- Real-time and batch processing
+- Machine learning integration
+- Automatic scalability
+- Reducing time-to-market for data projects
+
+### Is it free?
+Yes, chaM3Leon is released under Apache 2.0 license, which allows free commercial use.
+
+### Who maintains the project?
+The project is maintained by Smart-Shaped and the open source community.
+
+---
+
+## Installation and Setup
+
+### What are the prerequisites?
+**For Java layers:**
+- Java 11 (Spark layers) or Java 21 (Serving Layer)
 - Maven 3.6+
 - Apache Spark 3.5+
 
-**Per ML Runner (Python):**
+**For ML Runner (Python):**
 - Python 3.8+
 - pip
 
-### Devo installare tutti i componenti?
-No, chaM3Leon è modulare. Installa e usa solo i layer di cui hai bisogno.
+### Do I need to install all components?
+No, chaM3Leon is modular. Install and use only the layers you need.
 
-### Posso usare Docker?
-Sì! Anzi, è il modo raccomandato. Abbiamo un repository dedicato: [docker_chaM3Leon](https://github.com/Smart-Shaped/docker_chaM3Leon)
+### Can I use Docker?
+Yes! In fact, it's the recommended way. We have a dedicated repository: [docker_chaM3Leon](https://github.com/Smart-Shaped/docker_chaM3Leon)
 
-### Quanto tempo richiede il setup?
-- **Con Docker**: 30 minuti - 1 ora
-- **Setup manuale**: 2-4 ore
-- **Primo progetto funzionante**: 1 giornata
+### How long does setup take?
+- **With Docker**: 30 minutes - 1 hour
+- **Manual setup**: 2-4 hours
+- **First working project**: 1 day
 
-### Funziona su Windows?
-Sì, ma raccomandiamo Linux o macOS per produzione. Su Windows usa WSL2 o Docker.
+### Does it work on Windows?
+Yes, but we recommend Linux or macOS for production. On Windows use WSL2 or Docker.
 
-### Posso usarlo su cloud?
-Sì, funziona su AWS, Azure, Google Cloud e qualsiasi provider che supporti JVM e Docker.
-
----
-
-## Architettura e Design
-
-### Cos'è la Lambda Architecture?
-Un pattern architetturale che combina:
-- **Batch Layer**: Elaborazione accurata di dati storici
-- **Speed Layer**: Elaborazione rapida dati real-time
-- **Serving Layer**: Unifica e distribuisce i risultati
-
-Vantaggio: Hai sia velocità che accuratezza!
-
-### Devo usare tutti i layer?
-No! Usa solo quelli necessari:
-- Solo batch processing → Batch Layer
-- Solo real-time → Speed Layer
-- Solo raccolta dati → Harvester Layer
-- Solo ML → ML Runner
-- Serve API? → Serving Layer
-
-### I layer comunicano tra loro?
-Sì, attraverso:
-- **Kafka**: Per streaming dati
-- **Cassandra**: Per storage condiviso
-- **HDFS**: Per dati storici
-
-### Posso estendere i layer?
-Sì! Ogni layer è progettato per essere esteso. Crei classi che ereditano dalle classi base del framework.
-
-### Posso usare altri database oltre Cassandra?
-Il framework è ottimizzato per Cassandra, ma puoi estenderlo per supportare altri DB. Per il Serving Layer (Spring Boot) è più semplice integrare altri database.
+### Can I use it on cloud?
+Yes, it works on AWS, Azure, Google Cloud and any provider that supports JVM and Docker.
 
 ---
 
-## Sviluppo
+## Architecture and Design
 
-### Quali linguaggi devo conoscere?
-Dipende dai layer che usi:
-- **Java**: Per Batch, Speed, Harvester, Serving
-- **Python**: Solo per ML Runner
-- **YAML**: Per configurazioni (facile!)
+### What is Lambda Architecture?
+An architectural pattern that combines:
+- **Batch Layer**: Accurate processing of historical data
+- **Speed Layer**: Fast processing of real-time data
+- **Serving Layer**: Unifies and distributes results
 
-### Serve esperienza con Spark?
-Non necessariamente. Il framework astrae molte complessità di Spark. Però una conoscenza base aiuta.
+Advantage: You get both speed and accuracy!
 
-### Come debuggo la mia applicazione?
-- **Locale**: Usa la tua IDE (IntelliJ, Eclipse, VS Code)
-- **Log**: Configurabili tramite Log4j
-- **Spark UI**: Disponibile su `http://localhost:4040` durante esecuzione
-- **Cassandra**: Usa `cqlsh` per verificare dati
+### Do I need to use all layers?
+No! Use only those necessary:
+- Only batch processing → Batch Layer
+- Only real-time → Speed Layer
+- Only data collection → Harvester Layer
+- Only ML → ML Runner
+- Need APIs? → Serving Layer
 
-### Posso testare senza cluster Spark?
-Sì! Puoi usare `local[*]` mode per testare su singola macchina.
+### Do layers communicate with each other?
+Yes, through:
+- **Kafka**: For data streaming
+- **Cassandra**: For shared storage
+- **HDFS**: For historical data
 
-### Come gestisco le configurazioni?
-Attraverso file YAML:
-- `framework-config.yml`: Configurazioni ambiente
-- `local-config.yml`: Override locali
-- `typeMapping.yml`: Mapping tipi dati
+### Can I extend the layers?
+Yes! Each layer is designed to be extended. You create classes that inherit from the framework's base classes.
 
-Vedi [config_list.md](docs/config_list.md) per dettagli.
+### Can I use databases other than Cassandra?
+The framework is optimized for Cassandra, but you can extend it to support other DBs. For the Serving Layer (Spring Boot) it's easier to integrate other databases.
 
-### Dove metto il mio codice custom?
-Crei classi che estendono quelle del framework:
-- `BatchLayer` → La tua `MyBatchLayer`
-- `Preprocessor` → Il tuo `MyPreprocessor`
-- `BatchUpdater` → Il tuo `MyBatchUpdater`
+---
+
+## Development
+
+### Which languages do I need to know?
+Depends on the layers you use:
+- **Java**: For Batch, Speed, Harvester, Serving
+- **Python**: Only for ML Runner
+- **YAML**: For configurations (easy!)
+
+### Do I need Spark experience?
+Not necessarily. The framework abstracts many Spark complexities. However, basic knowledge helps.
+
+### How do I debug my application?
+- **Local**: Use your IDE (IntelliJ, Eclipse, VS Code)
+- **Logs**: Configurable via Log4j
+- **Spark UI**: Available at `http://localhost:4040` during execution
+- **Cassandra**: Use `cqlsh` to verify data
+
+### Can I test without a Spark cluster?
+Yes! You can use `local[*]` mode to test on a single machine.
+
+### How do I manage configurations?
+Through YAML files:
+- `framework-config.yml`: Environment configurations
+- `local-config.yml`: Local overrides
+- `typeMapping.yml`: Data type mappings
+
+See [config_list.md](docs/config_list.md) for details.
+
+### Where do I put my custom code?
+You create classes that extend those from the framework:
+- `BatchLayer` → Your `MyBatchLayer`
+- `Preprocessor` → Your `MyPreprocessor`
+- `BatchUpdater` → Your `MyBatchUpdater`
 - etc.
 
-### Come aggiungo nuove dipendenze?
-Nel tuo `pom.xml` (per Java) o `requirements.txt` (per Python).
+### How do I add new dependencies?
+In your `pom.xml` (for Java) or `requirements.txt` (for Python).
 
 ---
 
-## Deployment e Operations
+## Deployment and Operations
 
-### Come faccio il deploy in produzione?
-1. Compila: `mvn clean package`
-2. Genera JAR shaded
-3. Submit a Spark:
+### How do I deploy to production?
+1. Compile: `mvn clean package`
+2. Generate shaded JAR
+3. Submit to Spark:
 ```bash
 spark-submit --class com.myapp.Main \
   --master spark://master:7077 \
   target/myapp.jar
 ```
 
-Oppure usa Docker per containerizzazione.
+Or use Docker for containerization.
 
-### Supporta Kubernetes?
-Sì, puoi fare deploy su Kubernetes usando Spark Operator o container generici.
+### Does it support Kubernetes?
+Yes, you can deploy on Kubernetes using Spark Operator or generic containers.
 
-### Come monitoro le applicazioni?
-- **Spark UI**: Metriche job Spark
-- **Cassandra**: Monitoring con tools come DataStax OpsCenter
-- **Kafka**: Tools come Kafka Manager, Confluent Control Center
+### How do I monitor applications?
+- **Spark UI**: Spark job metrics
+- **Cassandra**: Monitoring with tools like DataStax OpsCenter
+- **Kafka**: Tools like Kafka Manager, Confluent Control Center
 - **Custom**: Log aggregation (ELK stack, Splunk)
 
-### Come gestisco gli errori?
-Il framework include:
-- Exception handling custom per ogni layer
-- Checkpointing per recovery
-- Retry logic configurabile
-- Dead letter queues per Kafka
+### How do I handle errors?
+The framework includes:
+- Custom exception handling for each layer
+- Checkpointing for recovery
+- Configurable retry logic
+- Dead letter queues for Kafka
 
-### Supporta alta disponibilità?
-Sì, tutti i componenti supportano HA:
-- **Spark**: Cluster mode con failover
+### Does it support high availability?
+Yes, all components support HA:
+- **Spark**: Cluster mode with failover
 - **Kafka**: Replication
 - **Cassandra**: Distributed by design
-- **HDFS**: Replication factor configurabile
+- **HDFS**: Configurable replication factor
 
 ---
 
-## Performance e Scalabilità
+## Performance and Scalability
 
-### Quanto scala?
-- **Dati**: Da GB a PB
-- **Throughput**: Milioni di eventi/secondo
-- **Latency**: Millisecondi (Speed Layer)
+### How well does it scale?
+- **Data**: From GB to PB
+- **Throughput**: Millions of events/second
+- **Latency**: Milliseconds (Speed Layer)
 
-Dipende dall'infrastruttura che allochi.
+Depends on the infrastructure you allocate.
 
-### Come ottimizzare le performance?
+### How do I optimize performance?
 - **Spark**: Tuning partitions, memory, parallelism
 - **Kafka**: Partitioning topics, consumer groups
 - **Cassandra**: Partition key design, replication factor
-- **Codice**: Evita shuffle inutili, usa broadcast variables
+- **Code**: Avoid unnecessary shuffles, use broadcast variables
 
-Consulta la documentazione di ciascun layer.
+Check the documentation for each layer.
 
-### Qual è la latenza tipica?
+### What is typical latency?
 - **Speed Layer**: 100ms - 1s
-- **Batch Layer**: Minuti - ore (dipende dal volume)
-- **ML Runner**: Secondi - minuti (training), millisecondi (inference)
+- **Batch Layer**: Minutes - hours (depends on volume)
+- **ML Runner**: Seconds - minutes (training), milliseconds (inference)
 - **Serving Layer**: < 100ms (API call)
 
-### Quante risorse servono?
-**Sviluppo/Test:**
-- 1 macchina: 8GB RAM, 4 CPU cores
-- Docker containers per servizi
+### How many resources are needed?
+**Development/Test:**
+- 1 machine: 8GB RAM, 4 CPU cores
+- Docker containers for services
 
-**Produzione (piccola):**
-- 3-5 nodi: 16GB RAM, 8 cores ciascuno
-- Cluster Spark, Kafka, Cassandra
+**Production (small):**
+- 3-5 nodes: 16GB RAM, 8 cores each
+- Spark, Kafka, Cassandra cluster
 
-**Produzione (grande):**
-- 10+ nodi specializzati
-- Auto-scaling su cloud
+**Production (large):**
+- 10+ specialized nodes
+- Auto-scaling on cloud
 
 ---
 
-## Integrazione
+## Integration
 
-### Come integro con sistemi esistenti?
-- **Harvester**: Chiama API esterne
-- **Kafka**: Integra con producer esterni
-- **Serving Layer**: Espone REST API standard
-- **Custom connectors**: Estendibili
+### How do I integrate with existing systems?
+- **Harvester**: Calls external APIs
+- **Kafka**: Integrates with external producers
+- **Serving Layer**: Exposes standard REST APIs
+- **Custom connectors**: Extensible
 
-### Supporta streaming da database?
-Sì, puoi usare Kafka Connect per streaming da DB come MySQL, PostgreSQL, MongoDB.
+### Does it support database streaming?
+Yes, you can use Kafka Connect for streaming from DBs like MySQL, PostgreSQL, MongoDB.
 
-### Posso integrare con AWS/Azure?
-Sì:
+### Can I integrate with AWS/Azure?
+Yes:
 - **AWS**: S3, Kinesis, EMR, Redshift
 - **Azure**: Blob Storage, Event Hubs, HDInsight
 - **GCP**: Cloud Storage, Pub/Sub, Dataproc
 
-### Come espongo i dati elaborati?
-Attraverso il **Serving Layer** che fornisce REST API. Puoi anche:
-- Scrivere su DB esterni
-- Pubblicare su code (Kafka, RabbitMQ)
-- Export su file (HDFS, S3)
+### How do I expose processed data?
+Through the **Serving Layer** which provides REST APIs. You can also:
+- Write to external DBs
+- Publish to queues (Kafka, RabbitMQ)
+- Export to files (HDFS, S3)
 
-### Supporta GraphQL?
-Il Serving Layer base usa REST. Puoi estenderlo per GraphQL usando librerie Spring Boot.
+### Does it support GraphQL?
+The base Serving Layer uses REST. You can extend it for GraphQL using Spring Boot libraries.
 
 ---
 
-## Licensing e Supporto
+## Licensing and Support
 
-### Che licenza usa?
-Apache License 2.0 - permette:
-- ✅ Uso commerciale
-- ✅ Modifica
-- ✅ Distribuzione
-- ✅ Uso privato
-- ⚠️ Devi includere notice di licenza
+### What license does it use?
+Apache License 2.0 - allows:
+- Commercial use
+- Modification
+- Distribution
+- Private use
+- Must include license notice
 
-### Posso usarlo in prodotti commerciali?
-Sì, la licenza Apache 2.0 lo permette.
+### Can I use it in commercial products?
+Yes, Apache 2.0 license allows it.
 
-### C'è supporto professionale?
-Attualmente il supporto è community-based tramite:
+### Is there professional support?
+Currently support is community-based through:
 - GitHub Issues
 - GitHub Discussions
-- Documentazione
+- Documentation
 
-Per servizi professionali, contatta Smart-Shaped.
+For professional services, contact Smart-Shaped.
 
-### Come contribuisco al progetto?
-1. Fork il repository
-2. Crea un branch per la tua feature
-3. Commit le modifiche
-4. Apri una Pull Request
+### How do I contribute to the project?
+1. Fork the repository
+2. Create a branch for your feature
+3. Commit changes
+4. Open a Pull Request
 
-Consulta CONTRIBUTING.md (se disponibile).
+Check CONTRIBUTING.md (if available).
 
-### Posso richiedere nuove feature?
-Sì! Apri una GitHub Issue con:
-- Descrizione della feature
-- Caso d'uso
-- Benefici attesi
+### Can I request new features?
+Yes! Open a GitHub Issue with:
+- Feature description
+- Use case
+- Expected benefits
 
-### Dove segnalo bug?
-Su [GitHub Issues](https://github.com/Smart-Shaped/chaM3Leon/issues)
+### Where do I report bugs?
+On [GitHub Issues](https://github.com/Smart-Shaped/chaM3Leon/issues)
 
-Includi:
-- Descrizione del problema
-- Steps per riprodurre
-- Versione framework
-- Log rilevanti
+Include:
+- Problem description
+- Steps to reproduce
+- Framework version
+- Relevant logs
 
 ---
 
 ## Machine Learning (ML Runner)
 
-### Quali framework ML supporta?
-Il ML Runner (Python) supporta:
+### Which ML frameworks does it support?
+The ML Runner (Python) supports:
 - scikit-learn
 - TensorFlow
 - PyTorch
 - XGBoost
 - LightGBM
-- Qualsiasi libreria Python ML
+- Any Python ML library
 
-### Come gestisce i modelli ML?
-Usa **MLflow** per:
+### How does it manage ML models?
+Uses **MLflow** for:
 - Model versioning
 - Experiment tracking
 - Model registry
 - Model serving
 
-### Supporta deep learning?
-Sì, tramite TensorFlow, PyTorch, Keras.
+### Does it support deep learning?
+Yes, through TensorFlow, PyTorch, Keras.
 
-### Come faccio training distribuito?
+### How do I do distributed training?
 - **Spark MLlib**: Built-in
-- **Horovod**: Per deep learning distribuito
-- **Ray**: Per scaling Python ML
+- **Horovod**: For distributed deep learning
+- **Ray**: For scaling Python ML
 
-### Posso usare modelli pre-addestrati?
-Sì! Puoi caricare modelli da:
+### Can I use pre-trained models?
+Yes! You can load models from:
 - MLflow Model Registry
 - File system (HDFS, S3)
 - Hugging Face Hub
@@ -327,164 +327,164 @@ Sì! Puoi caricare modelli da:
 
 ---
 
-## Sicurezza
+## Security
 
-### È sicuro per dati sensibili?
-Sì, ma devi configurare correttamente:
+### Is it safe for sensitive data?
+Yes, but you must configure correctly:
 - Encryption at rest (Cassandra, HDFS)
 - Encryption in transit (TLS/SSL)
-- Autenticazione (Kafka SASL, Cassandra auth)
+- Authentication (Kafka SASL, Cassandra auth)
 - Network security (firewall, VPC)
 
-### Supporta GDPR?
-Il framework fornisce strumenti per:
+### Does it support GDPR?
+The framework provides tools for:
 - Data retention policies
 - Right to be forgotten (delete API)
 - Audit logging
 - Data encryption
 
-L'implementazione finale dipende dal tuo progetto.
+Final implementation depends on your project.
 
-### Come gestisce le credenziali?
-Best practice:
-- Usa environment variables
+### How does it handle credentials?
+Best practices:
+- Use environment variables
 - Secret managers (Vault, AWS Secrets Manager)
-- Non committare mai secrets nel codice
+- Never commit secrets in code
 
 ---
 
 ## Troubleshooting
 
-### L'applicazione non parte
-Controlla:
-1. Versione Java corretta
+### Application won't start
+Check:
+1. Correct Java version
 2. Maven build successful
-3. Configurazioni YAML valide
-4. Servizi (Kafka, Cassandra) running
+3. Valid YAML configurations
+4. Services (Kafka, Cassandra) running
 
 ### Kafka connection refused
-- Verifica Kafka running: `jps | grep Kafka`
-- Controlla indirizzo/porta in config
-- Se Docker, verifica network
+- Verify Kafka running: `jps | grep Kafka`
+- Check address/port in config
+- If Docker, verify network
 
 ### Cassandra connection timeout
-- Verifica Cassandra running: `nodetool status`
-- Controlla datacenter name
-- Verifica porte aperte (9042)
+- Verify Cassandra running: `nodetool status`
+- Check datacenter name
+- Verify open ports (9042)
 
-### Out of Memory Spark
-Aumenta memoria:
+### Spark Out of Memory
+Increase memory:
 ```bash
 --driver-memory 4g --executor-memory 4g
 ```
 
 ### Checkpoint errors
-- Verifica permessi HDFS/filesystem
-- Controlla spazio disco disponibile
-- Path checkpoint corretto in config
+- Verify HDFS/filesystem permissions
+- Check available disk space
+- Correct checkpoint path in config
 
-### Performance scarsa
-- Aumenta parallelism (`spark.default.parallelism`)
-- Ottimizza partitioning
-- Verifica risorse cluster
-- Profile con Spark UI
+### Poor performance
+- Increase parallelism (`spark.default.parallelism`)
+- Optimize partitioning
+- Verify cluster resources
+- Profile with Spark UI
 
 ---
 
-## Confronti
+## Comparisons
 
 ### chaM3Leon vs Apache Beam
 **chaM3Leon:**
-- ✅ Più opinioned, meno boilerplate
-- ✅ Include ML layer integrato
-- ✅ Setup più rapido
-- ⚠️ Meno portabilità tra runner
+- More opinionated, less boilerplate
+- Includes integrated ML layer
+- Faster setup
+- Less portability between runners
 
 **Beam:**
-- ✅ Portabile (Spark, Flink, Dataflow)
-- ✅ Più maturo
-- ⚠️ Più complesso
-- ⚠️ Non include ML
+- Portable (Spark, Flink, Dataflow)
+- More mature
+- More complex
+- No ML included
 
 ### chaM3Leon vs Databricks
 **chaM3Leon:**
-- ✅ Open source, no vendor lock-in
-- ✅ Costi inferiori
-- ✅ Controllo totale
-- ⚠️ Più setup manual
+- Open source, no vendor lock-in
+- Lower costs
+- Total control
+- More manual setup
 
 **Databricks:**
-- ✅ Managed service
-- ✅ Ottimo tooling
-- ⚠️ Costoso
-- ⚠️ Vendor lock-in
+- Managed service
+- Excellent tooling
+- Expensive
+- Vendor lock-in
 
 ### chaM3Leon vs Airflow
-**Non sono alternativi!** Airflow è per orchestrazione, chaM3Leon per elaborazione dati.
+**They are not alternatives!** Airflow is for orchestration, chaM3Leon for data processing.
 
-Puoi usarli insieme: Airflow orchestra job chaM3Leon.
+You can use them together: Airflow orchestrates chaM3Leon jobs.
 
 ---
 
-## Risorse Aggiuntive
+## Additional Resources
 
-### Dove trovo esempi?
-- Repository GitHub (test, esempi)
+### Where do I find examples?
+- GitHub repository (tests, examples)
 - [USE_CASES.md](docs/USE_CASES.md)
 - [GETTING_STARTED.md](docs/GETTING_STARTED.md)
-- Video tutorial
+- Video tutorials
 
-### Ci sono video tutorial?
-Sì, sulla [playlist YouTube](README.md#additional-video-resources)
+### Are there video tutorials?
+Yes, on the [YouTube playlist](README.md#additional-video-resources)
 
-### C'è una community?
+### Is there a community?
 - GitHub Discussions
 - GitHub Issues
-- (Eventuale Slack/Discord - da verificare)
+- (Potential Slack/Discord - to be verified)
 
-### Dove approfondisco Spark?
+### Where can I learn more about Spark?
 - [Spark Official Docs](https://spark.apache.org/docs/latest/)
 - [Learning Spark (O'Reilly)](https://www.oreilly.com/library/view/learning-spark-2nd/9781492050032/)
-- Corsi online (Coursera, Udemy)
+- Online courses (Coursera, Udemy)
 
-### Dove approfondisco Kafka?
+### Where can I learn more about Kafka?
 - [Kafka Official Docs](https://kafka.apache.org/documentation/)
 - [Kafka: The Definitive Guide](https://www.confluent.io/resources/kafka-the-definitive-guide/)
 
 ---
 
-## Domande Business
+## Business Questions
 
-### Quanto costa implementare chaM3León?
-- **Software**: Gratis (open source)
-- **Infrastruttura**: €15-45k setup, €24-120k/anno operativo
-- **Team**: 2-3 persone (data engineer, data scientist, devops)
-- Vedi [SUMMARY.md](SUMMARY.md) per dettagli
+### How much does it cost to implement chaM3León?
+- **Software**: Free (open source)
+- **Infrastructure**: €15-45k setup, €24-120k/year operational
+- **Team**: 2-3 people (data engineer, data scientist, devops)
+- See [SUMMARY.md](SUMMARY.md) for details
 
-### Qual è il ROI?
-Tipicamente:
-- Break-even: 6-9 mesi
-- ROI 3 anni: 300-500%
-- Dipende dal caso d'uso
+### What is the ROI?
+Typically:
+- Break-even: 6-9 months
+- 3-year ROI: 300-500%
+- Depends on use case
 
-### Quanto tempo serve per andare in produzione?
-- **PoC**: 1 mese
-- **MVP**: 2-3 mesi
-- **Production-ready**: 3-6 mesi
+### How long does it take to go to production?
+- **PoC**: 1 month
+- **MVP**: 2-3 months
+- **Production-ready**: 3-6 months
 
-### Serve un team dedicato?
-Inizialmente no, ma per scaling sì:
-- **Start**: 1-2 persone part-time
+### Do I need a dedicated team?
+Initially no, but for scaling yes:
+- **Start**: 1-2 people part-time
 - **Production**: 2-3 full-time
-- **Scale**: Team dedicato (5-10 persone)
+- **Scale**: Dedicated team (5-10 people)
 
 ---
 
-**Non trovi la risposta?**
-1. Controlla [Documentation Hub](docs/README.md)
-2. Cerca in [GitHub Issues](https://github.com/Smart-Shaped/chaM3Leon/issues)
-3. Apri una nuova Issue o Discussion
+**Can't find the answer?**
+1. Check [Documentation Hub](docs/README.md)
+2. Search in [GitHub Issues](https://github.com/Smart-Shaped/chaM3Leon/issues)
+3. Open a new Issue or Discussion
 
 ---
 
-*Ultimo aggiornamento: Ottobre 2025*
+*Last updated: October 2025*

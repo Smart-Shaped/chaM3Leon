@@ -1,87 +1,87 @@
-# Riepilogo Documentazione Creata
+# Documentation Summary
 
-## 📋 Documentazione Generata per chaM3Leon
+## Documentation Generated for chaM3Leon
 
-Questo documento elenca tutta la documentazione non-tecnica creata per il framework chaM3León.
+This document lists all the non-technical documentation created for the chaM3León framework.
 
 ---
 
-## 🎯 Documenti Principali (Root Level)
+## Main Documents (Root Level)
 
 ### 1. VALUE_PROPOSITION.md
 **Path:** `/VALUE_PROPOSITION.md`  
-**Scopo:** Spiegare il valore di chaM3Leon in modo accessibile  
-**Contenuto:**
-- Cos'è chaM3Leon e perché sceglierlo
-- Vantaggi competitivi
-- Casi d'uso reali
-- Benefici per diverse tipologie di utenti
-- Tecnologie integrate spiegate semplicemente
+**Purpose:** Explain the value of chaM3Leon in an accessible way  
+**Content:**
+- What chaM3Leon is and why to choose it
+- Competitive advantages
+- Real use cases
+- Benefits for different types of users
+- Technologies integrated explained simply
 
-**Target:** Tutti (Business, Sviluppatori, Manager)  
-**Lunghezza:** ~1500 parole
+**Target:** Everyone (Business, Developers, Managers)  
+**Length:** ~1500 words
 
 ---
 
 ### 2. SUMMARY.md
 **Path:** `/SUMMARY.md`  
-**Scopo:** Executive summary per decision makers  
-**Contenuto:**
-- Problema e soluzione
-- Numeri chiave e metriche
-- Componenti principali spiegati semplicemente
-- Applicazioni tipiche per settore
-- Confronti con alternative
-- Modello di costo e ROI
+**Purpose:** Executive summary for decision makers  
+**Content:**
+- Problem and solution
+- Key numbers and metrics
+- Main components explained simply
+- Typical applications by sector
+- Comparisons with alternatives
+- Cost model and ROI
 - Roadmap
 
-**Target:** C-Level, Manager, Business Stakeholder  
-**Lunghezza:** ~2000 parole
+**Target:** C-Level, Managers, Business Stakeholders  
+**Length:** ~2000 words
 
 ---
 
-## 📚 Documenti nella Cartella /docs
+## Documents in /docs Folder
 
 ### 3. ARCHITECTURE.md
 **Path:** `/docs/ARCHITECTURE.md`  
-**Scopo:** Spiegare l'architettura in modo non-tecnico  
-**Contenuto:**
-- Visione d'insieme del sistema
-- Descrizione di ogni layer con analogie
-- Lambda Architecture spiegata semplicemente
-- Come comunicano i componenti
-- Pattern di utilizzo comuni
-- Esempio pratico E-Commerce
-- Principi di design
+**Purpose:** Explain the architecture in a non-technical way  
+**Content:**
+- System overview
+- Description of each layer with analogies
+- Lambda Architecture explained simply
+- How components communicate
+- Common usage patterns
+- Practical E-Commerce example
+- Design principles
 
-**Target:** Architetti, Team Lead, Sviluppatori Senior  
-**Lunghezza:** ~2500 parole
+**Target:** Architects, Team Leads, Senior Developers  
+**Length:** ~2500 words
 
 ---
 
 ### 4. GETTING_STARTED.md
 **Path:** `/docs/GETTING_STARTED.md`  
-**Scopo:** Guida pratica per iniziare  
-**Contenuto:**
-- Prerequisiti e installazione
-- Setup ambiente (Docker e manuale)
-- Creazione primo progetto step-by-step
-- Codice esempio completo
-- Compilazione ed esecuzione
-- Verifica funzionamento
-- Troubleshooting problemi comuni
-- Prossimi passi
+**Purpose:** Practical guide to get started  
+**Content:**
+- Prerequisites and installation
+- Environment setup (Docker and manual)
+- Creating first project step-by-step
+- Complete example code
+- Compilation and execution
+- Functionality verification
+- Common troubleshooting
+- Next steps
 
-**Target:** Sviluppatori (tutti i livelli)  
-**Lunghezza:** ~3000 parole + codice
+**Target:** Developers (all levels)  
+**Length:** ~3000 words + code
 
 ---
 
 ### 5. USE_CASES.md
 **Path:** `/docs/USE_CASES.md`  
-**Scopo:** Esempi concreti di applicazioni  
-**Contenuto:**
-- 8 casi d'uso dettagliati:
+**Purpose:** Concrete application examples  
+**Content:**
+- 8 detailed use cases:
   1. E-Commerce Monitoring
   2. Smart City IoT
   3. Social Media Analytics
@@ -90,98 +90,98 @@ Questo documento elenca tutta la documentazione non-tecnica creata per il framew
   6. Fleet Management
   7. Gaming Analytics
   8. Precision Agriculture
-- Per ogni caso:
-  - Scenario e problema
-  - Architettura con chaM3Leon
-  - Implementazione layer per layer
-  - Benefici misurabili
-- Template per creare il proprio caso d'uso
+- For each case:
+  - Scenario and problem
+  - Architecture with chaM3Leon
+  - Layer-by-layer implementation
+  - Measurable benefits
+- Template to create your own use case
 
-**Target:** Business Analyst, Product Manager, Sviluppatori  
-**Lunghezza:** ~4500 parole
+**Target:** Business Analysts, Product Managers, Developers  
+**Length:** ~4500 words
 
 ---
 
 ### 6. FAQ.md
 **Path:** `/docs/FAQ.md`  
-**Scopo:** Rispondere a domande frequenti  
-**Contenuto:**
-- Sezioni organizzate per categoria:
-  - Generale (cos'è, per chi)
-  - Installazione e Setup
-  - Architettura e Design
-  - Sviluppo
-  - Deployment e Operations
-  - Performance e Scalabilità
-  - Integrazione
-  - Licensing e Supporto
+**Purpose:** Answer frequently asked questions  
+**Content:**
+- Sections organized by category:
+  - General (what it is, for whom)
+  - Installation and Setup
+  - Architecture and Design
+  - Development
+  - Deployment and Operations
+  - Performance and Scalability
+  - Integration
+  - Licensing and Support
   - Machine Learning
-  - Sicurezza
+  - Security
   - Troubleshooting
-  - Confronti con alternative
-  - Risorse aggiuntive
-  - Domande business
+  - Comparisons with alternatives
+  - Additional resources
+  - Business questions
 
-**Target:** Tutti  
-**Lunghezza:** ~4000 parole (100+ Q&A)
+**Target:** Everyone  
+**Length:** ~4000 words (100+ Q&A)
 
 ---
 
 ### 7. README.md (docs/)
 **Path:** `/docs/README.md`  
-**Scopo:** Indice della documentazione  
-**Contenuto:**
-- Panoramica di tutta la documentazione
-- Percorsi di apprendimento per ruolo
-- Descrizione di ogni documento
-- Mappa concettuale
-- Risorse video
-- Link repository correlati
-- Guida contribuzione
-- Roadmap documentazione
+**Purpose:** Documentation index  
+**Content:**
+- Overview of all documentation
+- Learning paths by role
+- Description of each document
+- Conceptual map
+- Video resources
+- Related repository links
+- Contribution guide
+- Documentation roadmap
 
-**Target:** Tutti (punto di ingresso)  
-**Lunghezza:** ~1800 parole
+**Target:** Everyone (entry point)  
+**Length:** ~1800 words
 
 ---
 
-## 🔄 Modifiche ai File Esistenti
+## Changes to Existing Files
 
 ### README.md (Root)
 **Path:** `/README.md`  
-**Modifiche apportate:**
+**Changes made:**
 
-1. **Aggiunto header introduttivo:**
-   - Link a Executive Summary
-   - Link a Value Proposition
-   - Invito a nuovi utenti
+1. **Added introductory header:**
+   - Link to Executive Summary
+   - Link to Value Proposition
+   - Invitation to new users
 
-2. **Aggiunta sezione Documentation Hub:**
-   - Link a tutti i documenti principali
-   - Breve descrizione di ciascuno
+2. **Added Documentation Hub section:**
+   - Links to all main documents
+   - Brief description of each
 
-3. **Modificata sezione Features:**
-   - Cambiato "ML Layer" → "ML Runner"
-   - Aggiunto link a VALUE_PROPOSITION.md
-   - Aggiornato riferimento a submodule PyChaM3Leon
+3. **Modified Features section:**
+   - Changed "ML Layer" → "ML Runner"
+   - Added link to VALUE_PROPOSITION.md
+   - Updated reference to PyChaM3Leon submodule
 
-4. **Aggiornata sezione Implementation:**
-   - Rinominato "ML Layer" → "ML Runner"
-   - Aggiunto box informativo sul submodule Python
+4. **Updated Implementation section:**
+   - Renamed "ML Layer" → "ML Runner"
+   - Added info box about Python submodule
 
-5. **Aggiornata sezione Roadmap:**
+5. **Updated Roadmap section:**
    - Harvester in Python (Q2 2025)
    - Serving in Django (Q3 2025)
    - Workflow Designer (Q4 2025)
 
-6. **Corretti riferimenti video:**
+6. **Corrected video references:**
    - "ML Layer" → "ML Runner"
 
 ---
 
-## 📊 Statistiche Complessive
+## Overall Statistics
 
-### Totale Documenti Creati: 7
+### Total Documents Created: 7
 - VALUE_PROPOSITION.md
 - SUMMARY.md
 - ARCHITECTURE.md
@@ -190,138 +190,138 @@ Questo documento elenca tutta la documentazione non-tecnica creata per il framew
 - FAQ.md
 - docs/README.md
 
-### Totale Documenti Modificati: 1
-- README.md (principale)
+### Total Documents Modified: 1
+- README.md (main)
 
-### Parole Totali: ~19,000+
-### Esempi di Codice: 15+
-### Casi d'Uso Dettagliati: 8
+### Total Words: ~19,000+
+### Code Examples: 15+
+### Detailed Use Cases: 8
 ### Q&A in FAQ: 100+
 
 ---
 
-## 🎯 Obiettivi Raggiunti
+## Objectives Achieved
 
-### ✅ Documentazione Non-Tecnica
-Tutti i documenti sono scritti in linguaggio accessibile, usando:
-- Analogie e metafore
-- Esempi pratici
-- Diagrammi concettuali (testuali)
-- Evitando jargon tecnico quando possibile
+### Documentation Non-Technical
+All documents are written in accessible language, using:
+- Analogies and metaphors
+- Practical examples
+- Conceptual diagrams (textual)
+- Avoiding technical jargon when possible
 
-### ✅ Copertura Completa
-Documentazione per ogni tipo di utente:
-- Business/Manager → SUMMARY, VALUE_PROPOSITION
-- Sviluppatori → GETTING_STARTED, FAQ
-- Architetti → ARCHITECTURE
-- Product Owner → USE_CASES
-- Tutti → FAQ, docs/README
+### Complete Coverage
+Documentation for every type of user:
+- Business/Managers → SUMMARY, VALUE_PROPOSITION
+- Developers → GETTING_STARTED, FAQ
+- Architects → ARCHITECTURE
+- Product Owners → USE_CASES
+- Everyone → FAQ, docs/README
 
-### ✅ Struttura Logica
-Organizzazione chiara:
-- Documenti "overview" nel root
-- Documenti dettagliati in /docs
-- Indice centralizzato (docs/README)
-- Link incrociati tra documenti
+### Logical Structure
+Clear organization:
+- "Overview" documents in root
+- Detailed documents in /docs
+- Centralized index (docs/README)
+- Cross-links between documents
 
-### ✅ Actionable
-Ogni documento guida all'azione:
-- VALUE_PROPOSITION → Perché usare chaM3Leon
-- GETTING_STARTED → Come iniziare subito
-- USE_CASES → Cosa posso costruire
-- FAQ → Come risolvere problemi
+### Actionable
+Each document guides to action:
+- VALUE_PROPOSITION → Why use chaM3Leon
+- GETTING_STARTED → How to start immediately
+- USE_CASES → What can I build
+- FAQ → How to solve problems
 
 ---
 
-## 🔗 Navigazione Suggerita
+## Suggested Navigation
 
-### Per Nuovi Utenti
-1. VALUE_PROPOSITION.md (capire il valore)
-2. SUMMARY.md (overview esecutiva)
-3. GETTING_STARTED.md (mani sulla tastiera)
+### For New Users
+1. VALUE_PROPOSITION.md (understand the value)
+2. SUMMARY.md (executive overview)
+3. GETTING_STARTED.md (hands on keyboard)
 
-### Per Business
-1. SUMMARY.md (decisioni strategiche)
-2. USE_CASES.md (applicazioni concrete)
-3. FAQ.md (domande business)
+### For Business
+1. SUMMARY.md (strategic decisions)
+2. USE_CASES.md (concrete applications)
+3. FAQ.md (business questions)
 
-### Per Sviluppatori
-1. VALUE_PROPOSITION.md (contesto)
-2. ARCHITECTURE.md (come funziona)
-3. GETTING_STARTED.md (tutorial pratico)
+### For Developers
+1. VALUE_PROPOSITION.md (context)
+2. ARCHITECTURE.md (how it works)
+3. GETTING_STARTED.md (practical tutorial)
 4. FAQ.md (troubleshooting)
 
-### Per Approfondimenti Tecnici
-1. ARCHITECTURE.md (visione d'insieme)
-2. Documentazione layer specifici (README nei layer)
-3. config_list.md (riferimento configurazioni)
-4. apps_naming.md (convenzioni)
+### For Technical Deep Dive
+1. ARCHITECTURE.md (overview)
+2. Layer-specific documentation (README in layers)
+3. config_list.md (configuration reference)
+4. apps_naming.md (conventions)
 
 ---
 
-## 📝 Linee Guida Seguite
+## Guidelines Followed
 
-### Scrittura
-- Tono amichevole e professionale
-- Paragrafi brevi (3-5 righe)
-- Liste puntate per chiarezza
-- Esempi concreti sempre
+### Writing
+- Friendly and professional tone
+- Short paragraphs (3-5 lines)
+- Bullet lists for clarity
+- Always concrete examples
 
-### Struttura
-- Titoli H2 per sezioni principali
-- Titoli H3 per sottosezioni
-- Emoji per guidare l'occhio 📊 🎯 ✅
-- Box informativi per highlight
+### Structure
+- H2 titles for main sections
+- H3 titles for subsections
+- Emojis to guide the eye
+- Info boxes for highlights
 
-### Contenuto
-- Valore prima di dettagli tecnici
-- "Cosa" e "Perché" prima di "Come"
-- Benefici misurabili quando possibile
-- Link a risorse esterne quando utile
+### Content
+- Value before technical details
+- "What" and "Why" before "How"
+- Measurable benefits when possible
+- Links to external resources when useful
 
 ---
 
-## 🔮 Prossimi Passi Suggeriti
+## Suggested Next Steps
 
-### Documentazione Aggiuntiva
-- [ ] CONTRIBUTING.md (come contribuire al progetto)
-- [ ] CHANGELOG.md (storia versioni)
-- [ ] COOKBOOK.md (ricette pratiche comuni)
-- [ ] MIGRATION_GUIDE.md (da versioni precedenti)
-- [ ] PERFORMANCE_TUNING.md (ottimizzazione)
-- [ ] SECURITY.md (best practices sicurezza)
+### Additional Documentation
+- [ ] CONTRIBUTING.md (how to contribute to the project)
+- [ ] CHANGELOG.md (version history)
+- [ ] COOKBOOK.md (common practical recipes)
+- [ ] MIGRATION_GUIDE.md (from previous versions)
+- [ ] PERFORMANCE_TUNING.md (optimization)
+- [ ] SECURITY.md (security best practices)
 
-### Miglioramenti
-- [ ] Diagrammi visuali (invece che testuali)
-- [ ] Screenshot e GIF animate
-- [ ] Video tutorial integrati
-- [ ] Traduzioni (EN, IT completo)
+### Improvements
+- [ ] Visual diagrams (instead of textual)
+- [ ] Screenshots and animated GIFs
+- [ ] Integrated video tutorials
+- [ ] Translations (EN, IT complete)
 - [ ] Searchable docs (Docusaurus, MkDocs)
 
-### Contenuti
-- [ ] Case studies reali (con permesso clienti)
-- [ ] Benchmark performance
-- [ ] Comparison matrix dettagliata
-- [ ] Templates progetti pronti all'uso
-- [ ] Cheat sheets PDF
+### Content
+- [ ] Real case studies (with client permission)
+- [ ] Performance benchmarks
+- [ ] Detailed comparison matrix
+- [ ] Ready-to-use project templates
+- [ ] PDF cheat sheets
 
 ---
 
-## ✨ Feedback e Miglioramenti
+## Feedback and Improvements
 
-Questa documentazione è viva e può essere migliorata. Per suggerimenti:
+This documentation is alive and can be improved. For suggestions:
 
-1. Apri una GitHub Issue
-2. Specifica quale documento
-3. Suggerisci miglioramenti
-4. Contribuisci con Pull Request
-
----
-
-**Generato il:** 27 Ottobre 2025  
-**Versione Framework:** 2.0.0  
-**Versione Documentazione:** 1.0.0
+1. Open a GitHub Issue
+2. Specify which document
+3. Suggest improvements
+4. Contribute with Pull Request
 
 ---
 
-*Torna al [README principale](../README.md) o al [Documentation Hub](../docs/README.md)*
+**Generated on:** October 27, 2025  
+**Framework Version:** 2.0.0  
+**Documentation Version:** 1.0.0
+
+---
+
+*Back to [Main README](../README.md) or [Documentation Hub](../docs/README.md)*

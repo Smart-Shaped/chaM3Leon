@@ -1,50 +1,102 @@
-# Guida Introduttiva a chaM3Leon
+# Getting Started with chaM3Leon
 
-## Benvenuto!
+## Welcome!
 
-Questa guida ti aiuterà a fare i primi passi con chaM3Leon, dal setup iniziale alla creazione della tua prima applicazione di elaborazione dati. Non preoccuparti se non sei un esperto: ti guideremo passo dopo passo.
+This guide will help you take your first steps with chaM3Leon, from initial setup to creating your first data processing application. Don't worry if you're not an expert: we'll guide you step by step.
 
-## Prerequisiti
+## Prerequisites
 
-Prima di iniziare, assicurati di avere installato:
+Before starting, make sure you have installed:
 
-### Software Necessario
+### Required Software
 
-- **Java 11** (per i layer Spark) o **Java 21** (per il Serving Layer)
-  - Verifica: `java -version`
-  - Download: [Oracle JDK](https://www.oracle.com/java/technologies/downloads/) o [OpenJDK](https://adoptium.net/)
+- **Java 11** (for Spark layers) or **Java 21** (for Serving Layer)
+  - Verify: `java -version`
+  - Download: [Oracle JDK](https://www.oracle.com/java/technologies/downloads/) or [OpenJDK](https://adoptium.net/)
 
-- **Maven 3.6+** (per la gestione delle dipendenze)
-  - Verifica: `mvn -version`
+- **Maven 3.6+** (for dependency management)
+  - Verify: `mvn -version`
   - Download: [Apache Maven](https://maven.apache.org/download.cgi)
 
-- **Apache Spark 3.5+** (per l'elaborazione distribuita)
+- **Apache Spark 3.5+** (for distributed processing)
   - Download: [Apache Spark](https://spark.apache.org/downloads.html)
 
-- **Docker** (opzionale ma raccomandato)
+- **Docker** (optional but recommended)
   - Download: [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
-### Per il Layer Python (ML Runner)
+### For Python Layer (ML Runner)
 
 - **Python 3.12**
-  - Verifica: `python --version`
+  - Verify: `python --version`
   - Download: [Python.org](https://www.python.org/downloads/)
 
-- **pip** (gestore pacchetti Python)
-  - Verifica: `pip --version`
+- **pip** (Python package manager)
+  - Verify: `pip --version`
 
-## Fase 1: Installazione di chaM3Leon
+## Phase 1: Installing chaM3Leon
 
-### Opzione A: Clone del Repository
+### Option A: Repository Clone
 
 ```bash
-# Clona il repository principale
+```bash
+# Clone the main repository
 git clone https://github.com/Smart-Shaped/chaM3Leon.git
 cd chaM3Leon
 
-# Inizializza il submodule Python (ML Runner)
+# Initialize the Python submodule (ML Runner)
 git submodule init
 git submodule update
+```
+
+### Option B: ZIP Download
+
+1. Go to [GitHub - chaM3León](https://github.com/Smart-Shaped/chaM3Leon)
+2. Click on "Code" → "Download ZIP"
+3. Extract the ZIP file to a folder of your choice
+
+### Framework Compilation
+
+```bash
+# Navigate to the chaM3Leon folder
+cd chaM3Leon
+
+# Compile the framework
+mvn clean install
+```
+
+This command:
+- Downloads all necessary dependencies
+- Compiles the source code
+- Runs the tests
+- Creates usable JAR files
+
+**Note:** The first compilation may take a few minutes because Maven downloads all dependencies.
+
+## Phase 2: Environment Setup
+
+### Recommended Option: Using Docker
+
+The easiest way to start is using Docker, which automatically configures all necessary services.
+
+```bash
+# Clone the Docker repository
+git clone https://github.com/Smart-Shaped/docker_chaM3Leon.git
+cd docker_chaM3Leon
+
+# Start all services
+docker-compose up -d
+```
+
+This starts:
+- **Apache Kafka**: For data streaming
+- **Apache Cassandra**: For persistence
+- **HDFS**: For distributed storage
+- **Hadoop Yarn**: For distributed execution
+- **Spark Cluster**: For processing
+
+## Phase 3: Your First Project
+
+Let's create a simple project that uses the **Batch Layer** to process data.
 ```
 
 ### Opzione B: Download ZIP
@@ -93,11 +145,11 @@ Questo avvia:
 - **Hadoop Yarn**: Per l'esecuzione distribuita
 - **Spark Cluster**: Per l'elaborazione
 
-## Fase 3: Il Tuo Primo Progetto
+## Phase 3: Your First Project
 
-Creiamo un semplice progetto che usa il **Batch Layer** per elaborare dati.
+Let's create a simple project that uses the **Batch Layer** to process data.
 
-### Struttura del Progetto
+### Project Structure
 
 ```bash
 my-chameleon-app-batch/
@@ -197,7 +249,7 @@ my-chameleon-app-batch/
 </project>
 ```
 
-### 2. Crea il Data Model
+### 2. Create the Data Model
 
 File: `src/main/java/com/mycompany/demo/model/MyDataModel.java`
 
@@ -221,7 +273,7 @@ public class MyDataModel extends TableModel {
 }
 ```
 
-### 3. Crea il Preprocessor
+### 3. Create the Preprocessor
 
 File: `src/main/java/com/mycompany/demo/DemoPreprocessor.java`
 
@@ -261,14 +313,14 @@ public class DemoBatchUpdater extends BatchUpdater {
     
     @Override
     public Dataset<Row> updateBatch(Dataset<Row> batchData) {
-        // Esempio: calcola statistiche aggregate
+        // Example: calculate aggregate statistics
         return batchData.groupBy("message")
                        .count();
     }
 }
 ```
 
-### 5. Crea il Batch Layer
+### 5. Create the Batch Layer
 
 File: `src/main/java/com/mycompany/demo/DemoBatchLayer.java`
 
@@ -285,7 +337,7 @@ public class DemoBatchLayer extends BatchLayer {
 }
 ```
 
-### 6. Crea la Main Class
+### 6. Create the Main Class
 
 File: `src/main/java/com/mycompany/demo/DemoApp.java`
 
@@ -301,7 +353,7 @@ public class DemoApp {
 }
 ```
 
-### 7. Configura il Framework
+### 7. Configure the Framework
 
 File: `src/main/resources/framework-config.yml`
 
@@ -344,17 +396,17 @@ java.lang.Integer: "int"
 java.lang.Boolean: "boolean"
 ```
 
-### 8. Compila il Progetto
+### 8. Compile the Project
 
 ```bash
 mvn clean package
 ```
 
-Questo crea un file JAR in `target/demo-batch-1.0.0.jar`
+This creates a JAR file in `target/demo-batch-1.0.0.jar`
 
-### 9. Esegui l'Applicazione
+### 9. Run the Application
 
-#### Con Spark Locale
+#### With Local Spark
 
 ```bash
 spark-submit \
@@ -363,7 +415,7 @@ spark-submit \
   target/demo-batch-1.0.0.jar
 ```
 
-#### Con Spark Cluster
+#### With Spark Cluster
 
 ```bash
 spark-submit \
@@ -373,27 +425,90 @@ spark-submit \
   target/demo-batch-1.0.0.jar
 ```
 
-## Fase 4: Verifica il Funzionamento
+## Phase 4: Verify Functionality
 
-### Invia Dati di Test a Kafka
+### Send Test Data to Kafka
 
 ```bash
-# Crea il topic
+### Send Test Data to Kafka
+
+```bash
+# Create the topic
 kafka-topics.sh --create \
   --bootstrap-server localhost:9092 \
   --topic demo-topic \
   --partitions 1 \
   --replication-factor 1
 
-# Invia messaggi di test
+# Send test messages
 kafka-console-producer.sh \
   --bootstrap-server localhost:9092 \
   --topic demo-topic
 
-# Inserisci alcuni JSON (premi Enter dopo ognuno)
+# Insert some JSON (press Enter after each one)
 {"id":"1","message":"test","timestamp":1234567890,"value":100.5}
 {"id":"2","message":"test","timestamp":1234567891,"value":200.3}
 {"id":"3","message":"demo","timestamp":1234567892,"value":150.7}
+```
+
+### Verify Data in Cassandra
+
+```bash
+# Connect to Cassandra
+cqlsh localhost
+
+# Use the keyspace
+USE demo_keyspace;
+
+# Display the data
+SELECT * FROM mydatamodel;
+```
+
+## Next Steps
+
+Congratulations! You've created your first chaM3Leon application.
+
+### What to Do Next
+
+1. **Explore Other Layers**
+   - Try the [Speed Layer](../chaM3Leon/speed/README.md) for real-time processing
+   - Experiment with the [Harvester Layer](../chaM3Leon/harvester/README.md) to collect data from APIs
+   - Use the [ML Runner](https://github.com/Smart-Shaped/PyChaM3Leon) for machine learning
+
+2. **Deep Dive into Configurations**
+   - Read the [Configuration Guide](config_list.md)
+   - Learn naming best practices: [Apps Naming](apps_naming.md)
+
+3. **Study Real Use Cases**
+   - Check [USE_CASES.md](USE_CASES.md) for practical examples
+
+4. **Explore the Architecture**
+   - Better understand how it works: [ARCHITECTURE.md](ARCHITECTURE.md)
+
+## Common Troubleshooting
+
+### Problem: "Cannot find symbol" during compilation
+
+**Solution:** Make sure you've run `mvn clean install` in the main chaM3León folder before compiling your project.
+
+### Problem: Kafka won't connect
+
+**Solution:** 
+- Verify that Kafka is running: `jps` (you should see `Kafka`)
+- Check that the address in the configuration file is correct
+- If using Docker, make sure containers are active: `docker ps`
+
+### Problem: Cassandra connection refused
+
+**Solution:**
+- Verify that Cassandra is running
+- Check the ports (default: 9042)
+- Verify the datacenter in the configuration
+
+### Problem: Out of Memory during Spark execution
+
+**Solution:**
+Increase the available memory for Spark:
 ```
 
 ### Verifica i Dati in Cassandra
@@ -464,33 +579,33 @@ spark-submit \
   target/demo-batch-1.0.0.jar
 ```
 
-## Risorse Utili
+## Useful Resources
 
-### Documentazione
-- [README Principale](../README.md)
+### Documentation
+- [Main README](../README.md)
 - [Value Proposition](../VALUE_PROPOSITION.md)
-- [Documentazione Batch Layer](../chaM3Leon/batch/README.md)
-- [Documentazione Speed Layer](../chaM3Leon/speed/README.md)
-- [Documentazione Harvester](../chaM3Leon/harvester/README.md)
+- [Batch Layer Documentation](../chaM3Leon/batch/README.md)
+- [Speed Layer Documentation](../chaM3Leon/speed/README.md)
+- [Harvester Documentation](../chaM3Leon/harvester/README.md)
 
-### Video Tutorial
-- [Presentazione Framework](https://www.youtube.com/watch?v=wtVyYUDlRQc)
-- [Demo Batch e Speed](https://www.youtube.com/watch?v=UjzYc9C1krU)
-- [Demo Harvester](https://www.youtube.com/watch?v=pwE223S0-oU)
+### Video Tutorials
+- [Framework Presentation](https://www.youtube.com/watch?v=wtVyYUDlRQc)
+- [Batch and Speed Demo](https://www.youtube.com/watch?v=UjzYc9C1krU)
+- [Harvester Demo](https://www.youtube.com/watch?v=pwE223S0-oU)
 
-### Repository
+### Repositories
 - [chaM3Leon Main](https://github.com/Smart-Shaped/chaM3Leon)
 - [PyChaM3Leon (ML Runner)](https://github.com/Smart-Shaped/PyChaM3Leon)
 - [Docker Setup](https://github.com/Smart-Shaped/docker_chaM3Leon)
 
-## Supporto
+## Support
 
-Se hai domande o problemi:
-1. Controlla questa documentazione
-2. Consulta i video tutorial
-3. Apri una issue su GitHub
-4. Contatta la community
+If you have questions or problems:
+1. Check this documentation
+2. Consult the video tutorials
+3. Open an issue on GitHub
+4. Contact the community
 
 ---
 
-**Buon coding con chaM3Leon!**
+**Happy coding with chaM3Leon!**

@@ -1,29 +1,87 @@
-# Casi d'Uso di chaM3Leon
+# chaM3Leon Use Cases
 
-Questo documento presenta esempi concreti di come chaM3Leon può essere utilizzato in scenari reali. Ogni caso d'uso descrive il problema, la soluzione con chaM3Leon e i benefici ottenuti.
+This document presents concrete examples of how chaM3León can be used in real scenarios. Each use case describes the problem, the solution with chaM3León, and the benefits obtained.
 
 ---
 
-## 📊 Caso d'Uso 1: Sistema di Monitoraggio E-Commerce
+## Use Case 1: E-Commerce Monitoring System
 
 ### Scenario
-Un'azienda di e-commerce ha bisogno di:
-- Monitorare le vendite in tempo reale
-- Analizzare i trend settimanali
-- Prevedere la domanda futura
-- Fornire raccomandazioni personalizzate ai clienti
+An e-commerce company needs to:
+- Monitor sales in real-time
+- Analyze weekly trends
+- Predict future demand
+- Provide personalized recommendations to customers
 
-### Architettura con chaM3Leon
+### Architecture with chaM3León
 
 ```
-Eventi Vendita → Kafka → Speed Layer → Dashboard Live
+Sales Events → Kafka → Speed Layer → Live Dashboard
                       ↓
-                 Batch Layer → Report Settimanali
+                 Batch Layer → Weekly Reports
                       ↓
-                 ML Runner → Modelli Predittivi
+                 ML Runner → Predictive Models
                       ↓
-             Serving Layer → API per Web App
+             Serving Layer → Web App API
 ```
+
+### Implementation
+
+#### Speed Layer: Real-Time Monitoring
+```
+Function: Count sales and calculate revenue in real-time
+Input: Order stream from Kafka
+Output: Live counters saved in Cassandra
+Latency: < 1 second
+```
+
+**What to monitor:**
+- Orders per minute
+- Current total revenue
+- Best-selling products
+- Abandoned carts
+
+#### Batch Layer: Periodic Analysis
+```
+Function: Deep analysis every night
+Input: All daily orders
+Output: Aggregated reports in Cassandra
+Frequency: Every 24 hours
+```
+
+**What to analyze:**
+- Weekly sales trends
+- Customer segmentation
+- Product performance
+- Geographic analysis
+
+#### ML Runner: Predictive Intelligence
+```
+Function: Machine learning models
+Training: Once a week
+Inference: Real-time
+```
+
+**Implemented models:**
+1. **Recommendations**: "Customers who bought X also bought Y"
+2. **Demand Forecasting**: How many units to sell next week
+3. **Customer Lifetime Value**: Future customer value
+4. **Churn Prediction**: Probability that a customer will leave
+
+#### Serving Layer: Data Distribution
+```
+API Endpoints:
+- GET /api/sales/realtime → Current sales
+- GET /api/products/{id}/recommendations → Recommendations
+- GET /api/analytics/weekly → Weekly reports
+- POST /api/predict/demand → Forecasts
+```
+
+### Benefits Obtained
+- Immediate decisions: Real-time anomaly detection
+- Inventory optimization: Accurate forecasts reduce waste by 30%
+- Increased conversions: Personalized recommendations +25% sales
+- Cost reduction: Report automation reduces manual work by 80%
 
 ### Implementazione
 
@@ -85,519 +143,519 @@ API Endpoints:
 
 ---
 
-## 🌡️ Caso d'Uso 2: Monitoraggio IoT per Smart City
+## Use Case 2: IoT Monitoring for Smart City
 
 ### Scenario
-Una città intelligente deve gestire migliaia di sensori:
-- Sensori di temperatura
-- Rilevatori di qualità dell'aria
-- Sensori di traffico
-- Misuratori di consumo energetico
+A smart city needs to manage thousands of sensors:
+- Temperature sensors
+- Air quality detectors
+- Traffic sensors
+- Energy consumption meters
 
-### Architettura con chaM3Leon
+### Architecture with chaM3León
 
 ```
-Sensori IoT (migliaia) → Kafka → Speed Layer → Alert Sistema
+IoT Sensors (thousands) → Kafka → Speed Layer → Alert System
                                 ↓
-                           Batch Layer → Analisi Trend
+                           Batch Layer → Trend Analysis
                                 ↓
-                           ML Runner → Previsioni Anomalie
+                           ML Runner → Anomaly Predictions
                                 ↓
-                      Serving Layer → Dashboard Città
+                      Serving Layer → City Dashboard
 ```
 
-### Implementazione
+### Implementation
 
-#### Harvester Layer: Raccolta Dati Esterni
+#### Harvester Layer: External Data Collection
 ```
-Funzione: Integra dati meteo da API esterne
-Frequenza: Ogni ora
-Fonti: OpenWeatherMap, ARPA, etc.
-```
-
-#### Speed Layer: Processamento Real-Time
-```
-Volume: 10.000 letture/secondo
-Latenza: < 500ms
-Funzioni:
-- Calcolo medie mobili
-- Rilevamento soglie critiche
-- Trigger alert automatici
+Function: Integrates weather data from external APIs
+Frequency: Every hour
+Sources: OpenWeatherMap, ARPA, etc.
 ```
 
-**Esempi di Alert:**
-- Qualità aria sotto soglia → Notifica cittadini
-- Traffico intenso → Suggerimenti percorsi alternativi
-- Consumo energetico anomalo → Verifica guasti
-
-#### Batch Layer: Analisi Storiche
+#### Speed Layer: Real-Time Processing
 ```
-Dati: 6 mesi di letture
-Elaborazione: Ogni notte
-Output: Pattern stagionali, correlazioni
+Volume: 10,000 readings/second
+Latency: < 500ms
+Functions:
+- Moving averages calculation
+- Critical threshold detection
+- Automatic alert triggering
 ```
 
-**Analisi eseguite:**
-- Correlazione traffico/qualità aria
-- Pattern di consumo energetico
-- Impatto eventi meteo su mobilità
-- Trend stagionali
+**Alert examples:**
+- Air quality below threshold → Notify citizens
+- Heavy traffic → Suggest alternative routes
+- Anomalous energy consumption → Check failures
 
-#### ML Runner: Predizioni Intelligenti
+#### Batch Layer: Historical Analysis
 ```
-Modelli:
-1. Previsione qualità aria (24h)
-2. Stima traffico (prossime 2 ore)
-3. Anomaly detection (guasti sensori)
-4. Ottimizzazione semafori
+Data: 6 months of readings
+Processing: Every night
+Output: Seasonal patterns, correlations
 ```
 
-### Benefici Ottenuti
-- ✅ **Risposta rapida**: Alert in tempo reale salvano vite
-- ✅ **Efficienza energetica**: Riduzione consumi del 20%
-- ✅ **Meno traffico**: Ottimizzazione semafori riduce code del 15%
-- ✅ **Qualità vita**: Cittadini informati su qualità aria
+**Analyses performed:**
+- Traffic/air quality correlation
+- Energy consumption patterns
+- Weather impact on mobility
+- Seasonal trends
+
+#### ML Runner: Intelligent Predictions
+```
+Models:
+1. Air quality forecast (24h)
+2. Traffic estimation (next 2 hours)
+3. Anomaly detection (sensor failures)
+4. Traffic light optimization
+```
+
+### Benefits Obtained
+- Fast response: Real-time alerts save lives
+- Energy efficiency: 20% consumption reduction
+- Less traffic: Traffic light optimization reduces queues by 15%
+- Quality of life: Citizens informed about air quality
 
 ---
 
-## 📱 Caso d'Uso 3: Social Media Analytics
+## Use Case 3: Social Media Analytics
 
 ### Scenario
-Un'azienda vuole monitorare la propria brand reputation sui social media:
-- Analisi sentiment in tempo reale
-- Trend di menzioni
-- Identificazione influencer
+A company wants to monitor its brand reputation on social media:
+- Real-time sentiment analysis
+- Mention trends
+- Influencer identification
 - Crisis management
 
-### Architettura con chaM3Leon
+### Architecture with chaM3León
 
 ```
-API Social → Harvester → Kafka → Speed Layer → Alert Negativi
+Social APIs → Harvester → Kafka → Speed Layer → Negative Alerts
                               ↓
-                         Batch Layer → Report Brand
+                         Batch Layer → Brand Reports
                               ↓
                          ML Runner → Sentiment Analysis
                               ↓
-                    Serving Layer → Dashboard Marketing
+                    Serving Layer → Marketing Dashboard
 ```
 
-### Implementazione
+### Implementation
 
-#### Harvester Layer: Raccolta Social Data
+#### Harvester Layer: Social Data Collection
 ```
-Fonti:
+Sources:
 - Twitter API
 - Facebook Graph API
 - Instagram API
 - Reddit API
 
-Frequenza: Ogni 5 minuti
-Output: Post menzionanti il brand
+Frequency: Every 5 minutes
+Output: Posts mentioning the brand
 ```
 
-#### Speed Layer: Sentiment Real-Time
+#### Speed Layer: Real-Time Sentiment
 ```
-Input: Stream di post
-Elaborazione:
-1. Pulizia testo
+Input: Post stream
+Processing:
+1. Text cleaning
 2. Sentiment analysis (ML Runner inference)
-3. Conteggio menzioni
-4. Identificazione trending topics
+3. Mention counting
+4. Trending topic identification
 ```
 
-**Alert automatici:**
-- Sentiment negativo > 50% → Notifica crisis team
-- Spike menzioni improvviso → Verifica causa
-- Influencer menziona brand → Notifica marketing
+**Automatic alerts:**
+- Negative sentiment > 50% → Notify crisis team
+- Sudden mention spike → Verify cause
+- Influencer mentions brand → Notify marketing
 
 #### Batch Layer: Deep Analytics
 ```
-Analisi giornaliere:
-- Sentiment per prodotto
-- Geografica delle menzioni
-- Temi più discussi
-- Confronto con competitor
+Daily analyses:
+- Sentiment per product
+- Mention geography
+- Most discussed topics
+- Competitor comparison
 ```
 
-#### ML Runner: NLP e ML
+#### ML Runner: NLP and ML
 ```
-Modelli:
-1. Sentiment Classification (Positivo/Negativo/Neutro)
-2. Topic Modeling (Quali temi discutono)
-3. Influencer Scoring (Ranking influencer)
-4. Trend Prediction (Cosa diventerà virale)
+Models:
+1. Sentiment Classification (Positive/Negative/Neutral)
+2. Topic Modeling (What topics are discussed)
+3. Influencer Scoring (Influencer ranking)
+4. Trend Prediction (What will go viral)
 ```
 
-#### Serving Layer: Dashboard Marketing
+#### Serving Layer: Marketing Dashboard
 ```
 Endpoints:
-- GET /api/sentiment/realtime → Sentiment corrente
-- GET /api/mentions/trending → Topic trending
-- GET /api/influencers/top → Top influencer
-- GET /api/reports/daily → Report giornaliero
+- GET /api/sentiment/realtime → Current sentiment
+- GET /api/mentions/trending → Trending topics
+- GET /api/influencers/top → Top influencers
+- GET /api/reports/daily → Daily report
 ```
 
-### Benefici Ottenuti
-- ✅ **Crisis prevention**: Rilevamento problemi in 5 minuti invece di ore
-- ✅ **ROI marketing**: Identificazione influencer efficaci
-- ✅ **Customer insights**: Comprensione profonda esigenze clienti
-- ✅ **Competitive advantage**: Monitoraggio competitor in tempo reale
+### Benefits Obtained
+- Crisis prevention: Problem detection in 5 minutes instead of hours
+- Marketing ROI: Identification of effective influencers
+- Customer insights: Deep understanding of customer needs
+- Competitive advantage: Real-time competitor monitoring
 
 ---
 
-## 🏥 Caso d'Uso 4: Healthcare Monitoring
+## Use Case 4: Healthcare Monitoring
 
 ### Scenario
-Un ospedale vuole monitorare pazienti critici e ottimizzare risorse:
-- Monitoraggio parametri vitali
-- Predizione complicazioni
-- Ottimizzazione turni personale
-- Gestione emergenze
+A hospital wants to monitor critical patients and optimize resources:
+- Vital parameter monitoring
+- Complication prediction
+- Staff shift optimization
+- Emergency management
 
-### Architettura con chaM3Leon
+### Architecture with chaM3León
 
 ```
-Device Medicali → Kafka → Speed Layer → Alert Critici
+Medical Devices → Kafka → Speed Layer → Critical Alerts
                         ↓
-                   Batch Layer → Analisi Pazienti
+                   Batch Layer → Patient Analysis
                         ↓
-                   ML Runner → Predizioni Rischio
+                   ML Runner → Risk Predictions
                         ↓
-              Serving Layer → Dashboard Medici
+              Serving Layer → Medical Dashboard
 ```
 
-### Implementazione
+### Implementation
 
-#### Speed Layer: Monitoraggio Vitale
+#### Speed Layer: Vital Monitoring
 ```
-Parametri monitorati:
-- Battito cardiaco
-- Pressione sanguigna
-- Saturazione ossigeno
-- Temperatura corporea
+Monitored parameters:
+- Heart rate
+- Blood pressure
+- Oxygen saturation
+- Body temperature
 
-Frequenza: Ogni secondo
-Alert: Immediati su anomalie
-```
-
-**Regole di alert:**
-- Battito < 40 o > 120 → Alert critico
-- Saturazione O2 < 90% → Alert urgente
-- Temperatura > 38.5°C → Monitoraggio
-- Combinazioni parametri → ML prediction
-
-#### Batch Layer: Analisi Cliniche
-```
-Analisi notturne:
-- Pattern di recupero pazienti
-- Efficacia trattamenti
-- Utilizzo risorse (letti, macchinari)
-- Performance reparti
+Frequency: Every second
+Alerts: Immediate on anomalies
 ```
 
-#### ML Runner: Medicina Predittiva
+**Alert rules:**
+- Heart rate < 40 or > 120 → Critical alert
+- O2 saturation < 90% → Urgent alert
+- Temperature > 38.5°C → Monitoring
+- Parameter combinations → ML prediction
+
+#### Batch Layer: Clinical Analysis
 ```
-Modelli:
-1. Predizione complicazioni post-operatorie
-2. Stima tempo di recupero
-3. Ottimizzazione dosaggi farmaci
-4. Previsione picchi emergenze
+Nightly analyses:
+- Patient recovery patterns
+- Treatment effectiveness
+- Resource utilization (beds, equipment)
+- Department performance
 ```
 
-**Esempio: Predizione Sepsi**
+#### ML Runner: Predictive Medicine
+```
+Models:
+1. Post-operative complication prediction
+2. Recovery time estimation
+3. Drug dosage optimization
+4. Emergency spike prediction
+```
+
+**Example: Sepsis Prediction**
 ```
 Input: 
-- Parametri vitali ultimi 6 ore
-- Storia clinica paziente
-- Farmaci somministrati
+- Vital parameters last 6 hours
+- Patient clinical history
+- Administered drugs
 
 Output:
-- Probabilità sepsi prossime 24h
-- Fattori di rischio principali
-- Raccomandazioni preventive
+- Sepsis probability next 24h
+- Main risk factors
+- Preventive recommendations
 ```
 
-#### Serving Layer: Interfaccia Clinica
+#### Serving Layer: Clinical Interface
 ```
-API per sistemi ospedalieri:
-- GET /api/patients/{id}/vitals → Parametri correnti
-- GET /api/alerts/critical → Alert attivi
-- POST /api/predict/complications → Predizioni
-- GET /api/resources/optimization → Allocazione risorse
+APIs for hospital systems:
+- GET /api/patients/{id}/vitals → Current parameters
+- GET /api/alerts/critical → Active alerts
+- POST /api/predict/complications → Predictions
+- GET /api/resources/optimization → Resource allocation
 ```
 
-### Benefici Ottenuti
-- ✅ **Vite salvate**: Intervento precoce su complicazioni
-- ✅ **Efficienza**: Ottimizzazione risorse +30%
-- ✅ **Qualità cure**: Decisioni basate su dati oggettivi
-- ✅ **Riduzione costi**: Meno complicazioni = meno degenze
+### Benefits Obtained
+- Lives saved: Early intervention on complications
+- Efficiency: Resource optimization +30%
+- Care quality: Decisions based on objective data
+- Cost reduction: Fewer complications = shorter stays
 
 ---
 
-## 🏭 Caso d'Uso 5: Manufacturing Predictive Maintenance
+## Use Case 5: Manufacturing Predictive Maintenance
 
 ### Scenario
-Un'azienda manifatturiera vuole ridurre fermi macchina non pianificati:
-- Monitoraggio sensori macchinari
-- Predizione guasti
-- Ottimizzazione manutenzioni
-- Riduzione scarti produzione
+A manufacturing company wants to reduce unplanned machine downtime:
+- Machinery sensor monitoring
+- Failure prediction
+- Maintenance optimization
+- Production waste reduction
 
-### Architettura con chaM3Leon
+### Architecture with chaM3León
 
 ```
-Sensori Macchine → Kafka → Speed Layer → Alert Anomalie
+Machine Sensors → Kafka → Speed Layer → Anomaly Alerts
                          ↓
-                    Batch Layer → Pattern Guasti
+                    Batch Layer → Failure Patterns
                          ↓
-                    ML Runner → Predizione Guasti
+                    ML Runner → Failure Prediction
                          ↓
-               Serving Layer → Dashboard Manutenzione
+               Serving Layer → Maintenance Dashboard
 ```
 
-### Implementazione
+### Implementation
 
 #### Speed Layer: Condition Monitoring
 ```
-Sensori:
-- Vibrazione
-- Temperatura
-- Pressione
-- Consumo energia
-- Rumore
+Sensors:
+- Vibration
+- Temperature
+- Pressure
+- Energy consumption
+- Noise
 
-Frequenza: 100 letture/secondo per macchina
-Alert: Valori fuori range
+Frequency: 100 readings/second per machine
+Alerts: Values out of range
 ```
 
 #### Batch Layer: Historical Analysis
 ```
-Analisi:
-- Correlazione sensori con guasti storici
-- Pattern di degrado componenti
-- Efficacia interventi manutenzione
-- Costi fermi macchina
+Analysis:
+- Sensor correlation with historical failures
+- Component degradation patterns
+- Maintenance intervention effectiveness
+- Machine downtime costs
 ```
 
 #### ML Runner: Predictive Analytics
 ```
-Modelli:
-1. Time-to-Failure Prediction (Quando guasterà)
-2. Failure Type Classification (Tipo guasto)
-3. Remaining Useful Life (Vita residua)
-4. Optimal Maintenance Schedule (Quando fare manutenzione)
+Models:
+1. Time-to-Failure Prediction (When it will fail)
+2. Failure Type Classification (Type of failure)
+3. Remaining Useful Life (Remaining life)
+4. Optimal Maintenance Schedule (When to do maintenance)
 ```
 
-**Esempio: Predizione Guasto Cuscinetto**
+**Example: Bearing Failure Prediction**
 ```
 Input:
-- Vibrazioni ultime 48 ore
-- Temperatura trend
-- Ore funzionamento totali
-- Manutenzioni precedenti
+- Vibrations last 48 hours
+- Temperature trend
+- Total operating hours
+- Previous maintenance
 
 Output:
-- Probabilità guasto prossimi 7 giorni: 75%
-- Tipo guasto previsto: Cuscinetto asse Y
-- Raccomandazione: Sostituire entro 3 giorni
-- Costo fermo previsto se non interviene: €50.000
+- Failure probability next 7 days: 75%
+- Expected failure type: Y-axis bearing
+- Recommendation: Replace within 3 days
+- Expected downtime cost if not intervening: €50,000
 ```
 
-### Benefici Ottenuti
-- ✅ **Riduzione downtime**: -40% fermi non pianificati
-- ✅ **Risparmio costi**: -25% spese manutenzione
-- ✅ **Aumento produttività**: +15% output
-- ✅ **Qualità prodotto**: -30% scarti per guasti macchine
+### Benefits Obtained
+- Downtime reduction: -40% unplanned stops
+- Cost savings: -25% maintenance expenses
+- Increased productivity: +15% output
+- Product quality: -30% waste from machine failures
 
 ---
 
-## 🚗 Caso d'Uso 6: Fleet Management
+## Use Case 6: Fleet Management
 
 ### Scenario
-Un'azienda di logistica gestisce centinaia di veicoli:
-- Tracking GPS in tempo reale
-- Ottimizzazione rotte
-- Monitoraggio consumi carburante
-- Manutenzione preventiva veicoli
+A logistics company manages hundreds of vehicles:
+- Real-time GPS tracking
+- Route optimization
+- Fuel consumption monitoring
+- Preventive vehicle maintenance
 
-### Architettura con chaM3Leon
+### Architecture with chaM3León
 
 ```
-GPS Devices → Kafka → Speed Layer → Tracking Live
+GPS Devices → Kafka → Speed Layer → Live Tracking
                     ↓
-               Batch Layer → Ottimizzazione Rotte
+               Batch Layer → Route Optimization
                     ↓
-               ML Runner → Predizioni Consumi
+               ML Runner → Consumption Predictions
                     ↓
-          Serving Layer → App Autisti
+          Serving Layer → Driver App
 ```
 
-### Implementazione
+### Implementation
 
 #### Speed Layer: Real-Time Tracking
 ```
-Dati in ingresso:
-- Posizione GPS (ogni 30 secondi)
-- Velocità
-- Consumo carburante istantaneo
-- Stato veicolo
+Input data:
+- GPS position (every 30 seconds)
+- Speed
+- Instantaneous fuel consumption
+- Vehicle status
 
 Output:
-- Mappa live flotta
-- Alert deviazioni percorso
-- Stima arrivo aggiornata
+- Live fleet map
+- Route deviation alerts
+- Updated arrival estimate
 ```
 
 #### Batch Layer: Route Optimization
 ```
-Analisi giornaliere:
-- Rotte più efficienti
-- Hotspot traffico
-- Consumo medio per tratta
-- Performance autisti
+Daily analyses:
+- Most efficient routes
+- Traffic hotspots
+- Average consumption per route
+- Driver performance
 ```
 
 #### ML Runner: Smart Logistics
 ```
-Modelli:
-1. Stima tempo di consegna accurata
-2. Ottimizzazione assegnazione consegne
-3. Predizione consumo carburante
-4. Rilevamento stile guida inefficiente
+Models:
+1. Accurate delivery time estimation
+2. Delivery assignment optimization
+3. Fuel consumption prediction
+4. Inefficient driving style detection
 ```
 
-### Benefici Ottenuti
-- ✅ **Risparmio carburante**: -15% consumi
-- ✅ **Più consegne**: +20% consegne per veicolo/giorno
-- ✅ **Customer satisfaction**: Stime arrivo accurate al 95%
-- ✅ **Sicurezza**: Rilevamento comportamenti rischiosi
+### Benefits Obtained
+- Fuel savings: -15% consumption
+- More deliveries: +20% deliveries per vehicle/day
+- Customer satisfaction: 95% accurate arrival estimates
+- Safety: Risky behavior detection
 
 ---
 
-## 🎮 Caso d'Uso 7: Gaming Analytics
+## Use Case 7: Gaming Analytics
 
 ### Scenario
-Una gaming company vuole ottimizzare l'esperienza di gioco:
-- Monitoraggio comportamento giocatori
-- Bilanciamento gioco
-- Rilevamento cheaters
-- Personalizzazione contenuti
+A gaming company wants to optimize the gaming experience:
+- Player behavior monitoring
+- Game balancing
+- Cheater detection
+- Content personalization
 
-### Architettura con chaM3Leon
+### Architecture with chaM3León
 
 ```
-Eventi Gioco → Kafka → Speed Layer → Anti-Cheat
+Game Events → Kafka → Speed Layer → Anti-Cheat
                      ↓
                 Batch Layer → Player Analytics
                      ↓
-                ML Runner → Personalizzazione
+                ML Runner → Personalization
                      ↓
            Serving Layer → Game Server API
 ```
 
-### Implementazione
+### Implementation
 
 #### Speed Layer: Live Game Events
 ```
-Eventi processati:
-- Azioni giocatore
+Events processed:
+- Player actions
 - Match results
 - In-game purchases
 - Social interactions
 
-Rilevamenti:
-- Pattern cheat
-- Tossicità in chat
+Detections:
+- Cheat patterns
+- Chat toxicity
 - Match imbalance
 ```
 
 #### Batch Layer: Deep Analytics
 ```
-Analisi:
+Analysis:
 - Player retention
 - Engagement metrics
-- Economia in-game
+- In-game economy
 - Difficulty progression
 ```
 
 #### ML Runner: Game Intelligence
 ```
-Modelli:
-1. Churn Prediction (Chi lascerà il gioco)
-2. Skill Rating (Matchmaking equo)
-3. Content Recommendation (Quali sfide proporre)
-4. Cheat Detection (Individuazione cheater)
+Models:
+1. Churn Prediction (Who will leave the game)
+2. Skill Rating (Fair matchmaking)
+3. Content Recommendation (Which challenges to propose)
+4. Cheat Detection (Cheater identification)
 ```
 
-### Benefici Ottenuti
-- ✅ **Retention**: +30% giocatori che tornano
-- ✅ **Monetization**: +40% acquisti in-app
-- ✅ **Fair play**: -90% cheater attivi
-- ✅ **Engagement**: +50% tempo medio di gioco
+### Benefits Obtained
+- Retention: +30% returning players
+- Monetization: +40% in-app purchases
+- Fair play: -90% active cheaters
+- Engagement: +50% average playtime
 
 ---
 
-## 🌾 Caso d'Uso 8: Precision Agriculture
+## Use Case 8: Precision Agriculture
 
 ### Scenario
-Un'azienda agricola vuole ottimizzare raccolti usando tecnologia:
-- Monitoraggio condizioni terreno
-- Irrigazione intelligente
-- Predizione raccolto
-- Rilevamento malattie piante
+An agricultural company wants to optimize harvests using technology:
+- Soil condition monitoring
+- Smart irrigation
+- Harvest prediction
+- Plant disease detection
 
-### Architettura con chaM3Leon
+### Architecture with chaM3León
 
 ```
-Sensori Campo + Droni → Harvester → Batch Layer → Mappe Terreno
+Field Sensors + Drones → Harvester → Batch Layer → Soil Maps
                                            ↓
-                                      ML Runner → Predizioni
+                                      ML Runner → Predictions
                                            ↓
-Meteo API → Harvester → Speed Layer → Decisioni Irrigazione
+Weather API → Harvester → Speed Layer → Irrigation Decisions
 ```
 
-### Implementazione
+### Implementation
 
-#### Harvester Layer: Raccolta Multi-Source
+#### Harvester Layer: Multi-Source Collection
 ```
-Fonti dati:
-- Sensori umidità terreno
-- Immagini satellitari
-- Dati meteo API
-- Droni con camere multispettrali
+Data sources:
+- Soil moisture sensors
+- Satellite images
+- Weather API data
+- Drones with multispectral cameras
 ```
 
 #### Speed Layer: Automated Irrigation
 ```
-Decisioni real-time:
-- Quando irrigare (basato su umidità + previsioni meteo)
-- Quanto irrigare (ottimizzazione consumo acqua)
-- Dove irrigare (irrigazione di precisione)
+Real-time decisions:
+- When to irrigate (based on moisture + weather forecasts)
+- How much to irrigate (water consumption optimization)
+- Where to irrigate (precision irrigation)
 ```
 
 #### Batch Layer: Seasonal Analysis
 ```
-Analisi:
-- Correlazione resa/condizioni
-- Mappe fertilità terreno
-- Efficacia trattamenti
-- Trend stagionali
+Analysis:
+- Yield/conditions correlation
+- Soil fertility maps
+- Treatment effectiveness
+- Seasonal trends
 ```
 
 #### ML Runner: Smart Farming
 ```
-Modelli:
-1. Yield Prediction (Stima raccolto)
-2. Disease Detection (Malattie da immagini)
-3. Optimal Planting (Quando/dove piantare)
-4. Resource Optimization (Acqua/fertilizzanti)
+Models:
+1. Yield Prediction (Harvest estimate)
+2. Disease Detection (Diseases from images)
+3. Optimal Planting (When/where to plant)
+4. Resource Optimization (Water/fertilizers)
 ```
 
-### Benefici Ottenuti
-- ✅ **Aumento resa**: +25% raccolto per ettaro
-- ✅ **Risparmio acqua**: -40% consumo idrico
-- ✅ **Sostenibilità**: -30% uso fertilizzanti
-- ✅ **Riduzione perdite**: Rilevamento precoce malattie
+### Benefits Obtained
+- Increased yield: +25% harvest per hectare
+- Water savings: -40% water consumption
+- Sustainability: -30% fertilizer use
+- Loss reduction: Early disease detection
 
 ---
 

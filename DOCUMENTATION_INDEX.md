@@ -1,161 +1,161 @@
-# 🗺️ Mappa della Documentazione chaM3León
+# Documentation Map - chaM3Leon
 
-> **Guida Rapida:** Trova velocemente il documento che ti serve!
+> **Quick Guide:** Find the document you need quickly!
 
 ---
 
-## 🚀 Quick Start - Inizia qui!
+## Quick Start - Start here!
 
-| Se sei... | Inizia da... | Poi vai a... |
+| If you are... | Start from... | Then go to... |
 |-----------|--------------|--------------|
-| **👔 Manager/Business** | [SUMMARY.md](SUMMARY.md) | [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) → [USE_CASES.md](docs/USE_CASES.md) |
-| **👨‍💻 Sviluppatore** | [GETTING_STARTED.md](docs/GETTING_STARTED.md) | [ARCHITECTURE.md](docs/ARCHITECTURE.md) → [FAQ.md](docs/FAQ.md) |
-| **🏗️ Architetto** | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | [USE_CASES.md](docs/USE_CASES.md) → Layer READMEs |
-| **🔬 Data Scientist** | [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) | [ML Runner Docs](https://github.com/Smart-Shaped/PyChaM3Leon) |
-| **❓ Curioso** | [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) | [SUMMARY.md](SUMMARY.md) |
+| **Manager/Business** | [SUMMARY.md](SUMMARY.md) | [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) → [USE_CASES.md](docs/USE_CASES.md) |
+| **Developer** | [GETTING_STARTED.md](docs/GETTING_STARTED.md) | [ARCHITECTURE.md](docs/ARCHITECTURE.md) → [FAQ.md](docs/FAQ.md) |
+| **Architect** | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | [USE_CASES.md](docs/USE_CASES.md) → Layer READMEs |
+| **Data Scientist** | [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) | [ML Runner Docs](https://github.com/Smart-Shaped/PyChaM3Leon) |
+| **Curious** | [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) | [SUMMARY.md](SUMMARY.md) |
 
 ---
 
-## 📚 Documentazione Completa
+## Complete Documentation
 
-### 🎯 Panoramica e Valore
+### Overview and Value
 
-| Documento | Cosa Contiene | Tempo Lettura | Livello |
+| Document | What Contains | Reading Time | Level |
 |-----------|---------------|---------------|---------|
-| [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) | Cos'è chaM3Leon, vantaggi, confronti | 10 min | ⭐ Facile |
-| [SUMMARY.md](SUMMARY.md) | Executive summary, ROI, numeri chiave | 15 min | ⭐ Facile |
-| [README.md](README.md) | Overview tecnica del progetto | 8 min | ⭐⭐ Medio |
+| [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) | What is chaM3Leon, advantages, comparisons | 10 min | Easy |
+| [SUMMARY.md](SUMMARY.md) | Executive summary, ROI, key numbers | 15 min | Easy |
+| [README.md](README.md) | Technical project overview | 8 min | Medium |
 
-### 📖 Guide e Tutorial
+### Guides and Tutorials
 
-| Documento | Cosa Contiene | Tempo Lettura | Livello |
+| Document | What Contains | Reading Time | Level |
 |-----------|---------------|---------------|---------|
-| [GETTING_STARTED.md](docs/GETTING_STARTED.md) | Tutorial passo-passo, primo progetto | 30 min + pratica | ⭐⭐ Medio |
-| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Architettura spiegata semplicemente | 20 min | ⭐⭐ Medio |
-| [USE_CASES.md](docs/USE_CASES.md) | 8 casi d'uso reali dettagliati | 40 min | ⭐⭐ Medio |
+| [GETTING_STARTED.md](docs/GETTING_STARTED.md) | Step-by-step tutorial, first project | 30 min + practice | Medium |
+| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Architecture explained simply | 20 min | Medium |
+| [USE_CASES.md](docs/USE_CASES.md) | 8 detailed real use cases | 40 min | Medium |
 
-### 🔍 Riferimenti
+### References
 
-| Documento | Cosa Contiene | Tipo | Livello |
+| Document | What Contains | Type | Level |
 |-----------|---------------|------|---------|
-| [FAQ.md](docs/FAQ.md) | 100+ domande e risposte | Reference | ⭐ Facile |
-| [config_list.md](docs/config_list.md) | Tutte le configurazioni disponibili | Reference | ⭐⭐⭐ Tecnico |
-| [apps_naming.md](docs/apps_naming.md) | Convenzioni naming | Reference | ⭐⭐ Medio |
+| [FAQ.md](docs/FAQ.md) | 100+ questions and answers | Reference | Easy |
+| [config_list.md](docs/config_list.md) | All available configurations | Reference | Technical |
+| [apps_naming.md](docs/apps_naming.md) | Naming conventions | Reference | Medium |
 
-### 🧩 Documentazione Layer
+### Layer Documentation
 
-| Layer | Linguaggio | Documento | Focus |
+| Layer | Language | Document | Focus |
 |-------|------------|-----------|-------|
-| **Batch** | Java/Spark | [chaM3Leon/batch/README.md](chaM3Leon/batch/README.md) | Elaborazione storica |
-| **Speed** | Java/Spark | [chaM3Leon/speed/README.md](chaM3Leon/speed/README.md) | Processing real-time |
-| **Harvester** | Java/Spark | [chaM3Leon/harvester/README.md](chaM3Leon/harvester/README.md) | Raccolta dati |
-| **Serving** | Java/Spring | [serving_chaM3Leon/README.md](serving_chaM3Leon/README.md) | API REST |
+| **Batch** | Java/Spark | [chaM3Leon/batch/README.md](chaM3Leon/batch/README.md) | Historical processing |
+| **Speed** | Java/Spark | [chaM3Leon/speed/README.md](chaM3Leon/speed/README.md) | Real-time processing |
+| **Harvester** | Java/Spark | [chaM3Leon/harvester/README.md](chaM3Leon/harvester/README.md) | Data collection |
+| **Serving** | Java/Spring | [serving_chaM3Leon/README.md](serving_chaM3Leon/README.md) | REST API |
 | **ML Runner** | Python | [PyChaM3Leon (GitHub)](https://github.com/Smart-Shaped/PyChaM3Leon) | Machine Learning |
 
-### 📋 Meta-Documentazione
+### Meta-Documentation
 
-| Documento | Cosa Contiene |
+| Document | What Contains |
 |-----------|---------------|
-| [docs/README.md](docs/README.md) | Indice documentazione, percorsi apprendimento |
-| [DOCUMENTATION_SUMMARY.md](DOCUMENTATION_SUMMARY.md) | Riepilogo documentazione creata |
+| [docs/README.md](docs/README.md) | Documentation index, learning paths |
+| [DOCUMENTATION_SUMMARY.md](DOCUMENTATION_SUMMARY.md) | Documentation summary created |
 
 ---
 
-## 🎯 Per Obiettivo
+## By Objective
 
-### Voglio capire SE usare chaM3León
-1. [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) - Il valore
-2. [SUMMARY.md](SUMMARY.md) - ROI e costi
-3. [USE_CASES.md](docs/USE_CASES.md) - Applicazioni possibili
-4. [FAQ.md](docs/FAQ.md) - Sezione "Confronti"
+### I want to understand IF to use chaM3León
+1. [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) - The value
+2. [SUMMARY.md](SUMMARY.md) - ROI and costs
+3. [USE_CASES.md](docs/USE_CASES.md) - Possible applications
+4. [FAQ.md](docs/FAQ.md) - "Comparisons" section
 
-### Voglio capire COME funziona
-1. [ARCHITECTURE.md](docs/ARCHITECTURE.md) - Visione d'insieme
-2. [README.md](README.md) - Dettagli implementativi
-3. Layer-specific READMEs - Approfondimenti
+### I want to understand HOW it works
+1. [ARCHITECTURE.md](docs/ARCHITECTURE.md) - Overview
+2. [README.md](README.md) - Implementation details
+3. Layer-specific READMEs - Deep dive
 
-### Voglio INIZIARE a usarlo
-1. [GETTING_STARTED.md](docs/GETTING_STARTED.md) - Tutorial completo
-2. [config_list.md](docs/config_list.md) - Configurazioni
-3. [apps_naming.md](docs/apps_naming.md) - Convenzioni
+### I want to START using it
+1. [GETTING_STARTED.md](docs/GETTING_STARTED.md) - Complete tutorial
+2. [config_list.md](docs/config_list.md) - Configurations
+3. [apps_naming.md](docs/apps_naming.md) - Conventions
 4. [FAQ.md](docs/FAQ.md) - Troubleshooting
 
-### Voglio vedere ESEMPI
-1. [USE_CASES.md](docs/USE_CASES.md) - 8 casi dettagliati
-2. [GETTING_STARTED.md](docs/GETTING_STARTED.md) - Progetto esempio
-3. Layer READMEs - Esempi specifici
-4. [Video YouTube](README.md#additional-video-resources) - Demo pratiche
+### I want to see EXAMPLES
+1. [USE_CASES.md](docs/USE_CASES.md) - 8 detailed cases
+2. [GETTING_STARTED.md](docs/GETTING_STARTED.md) - Example project
+3. Layer READMEs - Specific examples
+4. [YouTube Videos](README.md#additional-video-resources) - Practical demos
 
-### Voglio RISOLVERE un problema
+### I want to SOLVE a problem
 1. [FAQ.md](docs/FAQ.md) - 100+ Q&A
-2. [GETTING_STARTED.md](docs/GETTING_STARTED.md) - Sezione troubleshooting
+2. [GETTING_STARTED.md](docs/GETTING_STARTED.md) - Troubleshooting section
 3. [GitHub Issues](https://github.com/Smart-Shaped/chaM3Leon/issues) - Community
 
 ---
 
-## 📊 Per Tipo di Contenuto
+## By Content Type
 
-### 🎓 Concetti e Teoria
-- [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) - Valore e vantaggi
-- [ARCHITECTURE.md](docs/ARCHITECTURE.md) - Design e pattern
+### Concepts and Theory
+- [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) - Value and advantages
+- [ARCHITECTURE.md](docs/ARCHITECTURE.md) - Design and patterns
 - [SUMMARY.md](SUMMARY.md) - Business overview
 
-### 💻 Pratica e Tutorial
+### Practice and Tutorials
 - [GETTING_STARTED.md](docs/GETTING_STARTED.md) - Hands-on tutorial
-- Layer READMEs - Guide implementazione
-- [USE_CASES.md](docs/USE_CASES.md) - Template pratici
+- Layer READMEs - Implementation guides
+- [USE_CASES.md](docs/USE_CASES.md) - Practical templates
 
-### 📖 Riferimento
-- [FAQ.md](docs/FAQ.md) - Domande frequenti
-- [config_list.md](docs/config_list.md) - Configurazioni
+### Reference
+- [FAQ.md](docs/FAQ.md) - Frequently asked questions
+- [config_list.md](docs/config_list.md) - Configurations
 - [apps_naming.md](docs/apps_naming.md) - Naming conventions
 
-### 💡 Esempi e Casi d'Uso
-- [USE_CASES.md](docs/USE_CASES.md) - 8 scenari reali
-- [GETTING_STARTED.md](docs/GETTING_STARTED.md) - Esempio completo
-- Video demo - Casi pratici
+### Examples and Use Cases
+- [USE_CASES.md](docs/USE_CASES.md) - 8 real scenarios
+- [GETTING_STARTED.md](docs/GETTING_STARTED.md) - Complete example
+- Video demos - Practical cases
 
 ---
 
-## 🏢 Per Settore / Industria
+## By Industry/Sector
 
-Trova il tuo settore in [USE_CASES.md](docs/USE_CASES.md):
+Find your sector in [USE_CASES.md](docs/USE_CASES.md):
 
-| Settore | Caso d'Uso | Pagina |
+| Sector | Use Case | Page |
 |---------|------------|--------|
-| **E-Commerce** | Monitoraggio vendite, raccomandazioni | Caso 1 |
-| **Smart City** | IoT, traffico, qualità aria | Caso 2 |
-| **Marketing** | Social media analytics, sentiment | Caso 3 |
-| **Healthcare** | Monitoring pazienti, predizioni | Caso 4 |
-| **Manufacturing** | Manutenzione predittiva | Caso 5 |
-| **Logistics** | Fleet management, ottimizzazione | Caso 6 |
-| **Gaming** | Player analytics, anti-cheat | Caso 7 |
-| **Agriculture** | Precision farming, irrigazione smart | Caso 8 |
+| **E-Commerce** | Sales monitoring, recommendations | Case 1 |
+| **Smart City** | IoT, traffic, air quality | Case 2 |
+| **Marketing** | Social media analytics, sentiment | Case 3 |
+| **Healthcare** | Patient monitoring, predictions | Case 4 |
+| **Manufacturing** | Predictive maintenance | Case 5 |
+| **Logistics** | Fleet management, optimization | Case 6 |
+| **Gaming** | Player analytics, anti-cheat | Case 7 |
+| **Agriculture** | Precision farming, smart irrigation | Case 8 |
 
 ---
 
-## 🎬 Contenuti Video
+## Video Content
 
-| Video | Argomento | Durata | Link |
+| Video | Topic | Duration | Link |
 |-------|-----------|--------|------|
-| Presentazione Framework | Overview generale | ~15 min | [YouTube](https://www.youtube.com/watch?v=wtVyYUDlRQc) |
-| Demo Batch & Speed | Esempio pratico | ~20 min | [YouTube](https://www.youtube.com/watch?v=UjzYc9C1krU) |
-| Demo Harvester & ML | ML integration | ~18 min | [YouTube](https://www.youtube.com/watch?v=pwE223S0-oU) |
+| Framework Presentation | General overview | ~15 min | [YouTube](https://www.youtube.com/watch?v=wtVyYUDlRQc) |
+| Batch & Speed Demo | Practical example | ~20 min | [YouTube](https://www.youtube.com/watch?v=UjzYc9C1krU) |
+| Harvester & ML Demo | ML integration | ~18 min | [YouTube](https://www.youtube.com/watch?v=pwE223S0-oU) |
 
 ---
 
-## 🔗 Link Esterni
+## External Links
 
-### Repository
-- [chaM3Leon Main](https://github.com/Smart-Shaped/chaM3Leon) - Framework principale
-- [PyChaM3León](https://github.com/Smart-Shaped/PyChaM3Leon) - ML Runner Python
+### Repositories
+- [chaM3Leon Main](https://github.com/Smart-Shaped/chaM3Leon) - Main framework
+- [PyChaM3León](https://github.com/Smart-Shaped/PyChaM3Leon) - Python ML Runner
 - [Docker Setup](https://github.com/Smart-Shaped/docker_chaM3Leon) - Container environment
 
 ### Community
-- [GitHub Issues](https://github.com/Smart-Shaped/chaM3Leon/issues) - Bug e feature request
-- [GitHub Discussions](https://github.com/Smart-Shaped/chaM3Leon/discussions) - Domande generali
+- [GitHub Issues](https://github.com/Smart-Shaped/chaM3Leon/issues) - Bugs and feature requests
+- [GitHub Discussions](https://github.com/Smart-Shaped/chaM3Leon/discussions) - General questions
 
-### Tecnologie Utilizzate
+### Technologies Used
 - [Apache Spark](https://spark.apache.org/docs/latest/)
 - [Apache Kafka](https://kafka.apache.org/documentation/)
 - [Apache Cassandra](https://cassandra.apache.org/doc/)
@@ -164,74 +164,74 @@ Trova il tuo settore in [USE_CASES.md](docs/USE_CASES.md):
 
 ---
 
-## 🗂️ Struttura File System
+## File System Structure
 
 ```
 chaM3León/
-├── README.md ⭐ Overview principale
-├── VALUE_PROPOSITION.md ⭐ Valore del framework
-├── SUMMARY.md ⭐ Executive summary
-├── DOCUMENTATION_INDEX.md ⭐ Questo file
-├── DOCUMENTATION_SUMMARY.md 📋 Riepilogo docs
+├── README.md - Main overview
+├── VALUE_PROPOSITION.md - Framework value
+├── SUMMARY.md - Executive summary
+├── DOCUMENTATION_INDEX.md - This file
+├── DOCUMENTATION_SUMMARY.md - Docs summary
 │
-├── docs/ 📚 Documentazione principale
-│   ├── README.md ⭐ Indice documentazione
-│   ├── GETTING_STARTED.md 🎓 Tutorial
-│   ├── ARCHITECTURE.md 🏗️ Architettura
-│   ├── USE_CASES.md 💡 Esempi pratici
-│   ├── FAQ.md ❓ Domande frequenti
-│   ├── config_list.md 📖 Configurazioni
-│   ├── apps_naming.md 📖 Naming conventions
-│   └── *.png 🖼️ Diagrammi
+├── docs/ - Main documentation
+│   ├── README.md - Documentation index
+│   ├── GETTING_STARTED.md - Tutorial
+│   ├── ARCHITECTURE.md - Architecture
+│   ├── USE_CASES.md - Practical examples
+│   ├── FAQ.md - Frequent questions
+│   ├── config_list.md - Configurations
+│   ├── apps_naming.md - Naming conventions
+│   └── *.png - Diagrams
 │
-├── chaM3León/ ☕ Layer Java
+├── chaM3León/ - Java Layers
 │   ├── batch/README.md - Batch Layer
 │   ├── speed/README.md - Speed Layer
 │   ├── harvester/README.md - Harvester Layer
 │   └── common/README.md - Common utilities
 │
-└── serving_chaM3León/ 🌐 Serving Layer
+└── serving_chaM3León/ - Serving Layer
     └── README.md - Spring Boot API
 ```
 
 ---
 
-## 💡 Suggerimenti di Navigazione
+## Navigation Suggestions
 
-### Prima volta qui?
+### First time here?
 ```
 START → VALUE_PROPOSITION → SUMMARY → GETTING_STARTED
 ```
 
-### Vuoi implementare subito?
+### Want to implement immediately?
 ```
 START → GETTING_STARTED → Layer README → config_list → GO!
 ```
 
-### Stai valutando il framework?
+### Evaluating the framework?
 ```
-START → SUMMARY → USE_CASES → FAQ (sezione business) → DECISION
+START → SUMMARY → USE_CASES → FAQ (business section) → DECISION
 ```
 
-### Hai un problema?
+### Have a problem?
 ```
 START → FAQ → GETTING_STARTED (troubleshooting) → GitHub Issues
 ```
 
-### Vuoi approfondire?
+### Want to deep dive?
 ```
 START → ARCHITECTURE → Layer READMEs → External docs → Expert!
 ```
 
 ---
 
-## 🔍 Ricerca Rapida
+## Quick Search
 
-### Cerchi informazioni su...
+### Looking for information about...
 
-**Installazione?** → [GETTING_STARTED.md](docs/GETTING_STARTED.md#fase-1-installazione-di-cham3leon)
+**Installation?** → [GETTING_STARTED.md](docs/GETTING_STARTED.md#fase-1-installazione-di-cham3leon)
 
-**Configurazione?** → [config_list.md](docs/config_list.md)
+**Configuration?** → [config_list.md](docs/config_list.md)
 
 **Spark?** → [ARCHITECTURE.md](docs/ARCHITECTURE.md#apache-spark---il-motore)
 
@@ -243,117 +243,117 @@ START → ARCHITECTURE → Layer READMEs → External docs → Expert!
 
 **Performance?** → [FAQ.md](docs/FAQ.md#performance-e-scalabilit%C3%A0)
 
-**Sicurezza?** → [FAQ.md](docs/FAQ.md#sicurezza)
+**Security?** → [FAQ.md](docs/FAQ.md#sicurezza)
 
-**Costi?** → [SUMMARY.md](SUMMARY.md#-modello-di-costo)
+**Costs?** → [SUMMARY.md](SUMMARY.md#-modello-di-costo)
 
 **ROI?** → [SUMMARY.md](SUMMARY.md#roi-tipico)
 
 **Docker?** → [GETTING_STARTED.md](docs/GETTING_STARTED.md#opzione-raccomandata-usando-docker)
 
-**Esempi?** → [USE_CASES.md](docs/USE_CASES.md)
+**Examples?** → [USE_CASES.md](docs/USE_CASES.md)
 
 ---
 
-## 📱 Documentazione Mobile-Friendly
+## Mobile-Friendly Documentation
 
-Tutti i documenti sono:
-- ✅ Markdown standard
-- ✅ Leggibili su GitHub mobile
-- ✅ Formattati per lettura verticale
-- ✅ Link funzionanti su tutti i device
-
----
-
-## 🌐 Traduzioni
-
-### Disponibili
-- 🇮🇹 Italiano (Principale)
-- 🇬🇧 English (Parziale - README principale)
-
-### In Programma
-- 🇪🇸 Español
-- 🇫🇷 Français
-- 🇩🇪 Deutsch
-
-*Contributi per traduzioni sono benvenuti!*
+All documents are:
+- Markdown standard
+- Readable on GitHub mobile
+- Formatted for vertical reading
+- Working links on all devices
 
 ---
 
-## 📊 Statistiche Documentazione
+## Translations
 
-- **Documenti totali:** 15+
-- **Parole totali:** 25.000+
-- **Esempi di codice:** 20+
-- **Casi d'uso:** 8 dettagliati
+### Available
+- Italian (Main)
+- English (Partial - Main README)
+
+### Planned
+- Spanish
+- French
+- German
+
+*Contributions for translations are welcome!*
+
+---
+
+## Documentation Statistics
+
+- **Total documents:** 15+
+- **Total words:** 25,000+
+- **Code examples:** 20+
+- **Use cases:** 8 detailed
 - **FAQ:** 100+ Q&A
-- **Link esterni:** 50+
-- **Diagrammi:** 5+
+- **External links:** 50+
+- **Diagrams:** 5+
 
 ---
 
-## 🎓 Percorsi di Apprendimento Consigliati
+## Recommended Learning Paths
 
-### Percorso 1: Business (2 ore)
+### Path 1: Business (2 hours)
 1. [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) - 10 min
 2. [SUMMARY.md](SUMMARY.md) - 15 min
-3. [USE_CASES.md](docs/USE_CASES.md) - 40 min (focus tuo settore)
-4. [FAQ.md](docs/FAQ.md) - 20 min (sezioni business)
-5. Video presentazione - 15 min
+3. [USE_CASES.md](docs/USE_CASES.md) - 40 min (focus your sector)
+4. [FAQ.md](docs/FAQ.md) - 20 min (business sections)
+5. Presentation video - 15 min
 
-**Outcome:** Decisione informata su adozione
+**Outcome:** Informed decision on adoption
 
-### Percorso 2: Sviluppatore (1 giornata)
+### Path 2: Developer (1 day)
 1. [VALUE_PROPOSITION.md](VALUE_PROPOSITION.md) - 10 min
 2. [ARCHITECTURE.md](docs/ARCHITECTURE.md) - 20 min
-3. [GETTING_STARTED.md](docs/GETTING_STARTED.md) - 2 ore (con pratica)
-4. Layer README specifico - 30 min
+3. [GETTING_STARTED.md](docs/GETTING_STARTED.md) - 2 hours (with practice)
+4. Specific Layer README - 30 min
 5. [FAQ.md](docs/FAQ.md) - 30 min
-6. Primo progetto - 3 ore
+6. First project - 3 hours
 
-**Outcome:** Primo progetto funzionante
+**Outcome:** First working project
 
-### Percorso 3: Architetto (4 ore)
+### Path 3: Architect (4 hours)
 1. [SUMMARY.md](SUMMARY.md) - 15 min
 2. [ARCHITECTURE.md](docs/ARCHITECTURE.md) - 30 min
-3. [USE_CASES.md](docs/USE_CASES.md) - 1 ora
-4. Tutti i Layer READMEs - 1 ora
+3. [USE_CASES.md](docs/USE_CASES.md) - 1 hour
+4. All Layer READMEs - 1 hour
 5. [config_list.md](docs/config_list.md) - 30 min
-6. External docs (Spark, Kafka) - 1 ora
+6. External docs (Spark, Kafka) - 1 hour
 
-**Outcome:** Design architetturale completo
-
----
-
-## ❓ Non Trovi Quello Che Cerchi?
-
-1. **Usa la ricerca GitHub** (in alto sulla pagina repo)
-2. **Controlla [FAQ.md](docs/FAQ.md)** - Probabilmente è lì
-3. **Esplora [docs/README.md](docs/README.md)** - Indice completo
-4. **Apri [GitHub Issue](https://github.com/Smart-Shaped/chaM3Leon/issues)** - Chiedi alla community
+**Outcome:** Complete architectural design
 
 ---
 
-## 🎯 Contribuisci alla Documentazione
+## Can't Find What You're Looking For?
 
-Hai trovato un errore? Vuoi aggiungere contenuto?
-
-1. Fork il repository
-2. Modifica i file .md
-3. Apri una Pull Request
-
-Linee guida: Scrivi semplice, usa esempi, aggiungi valore!
+1. **Use GitHub search** (at the top of the repo page)
+2. **Check [FAQ.md](docs/FAQ.md)** - It's probably there
+3. **Explore [docs/README.md](docs/README.md)** - Complete index
+4. **Open [GitHub Issue](https://github.com/Smart-Shaped/chaM3Leon/issues)** - Ask the community
 
 ---
 
-## 📅 Ultimo Aggiornamento
+## Contribute to Documentation
 
-**Data:** 27 Ottobre 2025  
-**Versione Docs:** 1.0.0  
-**Versione Framework:** 2.0.0
+Found an error? Want to add content?
+
+1. Fork the repository
+2. Edit the .md files
+3. Open a Pull Request
+
+Guidelines: Write simply, use examples, add value!
 
 ---
 
-**Happy Learning! 🎓🦎**
+## Last Update
 
-*[← Torna al README principale](README.md)*
+**Date:** October 27, 2025  
+**Docs Version:** 1.0.0  
+**Framework Version:** 2.0.0
+
+---
+
+**Happy Learning!**
+
+*[← Back to Main README](README.md)*

@@ -1,130 +1,130 @@
 # chaM3Leon: Executive Summary
 
-## In Sintesi
+## In a Nutshell
 
-**chaM3Leon** è un framework open-source per Big Data e Machine Learning che permette alle organizzazioni di gestire ed analizzare grandi quantità di dati in modo semplice ed efficace.
+**chaM3Leon** is an open-source framework for Big Data and Machine Learning that enables organizations to manage and analyze large amounts of data in a simple and effective way.
 
-### Il Problema che Risolviamo
+### The Problem We Solve
 
-Le aziende moderne devono:
-- Gestire enormi volumi di dati da molteplici fonti
-- Analizzare dati sia in tempo reale che storici
-- Applicare intelligenza artificiale per ottenere insights
-- Distribuire i risultati attraverso API moderne
+Modern companies need to:
+- Manage enormous data volumes from multiple sources
+- Analyze both real-time and historical data
+- Apply artificial intelligence to gain insights
+- Distribute results through modern APIs
 
-Fare tutto questo richiede normalmente:
-- Mesi di sviluppo
-- Team di esperti Big Data
-- Costi elevati di infrastruttura
-- Rischio di errori e problemi tecnici
+Doing all this normally requires:
+- Months of development
+- Teams of Big Data experts
+- High infrastructure costs
+- Risk of errors and technical issues
 
-### La Nostra Soluzione
+### Our Solution
 
-chaM3Leon fornisce **componenti già pronti e testati** che si possono facilmente combinare:
+chaM3Leon provides **ready-made and tested components** that can be easily combined:
 
 ```
-Raccolta Dati | Raccolta/Elaborazione real-time | Machine Learning | Distribuzione API
- (Harvester)            (Batch/Speed)                (ML Runner)        (Serving)
+Data Collection | Real-time Collection/Processing | Machine Learning | API Distribution
+  (Harvester)              (Batch/Speed)              (ML Runner)        (Serving)
 ```
 
-**Risultato:**
-- Setup piu rapido
-- Riduzione costi di sviluppo
-- Scalabilità automatica da piccoli a grandi dataset
-- Best practices già implementate
+**Result:**
+- Faster setup
+- Reduced development costs
+- Automatic scalability from small to large datasets
+- Best practices already implemented
 
 ---
 
-## Componenti Principali
+## Main Components
 
 ### 1. Harvester Layer
-**Cosa fa:** Scarica dati da API, database e altre fonti esterne  
-**Quando serve:** Devi integrare dati statici esterni (meteo, social media, partner)  
-**Linguaggio:** Java + Apache Spark
+**What it does:** Downloads data from APIs, databases and other external sources  
+**When to use:** You need to integrate static external data (weather, social media, partners)  
+**Language:** Java + Apache Spark
 
 ### 2. Speed Layer
-**Cosa fa:** Elabora dati in tempo reale mentre arrivano  
-**Quando serve:** Dashboard live, alert immediati, monitoring  
-**Linguaggio:** Java + Apache Spark
+**What it does:** Processes data in real-time as it arrives  
+**When to use:** Live dashboards, immediate alerts, monitoring  
+**Language:** Java + Apache Spark
 
 ### 3. Batch Layer
-**Cosa fa:** Elabora dati storici e immagazzina dati real-time  
-**Quando serve:** Report periodici, analisi trend, salvataggio dati per analisi  
-**Linguaggio:** Java + Apache Spark  
+**What it does:** Processes historical data and stores real-time data  
+**When to use:** Periodic reports, trend analysis, data storage for analysis  
+**Language:** Java + Apache Spark  
 
 ### 4. ML Runner
-**Cosa fa:** Applica machine learning per predizioni e insights  
-**Quando serve:** training ed inferenze 
-**Linguaggio:** Python + MLflow + Metaflow
+**What it does:** Applies machine learning for predictions and insights  
+**When to use:** Training and inference 
+**Language:** Python + MLflow + Metaflow
 
 ### 5. Serving Layer
-**Cosa fa:** Espone i dati attraverso API REST moderne  
-**Quando serve:** Integrare con web app, mobile app, dashboard  
-**Linguaggio:** Java + Spring Boot
+**What it does:** Exposes data through modern REST APIs  
+**When to use:** Integration with web apps, mobile apps, dashboards  
+**Language:** Java + Spring Boot
 
 ---
 
 ## Use Cases
 
 ### E-Commerce & Retail
-- Monitoraggio vendite real-time
-- Raccomandazioni personalizzate
-- Previsione domanda
-- Ottimizzazione inventario
+- Real-time sales monitoring
+- Personalized recommendations
+- Demand forecasting
+- Inventory optimization
 
 ### Smart Cities & IoT
-- Monitoraggio sensori (migliaia)
-- Gestione traffico intelligente
-- Qualità aria e ambiente
-- Ottimizzazione energia
+- Sensor monitoring (thousands)
+- Intelligent traffic management
+- Air quality and environment
+- Energy optimization
 
 ### Healthcare
-- Monitoraggio pazienti critici
-- Predizione complicazioni
-- Ottimizzazione risorse ospedaliere
-- Medicina personalizzata
+- Critical patient monitoring
+- Complication prediction
+- Hospital resource optimization
+- Personalized medicine
 
 ### Manufacturing
-- Manutenzione predittiva
-- Ottimizzazione produzione
-- Quality control automatico
-- Riduzione sprechi
+- Predictive maintenance
+- Production optimization
+- Automated quality control
+- Waste reduction
 
 ### Finance & Banking
-- Rilevamento frodi real-time
+- Real-time fraud detection
 - Risk scoring
-- Trading algoritmico
+- Algorithmic trading
 - Customer segmentation
 
 ---
 
-## Perché Scegliere chaM3Leon
+## Why Choose chaM3Leon
 
-### Tecnologie Best-in-Class
-chaM3Leon integra:
-- **Apache Spark** - Leader elaborazione distribuita
-- **Apache Kafka** - Standard de-facto per streaming
-- **Apache Cassandra** - DB NoSQL scalabile
-- **MLflow/Metaflow** - MLOps all'avanguardia
-- **Spring Boot** - Framework enterprise Java
+### Best-in-Class Technologies
+chaM3Leon integrates:
+- **Apache Spark** - Leader in distributed processing
+- **Apache Kafka** - De-facto standard for streaming
+- **Apache Cassandra** - Scalable NoSQL DB
+- **MLflow/Metaflow** - Cutting-edge MLOps
+- **Spring Boot** - Enterprise Java framework
 
-**Nasconde la complessità** attraverso astrazioni semplici.
+**It hides complexity** through simple abstractions.
 
 ---
 
 ## Skill Requirements
 
-### Competenze Necessarie
-| Ruolo | Must Have | Nice to Have |
+### Required Skills
+| Role | Must Have | Nice to Have |
 |-------|-----------|--------------|
 | **Engineer** | Java, Maven, SQL | Spark |
 | **Scientist** | Python, pandas, sklearn | MLflow, Metaflow |
 | **DevOps** | Docker, Linux | Kubernetes, Spark cluster |
 
-Risorse disponibili:
-- Documentazione completa
-- Video tutorial
-- Esempi pratici
+Available resources:
+- Complete documentation
+- Video tutorials
+- Practical examples
 - Community support
 
 ---
