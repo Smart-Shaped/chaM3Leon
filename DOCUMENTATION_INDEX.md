@@ -139,8 +139,6 @@ Find your sector in [USE_CASES.md](docs/USE_CASES.md):
 |-------|-----------|--------|------|
 | Framework Presentation | General overview | ~15 min | [YouTube](https://www.youtube.com/watch?v=wtVyYUDlRQc) |
 | Batch & Speed Demo | Practical example | ~20 min | [YouTube](https://www.youtube.com/watch?v=UjzYc9C1krU) |
-| Harvester & ML Demo | ML integration | ~18 min | [YouTube](https://www.youtube.com/watch?v=pwE223S0-oU) |
-
 ---
 
 ## External Links

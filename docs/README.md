@@ -37,9 +37,8 @@ Welcome to the complete documentation of the chaM3Leon framework. This page will
 ## Video Resources
 
 ### YouTube Tutorials
-- [Framework Presentation](https://www.youtube.com/watch?v=wtVyYUDlRQc) - General overview
-- [Batch and Speed Layer Demo](https://www.youtube.com/watch?v=UjzYc9C1krU) - Practical example
-- [Harvester and ML Runner Demo](https://www.youtube.com/watch?v=pwE223S0-oU) - ML integration
+- [Framework Presentation (Work in progress)](https://www.youtube.com/watch?v=wtVyYUDlRQc) - General overview
+- [Batch and Speed Layer Demo (Work in progress)](https://www.youtube.com/watch?v=UjzYc9C1krU) - Practical example
 
 ---
 

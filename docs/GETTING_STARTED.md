@@ -487,9 +487,8 @@ Congratulations! You've created your first chaM3Leon application.
 - [Harvester Documentation](../chaM3Leon/harvester/README.md)
 
 ### Video Tutorials
-- [Framework Presentation](https://www.youtube.com/watch?v=wtVyYUDlRQc)
-- [Batch and Speed Demo](https://www.youtube.com/watch?v=UjzYc9C1krU)
-- [Harvester Demo](https://www.youtube.com/watch?v=pwE223S0-oU)
+- [Framework Presentation](https://www.youtube.com/watch?v=wtVyYUDlRQc) (Work in progress)
+- [Batch and Speed Demo](https://www.youtube.com/watch?v=UjzYc9C1krU) (Work in progress)
 
 ### Repositories
 - [chaM3Leon Main](https://github.com/Smart-Shaped/chaM3Leon)
