@@ -39,7 +39,7 @@ In chaM3Leon, Airflow executes manually written DAGs for pipeline flows. In the 
 
 Airflow organizes the execution order, scheduling, and management of each functional layer of the framework (Batch, Speed, Harvester, ML).
 
-The platform’s architecture is a customized Lambda pattern organized into seven main layers:
+The platform’s architecture is a customized Lambda pattern organized into five main layers:
 
 ---
 
