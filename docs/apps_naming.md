@@ -23,7 +23,7 @@ Each application's `pom.xml` should follow these conventions:
 
 ## Batch Application
 
-- **Updater Class**: `{base_package}.{project_id}.batch.{project_id}com.smartshaped.chameleon.batch.BatchUpdater`
+- **Updater Class**: `{base_package}.{project_id}.batch.{project_id}BatchUpdater`
 - **Preprocessor Class**: `{base_package}.{project_id}.batch.{project_id}BatchPreprocessor`
 - **Cassandra Model Class**: `{base_package}.{project_id}.batch.model.{table_name}`
 
@@ -34,16 +34,6 @@ Each application's `pom.xml` should follow these conventions:
 - **Updater Class**: `{base_package}.{project_id}.speed.{project_id}SpeedUpdater`
 - **Preprocessor Class**: `{base_package}.{project_id}.speed.{project_id}SpeedPreprocessor`
 - **Cassandra Model Class**: `{base_package}.{project_id}.speed.model.{table_name}`
-
----
-
-## Machine Learning (ML) Application
-
-- **HDFS Reader Class**: `{base_package}.{project_id}.ml.{project_id}HdfsReader`
-- **Pipeline Class**: `{base_package}.{project_id}.ml.{project_id}Pipeline`
-- **Blackbox Class**: `{base_package}.{project_id}.ml.{project_id}Blackbox`
-- **Model Saver Class**: `{base_package}.{project_id}.ml.{project_id}ModelSaver`
-- **Cassandra Model Class**: `{base_package}.{project_id}.ml.model.{table_name}`
 
 ---
 
