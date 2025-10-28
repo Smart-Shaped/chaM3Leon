@@ -1,123 +1,78 @@
-# chaM3Leon: Valore e Vantaggi del Framework
+# 1. OVERVIEW
 
-## Cos'è chaM3Leon?
+The framework is designed to create from scratch and manage end-to-end AI/ML and big data pipelines. It reduces the time and resources needed to go from a pipeline idea to its implementation, cutting down the time — and thus the costs — of moving into production.
 
-chaM3Leon è un framework progettato per aiutare le organizzazioni a **gestire e analizzare grandi quantità di dati** in modo efficiente e scalabile. Pensato per chi lavora con Big Data e Machine Learning, offre una soluzione modulare e flessibile che semplifica processi complessi.
+## Target Audience
 
-## Perché scegliere chaM3Leon?
-
-### 🎯 **Semplicità nell'affrontare la complessità**
-
-Nel mondo moderno, le aziende devono gestire enormi flussi di dati provenienti da diverse fonti. chaM3Leon elimina la complessità tecnica fornendo componenti già pronti che funzionano insieme in modo armonioso.
-
-### 📦 **Architettura Modulare**
-
-Come i mattoncini LEGO, ogni componente del framework può essere utilizzato indipendentemente o combinato con altri. Questo significa:
-- **Usa solo ciò di cui hai bisogno**: Non sei obbligato a utilizzare tutte le funzionalità
-- **Personalizza facilmente**: Adatta ogni componente alle tue esigenze specifiche
-- **Scalabilità graduale**: Inizia in piccolo e cresci secondo necessità
-
-### ⚡ **Elaborazione Dati in Tempo Reale e Batch**
-
-chaM3Leon implementa una **Lambda Architecture**, che permette di:
-- **Analizzare dati in tempo reale** per risposte immediate
-- **Elaborare grandi volumi di dati storici** per analisi approfondite
-- **Combinare entrambi gli approcci** per ottenere il meglio dei due mondi
-
-### 🔄 **Pipeline Dati Complete**
-
-Il framework copre l'intero ciclo di vita dei dati:
-
-1. **Raccolta**: Acquisizione dati da API, database e altre fonti
-2. **Elaborazione**: Trasformazione e pulizia dei dati
-3. **Analisi**: Applicazione di modelli di machine learning
-4. **Distribuzione**: Messa a disposizione dei risultati attraverso API
-
-### 🚀 **Scalabilità Garantita**
-
-Basato su **Apache Spark**, chaM3Leon può gestire:
-- Piccoli dataset per progetti iniziali
-- Enormi quantità di dati per applicazioni enterprise
-- Crescita automatica in base alle necessità
-
-### 🔧 **Facilità d'Uso**
-
-Nonostante la potenza tecnologica:
-- **Configurazione tramite file YAML**: Niente codice complesso per le impostazioni base
-- **Componenti riutilizzabili**: Non devi reinventare la ruota ogni volta
-- **Documentazione completa**: Guide chiare per ogni livello di esperienza
-
-## Casi d'Uso Reali
-
-### 📊 **Analisi Dati in Tempo Reale**
-Monitora eventi in tempo reale (vendite, sensori IoT, social media) e reagisci immediatamente ai cambiamenti.
-
-### 🤖 **Machine Learning Operativo**
-Addestra modelli di intelligenza artificiale su grandi dataset e mettili in produzione facilmente.
-
-### 🌐 **Integrazione Multi-Fonte**
-Raccogli dati da diverse API e database, consolidali e analizzali in un unico ambiente.
-
-### 📈 **Reportistica Avanzata**
-Genera report complessi combinando dati storici e in tempo reale.
-
-## Vantaggi Competitivi
-
-### ✅ **Risparmio di Tempo**
-Non devi costruire l'infrastruttura da zero. chaM3Leon fornisce componenti già testati e ottimizzati.
-
-### ✅ **Riduzione dei Costi**
-Evita errori costosi e riduci il tempo di sviluppo utilizzando best practices già implementate.
-
-### ✅ **Flessibilità Tecnologica**
-Supporta sia Java che Python, permettendo ai team di lavorare con gli strumenti che conoscono meglio.
-
-### ✅ **Trasparenza e Controllo**
-Open source significa che puoi vedere esattamente cosa fa il codice e modificarlo secondo le tue esigenze.
-
-### ✅ **Comunità e Supporto**
-Fai parte di una comunità in crescita con documentazione, esempi e risorse video.
-
-## Tecnologie Moderne senza Complessità
-
-chaM3Leon integra le migliori tecnologie del settore:
-
-- **Apache Spark**: Per l'elaborazione distribuita
-- **Apache Kafka**: Per lo streaming di dati
-- **Apache Cassandra**: Per la memorizzazione scalabile
-- **MLflow e Metaflow**: Per la gestione di modelli ML
-- **Spring Boot**: Per le API REST
-- **Django**: Per interfacce web moderne (in arrivo)
-
-Ma **nasconde la complessità** attraverso interfacce semplici e configurazioni dichiarative.
-
-## Il Futuro di chaM3Leon
-
-Il framework è in continua evoluzione con:
-- **Harvester in Python**: Per una raccolta dati ancora più flessibile
-- **Serving con Django**: Per interfacce web moderne
-- **Workflow Designer**: Per progettare pipeline visuali senza codice
-
-## Chi Può Beneficiare di chaM3Leon?
-
-### 👨‍💼 **Data Scientists**
-Concentrati sui modelli senza preoccuparti dell'infrastruttura.
-
-### 👨‍💻 **Data Engineers**
-Costruisci pipeline robuste e scalabili in meno tempo.
-
-### 🏢 **Aziende**
-Riduci i costi e accelera il time-to-market per progetti di Big Data.
-
-### 🎓 **Ricercatori e Studenti**
-Impara le best practices del settore con un framework reale e ben documentato.
-
-## Conclusione
-
-chaM3Leon non è solo un framework tecnico: è una **soluzione completa** per trasformare i dati in valore. Che tu stia iniziando un nuovo progetto o cercando di ottimizzare processi esistenti, chaM3Leon ti offre gli strumenti per avere successo nel mondo dei Big Data e del Machine Learning.
-
-**Inizia oggi** e scopri come chaM3Leon può accelerare i tuoi progetti dati!
+1. State research institutions (mostly universities)
+2. Private research institutions
+3. Companies
+4. Anyone working with large datasets who would like to migrate or create big data processing pipelines with or without ML inferences — especially in the absence of internal developers and/or with non-multimillion-dollar budgets.
 
 ---
 
-*Per saperne di più sull'implementazione tecnica, consulta la [documentazione principale](README.md).*
+# 2. KEY BENEFITS
+
+## Core Value Proposition
+
+The framework is generic (technically abstract) enough to be versatile, allowing the implementation of AI/ML or big data pipelines of virtually any nature. At the same time, it is simple enough to implement, significantly reducing time-to-market/time-to-production. The system is based on technologies designed for big data management (described in the [TECHNICAL FEATURES](#3-technical-features) section), making it inherently scalable.
+
+It allows users to focus exclusively on their use case without worrying about the specifics of designing architectural and infrastructural components. The framework's goal is to leave space for ideas, allowing users to focus on the *what* rather than the *how*.
+
+In the future, the framework, combined with a specially designed web platform, will enable the creation of simple pipelines without the need for any consulting, through the use of the Workflow Designer.
+
+## Efficiency and Productivity
+
+Creating pipelines from the framework eliminates the need to design and implement the architecture, saving significant time and costly technical expertise. For example, companies without internal developers would otherwise spend considerable amounts on consulting for components that are already developed and ready to use.
+
+Time and cost savings are further enhanced by the fact that, if the ML or big data pipeline generates value for the client, early implementation creates value sooner than anticipated, also providing a potential competitive edge.
+
+---
+
+# 3. TECHNICAL FEATURES
+
+Inferences in big data often require real-time insights along with in-depth historical analyses. The architecture balances computational efficiency and flexibility, leveraging distributed processing frameworks like Apache Spark for standard Lambda architecture components (Batch Layer and Speed Layer), a custom Harvester for large historical data ingestion, and an ML Runner to manage and execute ML applications.
+
+End-to-end pipelines are orchestrated via **Apache Airflow**, enabling the creation, scheduling, and execution of workflows defined as DAGs (Directed Acyclic Graphs). Airflow represents complex processes as a series of interdependent tasks, making it particularly useful for managing big data or ML pipelines.
+
+In chaM3Leon, Airflow executes manually written DAGs for pipeline flows. In the future, DAGs will be automatically generated through a workflow designer, ensuring a 1:1 correspondence between the visual pipeline and execution in Airflow.
+
+Airflow organizes the execution order, scheduling, and management of each functional layer of the framework (Batch, Speed, Harvester, ML).
+
+The platform’s architecture is a customized Lambda pattern organized into seven main layers:
+
+---
+
+## Batch Layer
+
+A standard Lambda component based on Spark Structured Streaming, dedicated to processing non-real-time data streams from one or more Kafka topics. Processed results are saved to **HDFS**, while partial statistics are stored in **Cassandra** for historical analysis. The batch ingestion interval is configurable.
+
+> **Note:** Kafka message size limit is 1MB (extendable to 10MB). Files larger than this should be ingested through the Harvester.
+
+---
+
+## Speed Layer
+
+Manages real-time data streams and calculates partial statistics to provide quick insights. It relies on Spark Structured Streaming, handling low-latency updates. The layer does not store raw data in HDFS or Cassandra; instead, the **SpeedUpdater** calculates summary statistics stored in Cassandra. The time window for real-time processing is configurable.
+
+> Data is fed via Kafka, with message size considerations identical to the Batch Layer.
+
+---
+
+## Harvesting Layer (Harvester)
+
+Responsible for collecting data from heterogeneous external sources when Batch and Speed Layers are insufficient, such as historical archives or unsupported data formats. It processes and formats data for optimal ML consumption. Supports integration with numerous APIs and data services.
+
+> Prototype implementations include massive file ingestion of formats like GeoJSON and TIF/TIFF, widely used in geoclimatic analysis.
+
+---
+
+## ML Runner
+
+Fully developed in Python, this layer handles AI/ML modeling, reading required data for training and inference. Users define specifications to produce ML models, including training management. The library supports integration with common frameworks like **PyTorch** and **TensorFlow**, thanks to the **MLflow** library. Atomic steps are generated from a configuration file, automatically translated into **Metaflow** instructions with custom decorators.
+
+---
+
+## Serving Layer
+
+Aggregates data from Cassandra, including summary statistics and ML inferences, and exposes them via APIs for easy access to processed results.
